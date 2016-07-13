@@ -1,0 +1,11 @@
+
+.canvasContainer {
+    border: 1px solid brown;
+    padding: 20px;
+
+}
+
+.canvas {
+    background: #ccc;
+    border: 1px solid grey;
+}
