@@ -88,13 +88,15 @@
   "stylelint": {
     "extends": "stylelint-config-standard",
     "rules": {
-      "string-quotes": "single"
+      "string-quotes": "single",
+      "indentation": null
     }
   },
   "scripts": {
     "eslint": "eslint components core pages test utils main.js run.js webpack.config.js",
     "stylelint": "stylelint \"components/**/*.css\" \"pages/**/*.css\"",
     "lint": "npm run eslint && npm run stylelint",
+    "lint:watch": "watch 'npm run lint' components pages core test",
     "test": "mocha --compilers js:babel-register",
     "test:watch": "mocha --compilers js:babel-register --reporter min --watch",
     "clean": "node run clean",
