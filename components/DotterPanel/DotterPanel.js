@@ -32,7 +32,7 @@ class Panel extends React.Component {
     let s1 = this.props.s1;
     let s2 = this.props.s2;
     console.log(s1,s2)
-    undefined.length;
+    console.log(undefined.length);
 
     //let ls1 = s1.length;
     //let ls2 = s2.length;
