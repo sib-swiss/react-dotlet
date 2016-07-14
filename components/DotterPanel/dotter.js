@@ -1,5 +1,4 @@
 
-import {emptyArray} from './helpers';
 import { MATCH, MISMATCH } from './constants/constants';
 
 
