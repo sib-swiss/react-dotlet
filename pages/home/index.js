@@ -18,7 +18,7 @@ class HomePage extends React.Component {
     render() {
         return (
             <div>
-                <DotterPanel s1="AAAGTTTTCATTTTTTTTTT" s2="AAAGCTTTCTTTTTTAAACT" window_size={10} />
+                <DotterPanel s1="AAAAAAATTTCCCCCCTTGC" s2="AAAGAAATTTCCCCCCATGC" window_size={10} />
             </div>
         );
     }
