@@ -17,7 +17,7 @@ function sumMatches(s1, s2) {
     };
 }
 
-function scoreMatches(sums) {
+function scoreMatches(sums, scoreMatrix) {
 
 }
 
