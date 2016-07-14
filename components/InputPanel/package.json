@@ -1,0 +1,6 @@
+{
+    "name": "InputPanel",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./InputPanel.js"
+}

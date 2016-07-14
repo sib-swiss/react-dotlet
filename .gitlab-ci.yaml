@@ -1,0 +1,20 @@
+
+stages:
+- deps
+- test
+- build
+
+npm:
+    stage: deps
+    script: 
+    - npm install
+
+test_job:
+    stage: test
+    script: 
+    - npm run test
+
+build_job:
+    stage: build
+    script: 
+    - node run build
