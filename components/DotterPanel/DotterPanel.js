@@ -1,11 +1,11 @@
 import React from 'react';
 import s from './DotterPanel.css';
 import { IDENTITY } from './constants/scoring_matrices/dna';
-import { DnaScoreMatches } from './dotter';
+import * as dotter from './dotter';
 
-const CANVAS_SIZE = 800;
+const CANVAS_SIZE = 600;
 
-class Panel extends React.Component {
+class DotterPanel extends React.Component {
     static propTypes = {
         s1: React.PropTypes.string,
         s2: React.PropTypes.string,
@@ -49,16 +49,11 @@ class Panel extends React.Component {
         let window_size = this.props.window_size;
         let ws = Math.floor(window_size / 2);   // # of nucleotides on each side
 
-        var canvas_pt;
-        if (L < CANVAS_SIZE) {
-            canvas_pt = Math.floor(CANVAS_SIZE / L);
-        } else {
-            canvas_pt = 1;
-        }
+        let canvas_pt = dotter.getCanvasPt(CANVAS_SIZE, L);
         let npoints = CANVAS_SIZE / canvas_pt;
-        let step = L / npoints;                 // n points -> n-1 steps
+        let step = L / npoints;                 // n points -> n-1 steps. What if not int?
 
-        //console.log(this.props.window_size, ws, L, step)
+        console.log(window_size, ws, L, canvas_pt, step)
 
         for (let i=0; i <= npoints; i++) {      // n-1 steps
             let q1 = i * step;                  // position on seq1. First is 0, last is L
@@ -72,7 +67,7 @@ class Panel extends React.Component {
                 let l2 = Math.max(q2 - ws, 0),
                     r2 = q2 + ws + 1;           // nucleotides window on seq2
                 let subseq2 = s2.slice(l2, r2);
-                let score = DnaScoreMatches(subseq1, subseq2, IDENTITY);
+                let score = dotter.DnaScoreMatches(subseq1, subseq2, IDENTITY);
                 //console.log([i, j], [q1, q2], [l1,r1], [l2,r2], subseq1, subseq2, score)
                 if (score > 0) {
                     ctx.globalAlpha = score / window_size;
@@ -89,4 +84,4 @@ class Panel extends React.Component {
 
 }
 
-export default Panel;
+export default DotterPanel;

@@ -1,6 +1,20 @@
 
 import { MATCH, MISMATCH } from './constants/constants';
 
+/* Caclulate the size in px of a "point" on the canvas
+ * (bigger if the sequence is shorter than the canvas' dimensions in px,
+ * to fill it completely).
+ */
+function getCanvasPt(canvasSize, lenSeq) {
+    var canvas_pt;
+    if (lenSeq < canvasSize) {
+        canvas_pt = Math.floor(canvasSize / lenSeq);
+    } else {
+        canvas_pt = 1;
+    }
+    return canvas_pt;
+}
+
 
 function DnaSumMatches(s1, s2) {
     let L = Math.min(s1.length, s2.length);
@@ -26,6 +40,7 @@ function DnaScoreMatches(s1, s2, scoreMatrix) {
 
 
 export {
+    getCanvasPt,
     DnaSumMatches,
     DnaScoreMatches,
 };

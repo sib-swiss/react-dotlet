@@ -11,7 +11,7 @@
 import React from 'react';
 import Header from './Header';
 import Navigation from './Navigation';
-import Footer from '../Footer';
+import Footer from '../Footer/Footer';
 import s from './Layout.css';
 
 class Layout extends React.Component {
@@ -28,15 +28,22 @@ class Layout extends React.Component {
     return (
       <div className="mdl-layout mdl-js-layout" ref="root">
         <div className="mdl-layout__inner-container">
+
           <Header>
-            <span className="mdl-layout-title">React Static Boilerplate</span>
+
+            <span className="mdl-layout-title">Dotter Reborn</span>
             <div className="mdl-layout-spacer"></div>
             <Navigation />
+
           </Header>
+
           <main className="mdl-layout__content">
+
             <div className={s.content} {...this.props} />
             <Footer />
+
           </main>
+
         </div>
       </div>
     );

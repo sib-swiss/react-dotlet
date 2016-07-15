@@ -100,11 +100,16 @@ const config = {
             // CSS Modules https://github.com/css-modules/css-modules
             modules: true,
             localIdentName: isDebug ? '[name]_[local]_[hash:base64:3]' : '[hash:base64:4]',
+            camelCase: 'dashes',
             // CSS Nano http://cssnano.co/options/
             minimize: !isDebug,
           })}`,
           'postcss-loader',
         ],
+      },
+      {
+        test: /\.scss$/,
+        loaders: ["style", "css", "sass"],
       },
       {
         test: /\.json$/,

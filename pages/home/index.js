@@ -9,17 +9,21 @@
  */
 
 import React from 'react';
+import Layout from '../../components/Layout';
 import DotterPanel from '../../components/DotterPanel';
-import { title, html } from './index.md';
+import InputPanel from '../../components/InputPanel';
 
 class HomePage extends React.Component {
 
 
     render() {
         return (
+            <Layout>
             <div>
+                <InputPanel />
                 <DotterPanel s1="AAAAAAATTTCCCCCCTTGC" s2="AAAGAAATTTCCCCCCATGC" window_size={10} />
             </div>
+            </Layout>
         );
     }
 
