@@ -11,17 +11,36 @@
 import { createStore } from 'redux';
 import inputPanelActionTypes from '../components/InputPanel/actionTypes';
 
-// Centralized application state
-// For more information visit http://redux.js.org/
-const store = createStore((state, action) => {
-  // TODO: Add action handlers (aka "reduces")
-  switch (action) {
+
+/*
+ * Redux store: action handlers ("reduces")
+ */
+
+let defaultState = {
+    input: {
+        s1: "AAAAAAATTTCCCCCCTTGC",
+        s2: "AAAGAAATTTCCCCCCATGC",
+    },
+};
+
+
+let inputReducer = (state, action) => { switch (action.type) {
+
     case inputPanelActionTypes.CHANGE_SEQUENCE:
-       console.log("store", state.sequence)
-      return { ...state, sequence: state.sequence };
+        //console.log("store :: CHANGE_SEQUENCE", action.seqn, action.sequence);
+        let newState = Object.assign({}, state);
+        if (action.seqn === 1) {
+            newState.input.s1 = action.sequence;
+        } else {
+            newState.input.s2 = action.sequence;
+        }
+        return newState;
+
     default:
-      return state;
-  }
-});
+        return state;
+}};
+
+
+const store = createStore(inputReducer, defaultState);
 
 export default store;

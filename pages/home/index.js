@@ -21,7 +21,7 @@ class HomePage extends React.Component {
             <Layout>
             <div>
                 <InputPanel />
-                <DotterPanel s1="AAAAAAATTTCCCCCCTTGC" s2="AAAGAAATTTCCCCCCATGC" window_size={10} />
+                <DotterPanel window_size={10} />
             </div>
             </Layout>
         );

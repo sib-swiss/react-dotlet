@@ -2,6 +2,7 @@ import React from 'react';
 import s from './DotterPanel.css';
 import { IDENTITY } from './constants/scoring_matrices/dna';
 import * as dotter from './dotter';
+import store from '../../core/store';
 
 const CANVAS_SIZE = 600;
 
@@ -11,6 +12,21 @@ class DotterPanel extends React.Component {
         s2: React.PropTypes.string,
         window_size: React.PropTypes.number,
     };
+
+    state = {
+        s1: store.getState().input.s1,
+        s2: store.getState().input.s2,
+    };
+
+    componentWillMount() {
+        store.subscribe(() => {
+            var state = store.getState();
+            this.setState({
+                s1: state.input.s1,
+                s2: state.input.s2,
+            });
+        });
+    }
 
     render() {
         return (
@@ -35,13 +51,15 @@ class DotterPanel extends React.Component {
 
 
     fillCanvas() {
+        /* Init blank canvas */
         let cv = this._refDotterCanvas;
         let ctx = cv.getContext('2d');
         let canvas = ctx.canvas;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        let s1 = this.props.s1;
-        let s2 = this.props.s2;
+        let s1 = this.state.s1;
+        let s2 = this.state.s2;
+
         let ls1 = s1.length;
         let ls2 = s2.length;
         let L = Math.min(ls1, ls2);
@@ -53,7 +71,7 @@ class DotterPanel extends React.Component {
         let npoints = CANVAS_SIZE / canvas_pt;
         let step = L / npoints;                 // n points -> n-1 steps. What if not int?
 
-        console.log(window_size, ws, L, canvas_pt, step)
+        //console.log(window_size, ws, L, canvas_pt, step)
 
         for (let i=0; i <= npoints; i++) {      // n-1 steps
             let q1 = i * step;                  // position on seq1. First is 0, last is L
