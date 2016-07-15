@@ -8,8 +8,6 @@ const CANVAS_SIZE = 600;
 
 class DotterPanel extends React.Component {
     static propTypes = {
-        s1: React.PropTypes.string,
-        s2: React.PropTypes.string,
         window_size: React.PropTypes.number,
     };
 
