@@ -31,7 +31,7 @@ class Layout extends React.Component {
 
           <Header>
 
-            <span className="mdl-layout-title">Dotter Reborn</span>
+            <span className="mdl-layout-title">Dolet Reborn</span>
             <div className="mdl-layout-spacer"></div>
             <Navigation />
 

@@ -15,7 +15,7 @@ class InputPanel extends React.Component {
     render() {
         return (<div>
         <form>
-            <div className="mdl-textfield mdl-js-textfield">
+            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <input className="mdl-textfield__input" type="text" id="seq1_input"
                        onChange={this.onChangeSeq1}
                        defaultValue={store.getState().input.s1}
@@ -30,6 +30,7 @@ class InputPanel extends React.Component {
                 <label className="mdl-textfield__label" htmlFor="seq2_input">Sequence 2</label>
             </div>
         </form>
+
         </div>);
     }
 }

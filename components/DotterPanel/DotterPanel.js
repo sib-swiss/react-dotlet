@@ -3,6 +3,7 @@ import s from './DotterPanel.css';
 import { IDENTITY } from './constants/scoring_matrices/dna';
 import * as dotter from './dotter';
 import store from '../../core/store';
+import { computeDensity } from './actionCreators';
 
 const CANVAS_SIZE = 600;
 
@@ -19,6 +20,7 @@ class DotterPanel extends React.Component {
     componentWillMount() {
         store.subscribe(() => {
             var state = store.getState();
+            console.log("DotterPanel", state)
             this.setState({
                 s1: state.input.s1,
                 s2: state.input.s2,
@@ -71,6 +73,8 @@ class DotterPanel extends React.Component {
 
         //console.log(window_size, ws, L, canvas_pt, step)
 
+        let scores = new Set();
+
         for (let i=0; i <= npoints; i++) {      // n-1 steps
             let q1 = i * step;                  // position on seq1. First is 0, last is L
             let l1 = Math.max(q1 - ws, 0),
@@ -84,6 +88,7 @@ class DotterPanel extends React.Component {
                     r2 = q2 + ws + 1;           // nucleotides window on seq2
                 let subseq2 = s2.slice(l2, r2);
                 let score = dotter.DnaScoreMatches(subseq1, subseq2, IDENTITY);
+                scores.add(score)
                 //console.log([i, j], [q1, q2], [l1,r1], [l2,r2], subseq1, subseq2, score)
                 if (score > 0) {
                     ctx.globalAlpha = score / window_size;
@@ -94,10 +99,16 @@ class DotterPanel extends React.Component {
                 }
             }
         }
+        console.log(scores)
+        //store.dispatch(computeDensity(scores));
 
     }
+}
 
+
+class CanvasUpdater extends React.Component {
 
 }
+
 
 export default DotterPanel;
