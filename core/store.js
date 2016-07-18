@@ -8,68 +8,15 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import { createStore, combineReducers } from 'redux';
-import inputPanelActionTypes from '../components/InputPanel/actionTypes';
-import dotterPanelActionTypes from '../components/DotterPanel/constants/actionTypes';
-
-
 /*
- * Redux store: action handlers ("reducers")
+ * Redux store
  */
 
-let defaultState = {
-    input: {
-        s1: "AAAAAAATTTCCCCCCTTGC",
-        s2: "AAAGAAATTTCCCCCCATGC",
-    },
-    dotter: {
-        scores: [],
-    }
-};
-
-let inputDefaultState = {
-    s1: "AAAAAAATTTCCCCCCTTGC",
-    s2: "AAAGAAATTTCCCCCCATGC",
-};
-
-let dotterDefaultState = {
-    scores: [],
-};
-
-let input = (state = inputDefaultState, action) => { switch (action.type) {
-
-    case inputPanelActionTypes.CHANGE_SEQUENCE:
-        //console.log("store :: CHANGE_SEQUENCE", action.seqn, action.sequence);
-        let newState = Object.assign({}, state);
-        if (action.seqn === 1) {
-            newState.s1 = action.sequence;
-        } else {
-            newState.s2 = action.sequence;
-        }
-        return newState;
-
-    default:
-        console.log("store input :: ", action.type)
-        console.log("store input :: ", action.type === dotterPanelActionTypes.COMPUTE_DENSITY)
-        console.log("store input :: ", state)
-        return state;
-}};
-
-
-let dotter = (state = dotterDefaultState, action) => { switch (action.type) {
-
-    case dotterPanelActionTypes.COMPUTE_DENSITY:
-        console.log(action)
-        console.log("store :: COMPUTE_DENSITY", action.scores.size);
-        let newState = Object.assign({}, state);
-        newState.scores = action.scores;
-        return newState;
-
-    default:
-        console.log("dotter store :: default", action.type);
-        return state;
-
-}};
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import createLogger from 'redux-logger';
+import thunk from 'redux-thunk';
+import input from '../components/InputPanel/actions/reducers';
+import dotter from '../components/DotterPanel/actions/reducers';
 
 
 let reducer = combineReducers({
@@ -78,6 +25,19 @@ let reducer = combineReducers({
 });
 
 
-const store = createStore(reducer, defaultState);
+/*
+ * store.getState() will return an object of the form
+ * { <reducer1> input: ...,
+ *   <reducer2> dotter: ...,
+ *   ...
+ *  }
+ */
+
+const logger = createLogger({
+    collapsed: true,
+    diff: true,
+});
+
+const store = createStore(reducer, applyMiddleware(thunk, logger));
 
 export default store;
