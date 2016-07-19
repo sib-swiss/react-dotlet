@@ -23,12 +23,10 @@ class DotterPanel extends React.Component {
 
     _onClick(e) {
         let cv = e.target;
-        let elemLeft = cv.offsetLeft,
-            elemTop = cv.offsetTop,
-            context = cv.getContext('2d');
-        let x = e.pageX - elemLeft,
-            y = e.pageY - elemTop;
-        console.debug(x, y)
+        let dims = cv.getBoundingClientRect();
+        let x = e.pageX - dims.left,
+            y = e.pageY - dims.top;
+        console.debug("Clicked at coord", x, y)
         store.dispatch(inspectCoordinate);
     }
 

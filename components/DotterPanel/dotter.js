@@ -16,7 +16,9 @@ function getCanvasPt(canvasSize, lenSeq) {
     return canvas_pt;
 }
 
-
+/*
+ * In DNA-DNA comparison, sum the number of matches/mismatches.
+ */
 function DnaSumMatches(s1, s2) {
     let L = Math.min(s1.length, s2.length);
     let match = 0, mismatch = 0;
@@ -32,6 +34,9 @@ function DnaSumMatches(s1, s2) {
     };
 }
 
+/*
+ * In DNA-DNA comparison, return the similarity score.
+ */
 function DnaScoreMatches(s1, s2, scoreMatrix) {
     let sums = DnaSumMatches(s1, s2);
     let score = scoreMatrix[MATCH] * sums[MATCH]
@@ -39,7 +44,16 @@ function DnaScoreMatches(s1, s2, scoreMatrix) {
     return score;
 }
 
+/*
+ * Return
+ */
+function windowFromPosition(pos) {
 
+}
+
+/*
+ * Fill the dotter canvas with similarity scores; return the scores density.
+ */
 function fillCanvas(s1, s2, window_size=10) {
     /* Init blank canvas */
     let cv = document.getElementById("dotter-canvas");

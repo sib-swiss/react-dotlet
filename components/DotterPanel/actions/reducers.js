@@ -1,5 +1,5 @@
 
-import { COMPUTE_DENSITY } from './actionTypes';
+import { COMPUTE_DENSITY, INSPECT_COORDINATE } from './actionTypes';
 
 
 let dotterDefaultState = {
@@ -9,9 +9,14 @@ let dotterDefaultState = {
 let dotterReducer = (state = dotterDefaultState, action) => { switch (action.type) {
 
     case COMPUTE_DENSITY:
-        let newState = Object.assign({}, state);
+        var newState = Object.assign({}, state);
         newState.scores = action.scores;
         return newState;
+
+    case INSPECT_COORDINATE:
+        var newState = Object.assign({}, state);
+        return newState;
+
 
     default:
         console.log("dotter store :: default", action.type);
