@@ -4,5 +4,18 @@
 }
 
 .sequence {
-    font: 15px courier new;
+    font: 18px courier new;
+}
+
+.seq1 {
+
+}
+
+.seq2 {
+
+}
+
+.same {
+    color: yellow;
+    background-color: #3F51B5;
 }
