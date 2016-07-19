@@ -45,16 +45,16 @@ function DnaScoreMatches(s1, s2, scoreMatrix) {
 }
 
 /*
- * Return
+ * Return the position on the sequence `seq` corresponding to pixel coordinate `px`.
  */
-function windowFromPosition(pos) {
+function seqPosFromCoordinate(px, seq) {
 
 }
 
 /*
  * Fill the dotter canvas with similarity scores; return the scores density.
  */
-function fillCanvas(s1, s2, window_size=10) {
+function fillCanvas(s1, s2, window_size) {
     /* Init blank canvas */
     let cv = document.getElementById("dotter-canvas");
     if (cv === null) { throw "Canvas not found"; }
@@ -62,12 +62,12 @@ function fillCanvas(s1, s2, window_size=10) {
     let canvas = ctx.canvas;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    let ls1 = s1.length;
-    let ls2 = s2.length;
-    let L = Math.min(ls1, ls2);
     let ws = Math.floor(window_size / 2);   // # of nucleotides on each side
     let scores = {};
 
+    let ls1 = s1.length;
+    let ls2 = s2.length;
+    let L = Math.min(ls1, ls2);
     let canvas_pt = getCanvasPt(CANVAS_SIZE, L);
     let npoints = CANVAS_SIZE / canvas_pt;
     let step = L / npoints;                 // n points -> n-1 steps. What if not int?

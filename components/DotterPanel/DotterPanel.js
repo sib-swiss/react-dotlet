@@ -7,18 +7,15 @@ import { inspectCoordinate } from './actions/actionCreators';
 
 
 class DotterPanel extends React.Component {
-    static propTypes = {
-        window_size: React.PropTypes.number,
-    };
 
     componentDidMount() {
         let state = store.getState().input;
-        dotter.fillCanvas(state.s1, state.s2, this.props.window_size);
+        dotter.fillCanvas(state.s1, state.s2, state.window_size);
     }
 
     componentDidUpdate() {
         let state = store.getState().input;
-        dotter.fillCanvas(state.s1, state.s2, this.props.window_size);
+        dotter.fillCanvas(state.s1, state.s2, state.window_size);
     }
 
     _onClick(e) {

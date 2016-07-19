@@ -60,7 +60,7 @@ class HomePage extends React.Component {
             <Layout>
             <div>
                 <InputPanel />
-                <DotterPanel window_size={10} />
+                <DotterPanel />
                 <DensityPanel />
                 <TwoSeqsPanel />
             </div>
