@@ -27,7 +27,7 @@ class DensityPanel extends React.Component {
 
     render() {
         return (
-            <div>
+            <div id="density-panel" className={s.densityPanel}>
                 {JSON.stringify(this.state.scores)}
             </div>
         );

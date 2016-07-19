@@ -58,7 +58,6 @@ function seqPosFromCoordinate(px, seq) {
  */
 function fillCanvas(s1, s2, window_size) {
     /* Init blank canvas */
-    console.log(s1, s2)
     let cv = document.getElementById("dotter-canvas");
     if (cv === null) { throw "Canvas not found"; }
     let ctx = cv.getContext('2d');
@@ -84,7 +83,7 @@ function fillCanvas(s1, s2, window_size) {
         //console.log(s1, [l1,r1], s1.slice(l1, r1))
         let subseq1 = s1.slice(l1, r1);
 
-        for (let j=0; j <= i; j++) {        // i steps
+        for (let j=0; j <= npoints; j++) {  // i steps
             let q2 = j * step;              // position on seq2
             let l2 = Math.max(q2 - ws, 0),
                 r2 = q2 + ws + 1;           // nucleotides window on seq2
@@ -99,9 +98,6 @@ function fillCanvas(s1, s2, window_size) {
             if (score > 0) {
                 ctx.globalAlpha = score / window_size;
                 ctx.fillRect(q1 * canvas_pt, q2 * canvas_pt, canvas_pt, canvas_pt)
-                if (i !== j) {
-                    ctx.fillRect(q2 * canvas_pt, q1 * canvas_pt, canvas_pt, canvas_pt)
-                }
             }
         }
     }

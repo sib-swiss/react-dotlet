@@ -24,8 +24,12 @@ class TwoSeqsPanel extends React.Component {
     }
 
     render() {
+        let s1 = this.state.s1[this.state.i];
+        let s2 = this.state.s2[this.state.j];
+        console.debug(this.state.i, this.state.j, s1, s2)
+
         return (
-            <div id="two-seqs-panel">
+            <div id="two-seqs-panel" className={s.twoSeqsPanel}>
                 {JSON.stringify(this.state)}
             </div>
         );
