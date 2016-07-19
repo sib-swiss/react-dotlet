@@ -45,10 +45,12 @@ function DnaScoreMatches(s1, s2, scoreMatrix) {
 }
 
 /*
- * Return the position on the sequence `seq` corresponding to pixel coordinate `px`.
+ * Return the index on the sequence `seq` corresponding to pixel coordinate `px` (approximately).
  */
 function seqPosFromCoordinate(px, seq) {
-
+    let ratio = px / CANVAS_SIZE;  // x or y: the canvas is square
+    let index = Math.floor(seq.length * ratio);
+    return index;
 }
 
 /*
@@ -111,4 +113,5 @@ export {
     DnaSumMatches,
     DnaScoreMatches,
     fillCanvas,
+    seqPosFromCoordinate,
 };

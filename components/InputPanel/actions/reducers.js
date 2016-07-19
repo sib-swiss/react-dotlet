@@ -3,14 +3,14 @@ import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE } from './actionTypes';
 import { fillCanvas } from '../../DotterPanel/dotter';
 
 
-let inputDefaultState = {
+let defaultState = {
     s1: "AAAAAAATTTCCCCCCTTGC",
     s2: "AAAGAAATTTCCCCCCATGC",
     scores: [],
     window_size: 1,
 };
 
-let inputReducer = (state = inputDefaultState, action) => { switch (action.type) {
+let inputReducer = (state = defaultState, action) => { switch (action.type) {
 
     case CHANGE_SEQUENCE:
         var newState = Object.assign({}, state);

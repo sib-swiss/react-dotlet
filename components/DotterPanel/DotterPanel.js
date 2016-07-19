@@ -3,15 +3,10 @@ import s from './DotterPanel.css';
 import * as dotter from './dotter';
 import store from '../../core/store';
 import { CANVAS_SIZE } from './constants/constants';
-import { inspectCoordinate } from './actions/actionCreators';
+import { inspectCoordinate, updateScores } from './actions/actionCreators';
 
 
 class DotterPanel extends React.Component {
-
-    componentDidMount() {
-        let state = store.getState().input;
-        dotter.fillCanvas(state.s1, state.s2, state.window_size);
-    }
 
     componentDidUpdate() {
         let state = store.getState().input;
@@ -19,12 +14,14 @@ class DotterPanel extends React.Component {
     }
 
     _onClick(e) {
+        let state = store.getState().input;
         let cv = e.target;
         let dims = cv.getBoundingClientRect();
         let x = e.pageX - dims.left,
             y = e.pageY - dims.top;
-        console.debug("Clicked at coord", x, y)
-        store.dispatch(inspectCoordinate);
+        let i = dotter.seqPosFromCoordinate(x, state.s1);
+        let j = dotter.seqPosFromCoordinate(y, state.s2);
+        store.dispatch(inspectCoordinate(i, j));
     }
 
     render() {

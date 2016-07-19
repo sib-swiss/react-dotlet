@@ -17,6 +17,7 @@ import createLogger from 'redux-logger';
 import thunk from 'redux-thunk';
 import input from '../components/InputPanel/actions/reducers';
 import dotter from '../components/DotterPanel/actions/reducers';
+import twoseqs from '../components/TwoSeqsPanel/actions/reducers';
 
 
 let reducer = combineReducers({

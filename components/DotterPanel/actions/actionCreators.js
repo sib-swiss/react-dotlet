@@ -1,24 +1,16 @@
 
-import { COMPUTE_DENSITY, INSPECT_COORDINATE } from './actionTypes';
+import { INSPECT_COORDINATE } from './actionTypes';
 
 
-function computeDensity(scores) {
-    return {
-        type: COMPUTE_DENSITY,
-        scores: scores,
-    }
-}
-
-function inspectCoordinate(x, y) {
+function inspectCoordinate(i, j) {
     return {
         type: INSPECT_COORDINATE,
-        x: x,
-        y: y,
+        i: i,
+        j: j,
     }
 }
 
 
 export {
-    computeDensity,
     inspectCoordinate,
 };

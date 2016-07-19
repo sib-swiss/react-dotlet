@@ -1,7 +1,7 @@
 
 import React from 'react';
 import store from '../../core/store';
-import { changeSequence, changeWindowSize } from './actions/actionCreators';
+import { changeSequence, changeWindowSize, updateScores } from './actions/actionCreators';
 import * as validators from './validators';
 
 /* Material-UI */
@@ -9,13 +9,6 @@ import TextField from 'material-ui/TextField';
 
 
 class InputPanel extends React.Component {
-
-    componentDidMount() {
-        window.componentHandler.upgradeDom();
-    }
-    componentWillUnmount() {
-        window.componentHandler.downgradeDom();
-    }
 
     onChangeSeq1(e) {
         store.dispatch(changeSequence(1, e.target.value));
@@ -29,14 +22,21 @@ class InputPanel extends React.Component {
         }
     }
 
+    componentDidMount() {
+        store.dispatch(changeSequence(1, this._seq1Input.getValue()));
+        store.dispatch(changeSequence(1, this._seq2Input.getValue()));
+    }
+
     render() {
         return (<div>
         <form>
             <TextField hintText="Sequence1" floatingLabelText="Sequence1" id="seq1_input"
+                       ref={(c) => this._seq1Input = c}
                        onChange={this.onChangeSeq1}
                        defaultValue={store.getState().input.s1}
             />
             <TextField hintText="Sequence2" floatingLabelText="Sequence2" id="seq2_input"
+                       ref={(c) => this._seq2Input = c}
                        onChange={this.onChangeSeq2}
                        defaultValue={store.getState().input.s2}
             />
