@@ -66,9 +66,9 @@ function initBlankCanvas(canvasId) {
 /*
  * Fill the dotter canvas with similarity scores; return the scores density.
  */
-function fillCanvas(s1, s2, window_size) {
+function fillCanvas(s1, s2, windowSize) {
     let ctx = initBlankCanvas("dotter-canvas");
-    let ws = Math.floor(window_size / 2);   // # of nucleotides on each side
+    let ws = Math.floor(windowSize / 2);   // # of nucleotides on each side
     let scores = {};
 
     let ls1 = s1.length;
@@ -78,7 +78,7 @@ function fillCanvas(s1, s2, window_size) {
     let npoints = CANVAS_SIZE / canvas_pt;
     let step = L / npoints;                 // n points -> n-1 steps. What if not int?
 
-    //console.debug(window_size, ws, L, canvas_pt, step)
+    //console.debug(windowSize, ws, L, canvas_pt, step)
 
     for (let i=0; i <= npoints; i++) {      // n-1 steps
         let q1 = i * step;                  // position on seq1. First is 0, last is L
@@ -97,7 +97,7 @@ function fillCanvas(s1, s2, window_size) {
             //console.debug([i, j], [q1, q2], subseq1, subseq2, score)
 
             if (score > 0) {
-                ctx.globalAlpha = score / window_size;
+                ctx.globalAlpha = score / windowSize;
                 ctx.fillRect(q1 * canvas_pt, q2 * canvas_pt, canvas_pt, canvas_pt)
             }
         }

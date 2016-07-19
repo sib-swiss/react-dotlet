@@ -13,7 +13,7 @@ class TwoSeqsPanel extends React.Component {
         return {
             s1: storeState.input.s1,
             s2: storeState.input.s2,
-            window_size: storeState.input.window_size,
+            windowSize: storeState.input.windowSize,
             i: storeState.dotter.i,
             j: storeState.dotter.j,
         }
@@ -29,15 +29,15 @@ class TwoSeqsPanel extends React.Component {
      * Make it prettier: Mark start or end of the sequence.
      * @param w: subsequence to decorate
      * @param i: index of the subsequence center
-     * @param size: half the total number of chars
+     * @param halfSize: half the total number of chars
      */
     formatSeq(w, i, size, fill='_') {
         // Mark start of the sequence
-        if (i < size) {
-            w = fill.repeat(size-i) + w;
+        if (i < size/2) {
+            w = fill.repeat(size/2-i) + w;
         // Mark end of the sequence
         }
-        w += fill.repeat(2*size - w.length + 1)
+        w += fill.repeat(size - w.length + 1)
         return w;
     }
 
@@ -46,9 +46,9 @@ class TwoSeqsPanel extends React.Component {
             j = this.state.j,
             s1 = this.state.s1,
             s2 = this.state.s2,
-            window_size = this.state.window_size;
-        let ws = Math.floor(window_size / 2);
-        let nchars = 36; // on each side of `i`
+            windowSize = this.state.windowSize;
+        let ws = Math.floor(windowSize / 2);
+        let nchars = 72; // on each side of `i`
         let w1 = helpers.getSequenceAround(s1, i, nchars);
         let w2 = helpers.getSequenceAround(s2, j, nchars);
         let L = Math.max(s1.length, s2.length);
@@ -74,15 +74,16 @@ class TwoSeqsPanel extends React.Component {
 
         /* Draw the border showing the running window */
         function borderCharStyle(nseq, k) {
-            if (k === nchars - window_size + ws + 1) {
-                if (k === nchars + ws) {
+            let center = nchars/2;
+            if (k === center - (windowSize - ws) + 1) {
+                if (k === center + ws) {  // window size == 1
                     if (nseq === 1) return s.windowTopRight +' '+ s.windowTopLeft;
                     else return s.windowBotRight +' '+ s.windowBotLeft;
                 }
                 if (nseq === 1) return s.windowTopLeft;
                 else return s.windowBotLeft;
             }
-            if (k === nchars + ws) {
+            if (k === center + ws) {
                 if (nseq === 1) return s.windowTopRight;
                 else return s.windowBotRight;
             }
@@ -104,6 +105,7 @@ class TwoSeqsPanel extends React.Component {
 
         return (
             <div id="two-seqs-panel" className={s.twoSeqsPanel}>
+            <pre>
                 <div className={s.sequence}>{seqinfo1}</div>
                 <div className={s.sequence}>{ruler}</div>
                 <div className={s.sequence}>{spans1}</div>
@@ -111,7 +113,8 @@ class TwoSeqsPanel extends React.Component {
                 <div className={s.sequence}>{caret}</div>
                 <div className={s.sequence}>{ruler}</div>
                 <div className={s.sequence}>{seqinfo2}</div>
-                {"window_size: " + window_size}
+                {"windowSize: " + windowSize}
+            </pre>
             </div>
         );
     }

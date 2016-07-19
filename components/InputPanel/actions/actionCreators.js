@@ -1,4 +1,4 @@
-import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE } from './actionTypes';
+import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX } from './actionTypes';
 
 
 /*
@@ -14,10 +14,17 @@ function changeSequence(seqn, sequence) {
     }
 }
 
-function changeWindowSize(window_size) {
+function changeWindowSize(windowSize) {
     return {
         type: CHANGE_WINDOW_SIZE,
-        window_size: window_size,
+        windowSize: windowSize,
+    }
+}
+
+function changeScoringMatrix(scoringMatrix) {
+    return {
+        type: CHANGE_SCORING_MATRIX,
+        scoringMatrix: scoringMatrix,
     }
 }
 
@@ -25,4 +32,5 @@ function changeWindowSize(window_size) {
 export {
     changeSequence,
     changeWindowSize,
+    changeScoringMatrix,
 };

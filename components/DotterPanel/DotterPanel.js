@@ -10,7 +10,7 @@ class DotterPanel extends React.Component {
 
     componentDidUpdate() {
         let state = store.getState().input;
-        dotter.fillCanvas(state.s1, state.s2, state.window_size);
+        dotter.fillCanvas(state.s1, state.s2, state.windowSize);
     }
 
     _onClick(e) {
