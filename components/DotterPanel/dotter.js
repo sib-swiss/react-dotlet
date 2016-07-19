@@ -58,6 +58,7 @@ function seqPosFromCoordinate(px, seq) {
  */
 function fillCanvas(s1, s2, window_size) {
     /* Init blank canvas */
+    console.log(s1, s2)
     let cv = document.getElementById("dotter-canvas");
     if (cv === null) { throw "Canvas not found"; }
     let ctx = cv.getContext('2d');

@@ -24,7 +24,7 @@ class InputPanel extends React.Component {
 
     componentDidMount() {
         store.dispatch(changeSequence(1, this._seq1Input.getValue()));
-        store.dispatch(changeSequence(1, this._seq2Input.getValue()));
+        store.dispatch(changeSequence(2, this._seq2Input.getValue()));
     }
 
     render() {
