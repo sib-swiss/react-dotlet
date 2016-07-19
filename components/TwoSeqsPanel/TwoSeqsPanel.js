@@ -29,15 +29,15 @@ class TwoSeqsPanel extends React.Component {
      * Make it prettier: Mark start or end of the sequence.
      * @param w: subsequence to decorate
      * @param i: index of the subsequence center
-     * @param ws: number of elements on each side
+     * @param size: half the total number of chars
      */
-    formatSeq(w, i, ws, fill='_') {
+    formatSeq(w, i, size, fill='_') {
         // Mark start of the sequence
-        if (i < ws) {
-            w = fill.repeat(ws-i) + w;
+        if (i < size) {
+            w = fill.repeat(size-i) + w;
         // Mark end of the sequence
         }
-        w += fill.repeat(2*ws - w.length + 1)
+        w += fill.repeat(2*size - w.length + 1)
         return w;
     }
 
@@ -47,36 +47,60 @@ class TwoSeqsPanel extends React.Component {
             s1 = this.state.s1,
             s2 = this.state.s2,
             window_size = this.state.window_size;
-        let c1 = s1[i];
-        let c2 = s2[j];
         let ws = Math.floor(window_size / 2);
-        let nchars = 36;
+        let nchars = 36; // on each side of `i`
         let w1 = helpers.getSequenceAround(s1, i, nchars);
         let w2 = helpers.getSequenceAround(s2, j, nchars);
         let L = Math.max(s1.length, s2.length);
 
         /* Formatting */
         let nbsp = String.fromCharCode(160); // code for &nbsp;
-        w1 = this.formatSeq(w1, i, nchars);
-        w2 = this.formatSeq(w2, j, nchars);
+        let fill = nbsp;
+        w1 = this.formatSeq(w1, i, nchars, fill);
+        w2 = this.formatSeq(w2, j, nchars, fill);
         let ruler = this.formatSeq("|", 0, nchars, nbsp);  // "|"
         let caret = this.formatSeq("^", 0, nchars, nbsp);  // "^"
         let seqinfo1 = this.formatSeq("Seq1:"+i, 4, nchars, nbsp);
         let seqinfo2 = this.formatSeq("Seq2:"+j, 4, nchars, nbsp);
 
         /* Return "s.same" style if the characters match on both substrings */
-        function sameCharStyle(i) {
-            if (w1[i] === w2[i] && w1[i] !== '_') {
+        function sameCharStyle(k) {
+            if (w1[k] === w2[k] && w1[k] !== fill) {
                 return s.same;
             } else {
                 return  '';
             }
         }
 
+        /* Draw the border showing the running window */
+        function borderCharStyle(nseq, k) {
+            if (k === nchars - window_size + ws + 1) {
+                if (k === nchars + ws) {
+                    if (nseq === 1) return s.windowTopRight +' '+ s.windowTopLeft;
+                    else return s.windowBotRight +' '+ s.windowBotLeft;
+                }
+                if (nseq === 1) return s.windowTopLeft;
+                else return s.windowBotLeft;
+            }
+            if (k === nchars + ws) {
+                if (nseq === 1) return s.windowTopRight;
+                else return s.windowBotRight;
+            }
+        }
+
         let spans1 = w1.split('').map((c,i) =>
-            <span key={i} className={[s.seq1, sameCharStyle(i)].join(' ')} >{c}</span> );
+            <span key={i} className={[
+                s.seq1,
+                sameCharStyle(i),
+                borderCharStyle(1, i),
+            ].join(' ')} >{c}</span> );
+
         let spans2 = w2.split('').map((c,i) =>
-            <span key={i} className={[s.seq2, sameCharStyle(i)].join(' ')} >{c}</span> );
+            <span key={i} className={[
+                s.seq2,
+                sameCharStyle(i),
+                borderCharStyle(2, i),
+            ].join(' ')} >{c}</span> );
 
         return (
             <div id="two-seqs-panel" className={s.twoSeqsPanel}>

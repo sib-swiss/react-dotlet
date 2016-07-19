@@ -19,3 +19,23 @@
     color: yellow;
     background-color: #3F51B5;
 }
+
+
+/* Draw the border showing the running window */
+
+.windowTopLeft {
+    border-top: 1px solid red;
+    border-left: 1px solid red;
+}
+.windowTopRight {
+    border-top: 1px solid red;
+    border-right: 1px solid red;
+}
+.windowBotLeft {
+    border-bottom: 1px solid red;
+    border-left: 1px solid red;
+}
+.windowBotRight {
+    border-bottom: 1px solid red;
+    border-right: 1px solid red;
+}

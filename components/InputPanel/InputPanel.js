@@ -10,6 +10,10 @@ import TextField from 'material-ui/TextField';
 
 class InputPanel extends React.Component {
 
+    state = {
+        window_size: 1,
+    }
+
     onChangeSeq1(e) {
         store.dispatch(changeSequence(1, e.target.value));
     }

@@ -27,7 +27,7 @@ let inputReducer = (state = defaultState, action) => { switch (action.type) {
 
     case CHANGE_WINDOW_SIZE:
         let winsize = action.window_size;
-        if (winsize === '') {
+        if (! winsize) {
             winsize = 1;
         }
         scores = fillCanvas(state.s1, state.s2, winsize);
