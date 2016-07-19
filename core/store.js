@@ -36,7 +36,7 @@ let reducer = combineReducers({
 
 const logger = createLogger({
     collapsed: true,
-    diff: true,
+    diff: false,
 });
 
 const store = createStore(reducer, applyMiddleware(thunk, logger));

@@ -2,3 +2,7 @@
 .twoSeqsPanel {
     margin: 15px;
 }
+
+.sequence {
+    font: 15px courier new;
+}
