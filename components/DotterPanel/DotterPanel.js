@@ -19,8 +19,9 @@ class DotterPanel extends React.Component {
         let dims = cv.getBoundingClientRect();
         let x = e.pageX - dims.left,
             y = e.pageY - dims.top;
-        let i = dotter.seqPosFromCoordinate(x, state.s1);
-        let j = dotter.seqPosFromCoordinate(y, state.s2);
+        let L = Math.max(state.s1.length, state.s2.length);
+        let i = dotter.seqPosFromCoordinate(x, L);
+        let j = dotter.seqPosFromCoordinate(y, L);
         store.dispatch(inspectCoordinate(i, j));
     }
 
