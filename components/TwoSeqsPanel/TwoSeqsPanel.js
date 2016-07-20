@@ -34,8 +34,8 @@ class TwoSeqsPanel extends React.Component {
             windowSize = this.state.windowSize;
         let ws = Math.floor(windowSize / 2);
         let nchars = 72; // on each side of `i`
-        let w1 = helpers.getSequenceAround(s1, i, nchars);
-        let w2 = helpers.getSequenceAround(s2, j, nchars);
+        let w1 = helpers.getSequenceAround(s1, i, nchars/2);
+        let w2 = helpers.getSequenceAround(s2, j, nchars/2);
         let L = Math.max(s1.length, s2.length);
 
         /* Formatting */
