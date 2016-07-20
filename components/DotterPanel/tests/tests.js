@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 
 import { DnaScoreMatches, DnaSumMatches } from '../dotter';
-import * as C from '../constants/constants';
+import * as C from '../../constants/constants';
 
 describe('DotterPanel test suite', () => {
     let s1 = "AAAAAAATTTCCCCCCTTGC";

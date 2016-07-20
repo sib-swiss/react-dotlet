@@ -2,6 +2,8 @@ import React from 'react';
 import store from '../../core/store';
 import { changeSequence, changeWindowSize, changeScoringMatrix } from './actions/actionCreators';
 import * as validators from './validators';
+import { SCORING_MATRICES } from '../constants/constants';
+
 
 /* Material-UI */
 import TextField from 'material-ui/TextField';
@@ -13,7 +15,7 @@ class InputPanel extends React.Component {
 
     state = {
         windowSize: 1,
-        scoringMatrix: 1,
+        scoringMatrix: 'identity',
     };
 
     onChangeSeq1 = (event, index, value) => {
@@ -34,8 +36,8 @@ class InputPanel extends React.Component {
     };
 
     componentDidMount() {
-        store.dispatch(changeSequence(1, this._seq1Input.getValue()));
-        store.dispatch(changeSequence(2, this._seq2Input.getValue()));
+        // Trigger any event to initialize the canvas with default parameters already in store.
+        store.dispatch(changeWindowSize(this.state.windowSize));
     }
 
     render() {
@@ -65,12 +67,12 @@ class InputPanel extends React.Component {
                          onChange={this.onChangeScoringMatrix}
                          value={this.state.scoringMatrix}
                          >
-                <MenuItem value={1} primaryText="Identity" />
-                <MenuItem value={2} primaryText="BLOSUM45"/>
-                <MenuItem value={3} primaryText="BLOSUM62"/>
-                <MenuItem value={4} primaryText="BLOSUM80"/>
-                <MenuItem value={5} primaryText="PAM30"/>
-                <MenuItem value={6} primaryText="PAM70"/>
+                <MenuItem value={SCORING_MATRICES.IDENTITY} primaryText="Identity" />
+                <MenuItem value={SCORING_MATRICES.BLOSUM45} primaryText="BLOSUM 45" />
+                <MenuItem value={SCORING_MATRICES.BLOSUM62} primaryText="BLOSUM 62" />
+                <MenuItem value={SCORING_MATRICES.BLOSUM80} primaryText="BLOSUM 80" />
+                <MenuItem value={SCORING_MATRICES.PAM30} primaryText="PAM 30" />
+                <MenuItem value={SCORING_MATRICES.PAM70} primaryText="PAM 70" />
             </SelectField>
         </form>
         </div>);

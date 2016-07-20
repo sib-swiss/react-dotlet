@@ -1,7 +1,20 @@
 
-import { MATCH, MISMATCH, CANVAS_SIZE } from './constants/constants';
-import { IDENTITY } from './constants/scoring_matrices/dna';
+import { MATCH, MISMATCH, CANVAS_SIZE } from '../constants/constants';
 import * as helpers from '../helpers';
+import { SCORING_MATRICES } from '../constants/constants';
+import { BLOSUM_45, BLOSUM_62, BLOSUM_80 } from '../constants/scoring_matrices/blosum';
+import { PAM_30, PAM_70 } from '../constants/scoring_matrices/pam';
+import { IDENTITY } from '../constants/scoring_matrices/dna';
+
+
+const scoringMatrices = {
+    [SCORING_MATRICES.IDENTITY]: IDENTITY,
+    [SCORING_MATRICES.BLOSUM45]: BLOSUM_45,
+    [SCORING_MATRICES.BLOSUM62]: BLOSUM_62,
+    [SCORING_MATRICES.BLOSUM80]: BLOSUM_80,
+    [SCORING_MATRICES.PAM30]: PAM_30,
+    [SCORING_MATRICES.PAM70]: PAM_70,
+}
 
 /* Caclulate the size in px of a "point" on the canvas
  * (bigger if the sequence is shorter than the canvas' dimensions in px,
@@ -66,10 +79,11 @@ function initBlankCanvas(canvasId) {
 /*
  * Fill the dotter canvas with similarity scores; return the scores density.
  */
-function fillCanvas(s1, s2, windowSize) {
+function fillCanvas(s1, s2, windowSize, scoringMatrix) {
     let ctx = initBlankCanvas("dotter-canvas");
     let ws = Math.floor(windowSize / 2);   // # of nucleotides on each side
     let scores = {};
+    let matrix = scoringMatrices[scoringMatrix];
 
     let ls1 = s1.length;
     let ls2 = s2.length;
@@ -87,7 +101,7 @@ function fillCanvas(s1, s2, windowSize) {
         for (let j=0; j <= npoints; j++) {  // i steps
             let q2 = j * step;              // position on seq2
             let subseq2 = helpers.getSequenceAround(s2, q2, ws);  // nucleotides window on seq2
-            let score = DnaScoreMatches(subseq1, subseq2, IDENTITY);
+            let score = DnaScoreMatches(subseq1, subseq2, matrix);
             if (! (score in scores)) {
                 scores[score] = 0;
             } else {

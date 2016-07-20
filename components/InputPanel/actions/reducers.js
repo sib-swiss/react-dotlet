@@ -1,6 +1,7 @@
 
 import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX } from './actionTypes';
 import { fillCanvas } from '../../DotterPanel/dotter';
+import { SCORING_MATRICES } from '../../constants/constants';
 
 
 let defaultState = {
@@ -8,7 +9,7 @@ let defaultState = {
     s2: "AAAGAAATTTCCCCCCATGC",
     scores: [],
     windowSize: 1,
-    scoringMatrix: 1,
+    scoringMatrix: SCORING_MATRICES.IDENTITY,
 };
 
 let inputReducer = (state = defaultState, action) => { switch (action.type) {
@@ -17,10 +18,10 @@ let inputReducer = (state = defaultState, action) => { switch (action.type) {
         var newState = Object.assign({}, state);
         let scores;
         if (action.seqn === 1) {
-            scores = fillCanvas(action.sequence, state.s2, state.windowSize);
+            scores = fillCanvas(action.sequence, state.s2, state.windowSize, state.scoringMatrix);
             newState.s1 = action.sequence;
         } else {
-            scores = fillCanvas(state.s1, action.sequence, state.windowSize);
+            scores = fillCanvas(state.s1, action.sequence, state.windowSize, state.scoringMatrix);
             newState.s2 = action.sequence;
         }
         newState.scores = scores;
@@ -31,11 +32,12 @@ let inputReducer = (state = defaultState, action) => { switch (action.type) {
         if (! winsize) {
             winsize = 1;
         }
-        scores = fillCanvas(state.s1, state.s2, winsize);
+        scores = fillCanvas(state.s1, state.s2, winsize, state.scoringMatrix);
         return Object.assign({}, state, {scores: scores, windowSize: parseInt(winsize)});
 
     case CHANGE_SCORING_MATRIX:
-        return Object.assign({}, state, {scoringMatrix: action.scoringMatrix});
+        scores = fillCanvas(state.s1, state.s2, state.windowSize, action.scoringMatrix);
+        return Object.assign({}, state, {scores: scores, scoringMatrix: action.scoringMatrix});
 
     default:
         return state;
