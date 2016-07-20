@@ -37,7 +37,9 @@ class TwoSeqsPanel extends React.Component {
             w = fill.repeat(size/2-i) + w;
         // Mark end of the sequence
         }
-        w += fill.repeat(size - w.length + 1)
+        if (w.length < size) {
+            w += fill.repeat(size - w.length + 1)
+        }
         return w;
     }
 

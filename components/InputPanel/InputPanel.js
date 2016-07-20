@@ -1,5 +1,6 @@
 import React from 'react';
 import store from '../../core/store';
+import s from './InputPanel.css';
 import { changeSequence, changeWindowSize, changeScoringMatrix } from './actions/actionCreators';
 import * as validators from './validators';
 import { SCORING_MATRICES } from '../constants/constants';
@@ -9,19 +10,19 @@ import { SCORING_MATRICES } from '../constants/constants';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import RaisedButton from 'material-ui/RaisedButton';
+import Popover from 'material-ui/Popover';
 
 
 class InputPanel extends React.Component {
 
-    state = {
-        windowSize: 1,
-        scoringMatrix: 'identity',
-    };
+    state = store.getState().input;
 
-    onChangeSeq1 = (event, index, value) => {
+    onChangeSeq1 = (event, value) => {
         store.dispatch(changeSequence(1, value));
     };
-    onChangeSeq2 = (event, index, value) => {
+    onChangeSeq2 = (event, value) => {
         store.dispatch(changeSequence(2, value));
     };
     onChangeWindowSize = (event, index, value) => {
@@ -41,20 +42,35 @@ class InputPanel extends React.Component {
     }
 
     render() {
-        return (<div>
-        <form>
-            <TextField hintText="Sequence1" floatingLabelText="Sequence1" id="seq1_input"
-                       ref={(c) => this._seq1Input = c}
+        return (<div className={s.root}>
+        <Toolbar>
+            <ToolbarGroup>
+                <SequencePopover label="Sequence 1" callback={this.onChangeSeq1} sequence={this.state.s1}/>
+                <SequencePopover label="Sequence 2" callback={this.onChangeSeq2} sequence={this.state.s2}/>
+            </ToolbarGroup>
+            {/*
+             <ToolbarGroup>
+                <TextField hintText="Sequence1" floatingLabelText="Sequence1" id="seq1_input"
                        floatingLabelFixed={true}
+                       multiLine={true}
+                       rowsMax={10}
                        onChange={this.onChangeSeq1}
-                       defaultValue={store.getState().input.s1}
-            />
+                       defaultValue={this.state.s1}
+                />
+            </ToolbarGroup>
+            */}
+            {/*
+            <ToolbarGroup>
             <TextField hintText="Sequence2" floatingLabelText="Sequence2" id="seq2_input"
-                       ref={(c) => this._seq2Input = c}
                        floatingLabelFixed={true}
+                       multiLine={true}
+                       rowsMax={10}
                        onChange={this.onChangeSeq2}
-                       defaultValue={store.getState().input.s2}
+                       defaultValue={this.state.s2}
             />
+            </ToolbarGroup>
+             */}
+            <ToolbarGroup>
             <TextField hintText="Window size" floatingLabelText="Window size" id="windowSize_input"
                        type="number"
                        style={{width: '110px'}}
@@ -62,6 +78,8 @@ class InputPanel extends React.Component {
                        onChange={this.onChangeWindowSize}
                        defaultValue={this.state.windowSize || 1}
             />
+            </ToolbarGroup>
+            <ToolbarGroup>
             <SelectField floatingLabelText="Scoring matrix"
                          floatingLabelFixed={true}
                          onChange={this.onChangeScoringMatrix}
@@ -74,8 +92,52 @@ class InputPanel extends React.Component {
                 <MenuItem value={SCORING_MATRICES.PAM30} primaryText="PAM 30" />
                 <MenuItem value={SCORING_MATRICES.PAM70} primaryText="PAM 70" />
             </SelectField>
-        </form>
+        </ToolbarGroup>
+        </Toolbar>
         </div>);
+    }
+}
+
+
+class SequencePopover extends React.Component {
+    state = {
+        open: false,
+        anchorEl: null,
+    };
+
+    open = (event) => {
+        this.setState({
+            open: true,
+            anchorEl: event.currentTarget,
+        });
+    };
+
+    close = () => {
+        this.setState({ open: false });
+    };
+
+    render() {
+        return (<ToolbarGroup>
+            <RaisedButton label={this.props.label} onClick={this.open}/>
+            <Popover
+                open={this.state.open}
+                anchorEl={this.state.anchorEl}
+                anchorOrigin={{horizontal: 'middle', vertical: 'bottom'}}
+                targetOrigin={{horizontal: 'middle', vertical: 'top'}}
+                onRequestClose={this.close}
+                animated={false}
+                useLayerForClickAway={false}  // otherwise prevents clicks to the underlying elements
+            >
+                <TextField
+                    name={"input_seq_"+this.props.label.replace(' ','_')}
+                    multiLine={true}
+                    rowsMax={10}
+                    onChange={this.props.callback}
+                    defaultValue={this.props.sequence}
+                />
+            </Popover>
+            </ToolbarGroup>
+        );
     }
 }
 
