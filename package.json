@@ -104,7 +104,7 @@
     "lint": "npm run eslint && npm run stylelint",
     "lint:watch": "watch 'npm run lint' components pages core test",
     "test": "mocha --recursive --compilers js:babel-register test/**/*.js components/**/*test*.js",
-    "test:watch": "mocha --recursive --compilers js:babel-register --reporter min --watch test/**/*.js components/**/*test*.js",
+    "test:watch": "mocha --recursive --compilers js:babel-register --watch test/**/*.js components/**/*test*.js",
     "clean": "node run clean",
     "build": "node run build",
     "build:debug": "node run build --debug",

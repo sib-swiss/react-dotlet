@@ -10,10 +10,19 @@
 
 import { expect } from 'chai';
 
-describe('test suite', () => {
+import { getSequenceAround } from '../components/helpers';
 
+describe('Test mocha works', () => {
   it('test', () => {
     expect(true).to.be.equal.true;
   });
+});
+
+
+describe('Global component helpers', () => {
+
+    it('getSequenceAround in the middle of a big sequence', () => {
+        expect(getSequenceAround("A".repeat(100), 50, 8).length).to.be.equal(17);
+    });
 
 });
