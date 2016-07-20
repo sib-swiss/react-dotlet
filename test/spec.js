@@ -12,12 +12,6 @@ import { expect } from 'chai';
 
 import { getSequenceAround } from '../components/helpers';
 
-describe('Test mocha works', () => {
-  it('test', () => {
-    expect(true).to.be.equal.true;
-  });
-});
-
 
 describe('Global component helpers', () => {
 

@@ -20,9 +20,11 @@ class InputPanel extends React.Component {
     state = store.getState().input;
 
     onChangeSeq1 = (event, value) => {
+        this.setState({ s1: value });
         store.dispatch(changeSequence(1, value));
     };
     onChangeSeq2 = (event, value) => {
+        this.setState({ s2: value });
         store.dispatch(changeSequence(2, value));
     };
     onChangeWindowSize = (event, index, value) => {
@@ -48,28 +50,6 @@ class InputPanel extends React.Component {
                 <SequencePopover label="Sequence 1" callback={this.onChangeSeq1} sequence={this.state.s1}/>
                 <SequencePopover label="Sequence 2" callback={this.onChangeSeq2} sequence={this.state.s2}/>
             </ToolbarGroup>
-            {/*
-             <ToolbarGroup>
-                <TextField hintText="Sequence1" floatingLabelText="Sequence1" id="seq1_input"
-                       floatingLabelFixed={true}
-                       multiLine={true}
-                       rowsMax={10}
-                       onChange={this.onChangeSeq1}
-                       defaultValue={this.state.s1}
-                />
-            </ToolbarGroup>
-            */}
-            {/*
-            <ToolbarGroup>
-            <TextField hintText="Sequence2" floatingLabelText="Sequence2" id="seq2_input"
-                       floatingLabelFixed={true}
-                       multiLine={true}
-                       rowsMax={10}
-                       onChange={this.onChangeSeq2}
-                       defaultValue={this.state.s2}
-            />
-            </ToolbarGroup>
-             */}
             <ToolbarGroup>
             <TextField hintText="Window size" floatingLabelText="Window size" id="windowSize_input"
                        type="number"

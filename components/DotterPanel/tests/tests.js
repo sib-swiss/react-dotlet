@@ -20,4 +20,8 @@ describe('DotterPanel test suite', () => {
         expect(score).to.be.equal(18*2 - 2);
     });
 
+    it ('dotter.seqPosFromCoordinate', () => {
+        //seqPosFromCoordinate()
+    });
+
 });

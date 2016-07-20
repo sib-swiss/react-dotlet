@@ -2,6 +2,7 @@ import React from 'react';
 import s from './TwoSeqsPanel.css';
 import store from '../../core/store';
 import * as helpers from '../helpers';
+import { formatSeq } from './helpers';
 
 
 class TwoSeqsPanel extends React.Component {
@@ -25,24 +26,6 @@ class TwoSeqsPanel extends React.Component {
         });
     }
 
-    /*
-     * Make it prettier: Mark start or end of the sequence.
-     * @param w: subsequence to decorate
-     * @param i: index of the subsequence center
-     * @param halfSize: half the total number of chars
-     */
-    formatSeq(w, i, size, fill='_') {
-        // Mark start of the sequence
-        if (i < size/2) {
-            w = fill.repeat(size/2-i) + w;
-        // Mark end of the sequence
-        }
-        if (w.length < size) {
-            w += fill.repeat(size - w.length + 1)
-        }
-        return w;
-    }
-
     render() {
         let i = this.state.i,
             j = this.state.j,
@@ -58,12 +41,12 @@ class TwoSeqsPanel extends React.Component {
         /* Formatting */
         let nbsp = String.fromCharCode(160); // code for &nbsp;
         let fill = nbsp;
-        w1 = this.formatSeq(w1, i, nchars, fill);
-        w2 = this.formatSeq(w2, j, nchars, fill);
-        let ruler = this.formatSeq("|", 0, nchars, nbsp);  // "|"
-        let caret = this.formatSeq("^", 0, nchars, nbsp);  // "^"
-        let seqinfo1 = this.formatSeq("Seq1:"+i, 4, nchars, nbsp);
-        let seqinfo2 = this.formatSeq("Seq2:"+j, 4, nchars, nbsp);
+        w1 = formatSeq(w1, i, nchars, fill);
+        w2 = formatSeq(w2, j, nchars, fill);
+        let ruler = formatSeq("|", 0, nchars, nbsp);  // "|"
+        let caret = formatSeq("^", 0, nchars, nbsp);  // "^"
+        let seqinfo1 = formatSeq("Seq1:"+i, 4, nchars, nbsp);
+        let seqinfo2 = formatSeq("Seq2:"+j, 4, nchars, nbsp);
 
         /* Return "s.same" style if the characters match on both substrings */
         function sameCharStyle(k) {
