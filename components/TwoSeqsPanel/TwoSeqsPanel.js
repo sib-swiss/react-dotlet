@@ -33,9 +33,10 @@ class TwoSeqsPanel extends React.Component {
             s2 = this.state.s2,
             windowSize = this.state.windowSize;
         let ws = Math.floor(windowSize / 2);
-        let nchars = 72; // on each side of `i`
-        let w1 = helpers.getSequenceAround(s1, i, nchars/2);
-        let w2 = helpers.getSequenceAround(s2, j, nchars/2);
+        let nchars = 73;            // total number of chars to display, always odd for simplicity.
+        let half = (nchars-1) / 2;  // on each side of `i`, always int if nchars is odd.
+        let w1 = helpers.getSequenceAround(s1, i, half);
+        let w2 = helpers.getSequenceAround(s2, j, half);
         let L = Math.max(s1.length, s2.length);
 
         /* Formatting */
