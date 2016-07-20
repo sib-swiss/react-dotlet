@@ -21,8 +21,25 @@ describe('Test mocha works', () => {
 
 describe('Global component helpers', () => {
 
-    it('getSequenceAround in the middle of a big sequence', () => {
-        expect(getSequenceAround("A".repeat(100), 50, 8).length).to.be.equal(17);
+    it('getSequenceAround', () => {
+        expect(getSequenceAround("ATGC", 0, 0)).to.be.equal("A");
+        expect(getSequenceAround("ATGC", 2, 0)).to.be.equal("G");
+        expect(getSequenceAround("AATTCCGGCCTT", 5, 3)).to.be.equal("TTCCGGC");
+        expect(getSequenceAround("AATTCCGGCCTT", 3, 2)).to.be.equal("ATTCC");
+        expect(getSequenceAround("A".repeat(100), 50, 8).length).to.be.equal(2*8+1);
+        expect(getSequenceAround("A".repeat(100), 50, 7).length).to.be.equal(2*7+1);
+    });
+    it('getSequenceAround close from the start of the sequence', () => {
+        let ws = 10;
+        expect(getSequenceAround("A".repeat(100), 5, ws).length).to.be.equal((5+1)+ws);
+        expect(getSequenceAround("A".repeat(100), 1, ws).length).to.be.equal((1+1)+ws);
+        expect(getSequenceAround("A".repeat(100), 0, ws).length).to.be.equal((0+1)+ws);
+    });
+    it('getSequenceAround close from the end of the sequence', () => {
+        let ws = 10;
+        expect(getSequenceAround("A".repeat(100), 95, ws).length).to.be.equal(5+ws);
+        expect(getSequenceAround("A".repeat(100), 99, ws).length).to.be.equal(1+ws);
+        expect(getSequenceAround("A".repeat(100), 100, ws).length).to.be.equal(0+ws);
     });
 
 });
