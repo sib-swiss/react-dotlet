@@ -27,7 +27,7 @@ class InputPanel extends React.Component {
         this.setState({ s2: value });
         store.dispatch(changeSequence(2, value));
     };
-    onChangeWindowSize = (event, index, value) => {
+    onChangeWindowSize = (event, value) => {
         if (value !== '') {
             this.setState({ windowSize: value });
             store.dispatch(changeWindowSize(value));
