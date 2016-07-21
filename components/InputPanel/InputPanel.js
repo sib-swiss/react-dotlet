@@ -49,8 +49,8 @@ class InputPanel extends React.Component {
 
     render() {
         return (<div className={s.root}>
-        <Toolbar>
-            <ToolbarGroup>
+        <Toolbar style={{paddingBottom: '80px'}}>
+            <ToolbarGroup style={{marginTop: '10px'}}>
                 <SequencePopover label="Sequence 1" callback={this.onChangeSeq1} sequence={this.state.s1}/>
                 <SequencePopover label="Sequence 2" callback={this.onChangeSeq2} sequence={this.state.s2}/>
             </ToolbarGroup>
@@ -69,12 +69,18 @@ class InputPanel extends React.Component {
                          onChange={this.onChangeScoringMatrix}
                          value={this.state.scoringMatrix}
                          >
-                <MenuItem value={SCORING_MATRICES.IDENTITY} primaryText="Identity" />
-                <MenuItem value={SCORING_MATRICES.BLOSUM45} primaryText="BLOSUM 45" />
-                <MenuItem value={SCORING_MATRICES.BLOSUM62} primaryText="BLOSUM 62" />
-                <MenuItem value={SCORING_MATRICES.BLOSUM80} primaryText="BLOSUM 80" />
-                <MenuItem value={SCORING_MATRICES.PAM30} primaryText="PAM 30" />
-                <MenuItem value={SCORING_MATRICES.PAM70} primaryText="PAM 70" />
+                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRICES.IDENTITY}
+                          value={SCORING_MATRICES.IDENTITY} primaryText="Identity" />
+                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRICES.BLOSUM45}
+                          value={SCORING_MATRICES.BLOSUM45} primaryText="BLOSUM 45" />
+                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRICES.BLOSUM62}
+                          value={SCORING_MATRICES.BLOSUM62} primaryText="BLOSUM 62" />
+                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRICES.BLOSUM80}
+                          value={SCORING_MATRICES.BLOSUM80} primaryText="BLOSUM 80" />
+                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRICES.PAM30}
+                          value={SCORING_MATRICES.PAM30} primaryText="PAM 30" />
+                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRICES.PAM70}
+                          value={SCORING_MATRICES.PAM70} primaryText="PAM 70" />
             </SelectField>
         </ToolbarGroup>
         </Toolbar>
