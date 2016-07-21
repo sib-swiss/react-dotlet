@@ -33,7 +33,7 @@ describe('DotterPanel test suite', () => {
         expect(getStep(12, 11)).to.be.equal(1);
         // Not well-defined: point size should increase instead.
         expect(() => getStep(600, 10)).to.throw(RangeError);
-    })
+    });
 
     it('dotter.seqIndexFromCoordinate', () => {
         // make sure it's ok when 5 points 6 chars and need to put 2 per point (empty clickable margin)

@@ -9,6 +9,6 @@ let IDENTITY = {
 let PENALTY = {
     [MATCH]: 2,
     [MISMATCH]: -1
-}
+};
 
 export { IDENTITY, PENALTY };

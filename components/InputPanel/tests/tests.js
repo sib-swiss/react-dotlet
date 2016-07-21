@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 
 
-import * as C from '../../constants/constants';
+//import * as C from '../../constants/constants';
 
 describe('InputPanel test suite', () => {
-    let s1 = "AAAAAAATTTCCCCCCTTGC";
-    let s2 = "AAAGAAATTTCCCCCCATGC";
+    //let s1 = "AAAAAAATTTCCCCCCTTGC";
+    //let s2 = "AAAGAAATTTCCCCCCATGC";
 
     //it('dotter.DnaSumMatches', () => {
     //    let sums = DnaSumMatches(s1,s2);

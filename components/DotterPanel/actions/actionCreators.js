@@ -7,7 +7,7 @@ function inspectCoordinate(i, j) {
         type: INSPECT_COORDINATE,
         i: i,
         j: j,
-    }
+    };
 }
 
 

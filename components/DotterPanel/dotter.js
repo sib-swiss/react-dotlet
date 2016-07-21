@@ -79,8 +79,8 @@ function DnaScoreMatches(s1, s2, scoreMatrix) {
  * @param L (int): matrix size (max sequence length).
  */
 function seqIndexFromCoordinate(px, L, canvasSize=CANVAS_SIZE) {
-    let canvasPt = getCanvasPt(CANVAS_SIZE, L);   // size of a "dot" on the canvas, when L is small (else 1)
-    let npoints = Math.floor(CANVAS_SIZE / canvasPt);         // number of points in one line when L is small (else CANVAS_SIZE)
+    let canvasPt = getCanvasPt(canvasSize, L);   // size of a "dot" on the canvas, when L is small (else 1)
+    let npoints = Math.floor(canvasSize / canvasPt);         // number of points in one line when L is small (else CANVAS_SIZE)
     let step = getStep(npoints, L);                // 1 point -> `step` characters
     let index = Math.ceil((px / canvasPt) * step) - 1;
     return index;
@@ -88,11 +88,11 @@ function seqIndexFromCoordinate(px, L, canvasSize=CANVAS_SIZE) {
 
 function initBlankCanvas(canvasId) {
     let cv = document.getElementById(canvasId);
-    if (cv === null) { throw "Canvas not found"; }
+    if (cv === null) { throw new ReferenceError("Canvas not found"); }
     let ctx = cv.getContext('2d');
     let canvas = ctx.canvas;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    return ctx
+    return ctx;
 }
 
 /*
@@ -132,11 +132,11 @@ function fillCanvas(s1, s2, windowSize, scoringMatrix) {
 
             if (score > 0) {
                 ctx.globalAlpha = score / windowSize;
-                ctx.fillRect(q1 * canvasPt, q2 * canvasPt, canvasPt, canvasPt)
+                ctx.fillRect(q1 * canvasPt, q2 * canvasPt, canvasPt, canvasPt);
             }
         }
     }
-    return scores
+    return scores;
 }
 
 

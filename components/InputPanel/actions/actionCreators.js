@@ -11,21 +11,21 @@ function changeSequence(seqn, sequence) {
         type: CHANGE_SEQUENCE,
         seqn: seqn,
         sequence: sequence,
-    }
+    };
 }
 
 function changeWindowSize(windowSize) {
     return {
         type: CHANGE_WINDOW_SIZE,
         windowSize: windowSize,
-    }
+    };
 }
 
 function changeScoringMatrix(scoringMatrix) {
     return {
         type: CHANGE_SCORING_MATRIX,
         scoringMatrix: scoringMatrix,
-    }
+    };
 }
 
 

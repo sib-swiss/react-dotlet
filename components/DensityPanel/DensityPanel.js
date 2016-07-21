@@ -1,16 +1,20 @@
 import React from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import s from './DensityPanel.css';
 import store from '../../core/store';
 
 
 class DensityPanel extends React.Component {
-
-    state = this.getStore()
+    constructor() {
+        super();
+        this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+        this.state = this.getStore();
+    }
 
     getStore() {
         return {
             scores: store.getState().input.scores,
-        }
+        };
     }
 
     componentWillMount() {

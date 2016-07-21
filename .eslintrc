@@ -35,6 +35,7 @@
     "unicodeCodePointEscapes": true,
     "globalReturn": true,
     "jsx": true,
+    "jsx-no-bind": true
   },
 
   "rules": {

@@ -1,8 +1,9 @@
 import React from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import store from '../../core/store';
 import s from './InputPanel.css';
 import { changeSequence, changeWindowSize, changeScoringMatrix } from './actions/actionCreators';
-import * as validators from './validators';
+//import * as validators from './validators';
 import { SCORING_MATRICES } from '../constants/constants';
 
 
@@ -10,14 +11,17 @@ import { SCORING_MATRICES } from '../constants/constants';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import RaisedButton from 'material-ui/RaisedButton';
 import Popover from 'material-ui/Popover';
 
 
 class InputPanel extends React.Component {
-
-    state = store.getState().input;
+    constructor() {
+        super();
+        this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+        this.state = store.getState().input;
+    }
 
     onChangeSeq1 = (event, value) => {
         this.setState({ s1: value });
@@ -56,7 +60,7 @@ class InputPanel extends React.Component {
                        style={{width: '110px'}}
                        floatingLabelFixed={true}
                        onChange={this.onChangeWindowSize}
-                       defaultValue={this.state.windowSize || 1}
+                       defaultValue={this.state.windowSize}
             />
             </ToolbarGroup>
             <ToolbarGroup>

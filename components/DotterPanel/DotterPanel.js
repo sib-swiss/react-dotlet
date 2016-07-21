@@ -1,4 +1,5 @@
 import React from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import s from './DotterPanel.css';
 import * as dotter from './dotter';
 import store from '../../core/store';
@@ -7,6 +8,10 @@ import { inspectCoordinate } from './actions/actionCreators';
 
 
 class DotterPanel extends React.Component {
+    constructor() {
+        super();
+        this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+    }
 
     componentDidUpdate() {
         let state = store.getState().input;

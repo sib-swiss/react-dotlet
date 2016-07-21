@@ -3,11 +3,15 @@ import s from './TwoSeqsPanel.css';
 import store from '../../core/store';
 import * as helpers from '../helpers';
 import { formatSeq } from './helpers';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 
 
 class TwoSeqsPanel extends React.Component {
-
-    state = this.stateFromStore();
+    constructor(props) {
+        super(props);
+        this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+        this.state = this.stateFromStore();
+    }
 
     stateFromStore() {
         let storeState = store.getState();
@@ -17,7 +21,7 @@ class TwoSeqsPanel extends React.Component {
             windowSize: storeState.input.windowSize,
             i: storeState.dotter.i,
             j: storeState.dotter.j,
-        }
+        };
     }
 
     componentWillMount() {
@@ -37,7 +41,6 @@ class TwoSeqsPanel extends React.Component {
         let half = (nchars-1) / 2;  // on each side of `i`, always int if nchars is odd.
         let w1 = helpers.getSequenceAround(s1, i, half);
         let w2 = helpers.getSequenceAround(s2, j, half);
-        let L = Math.max(s1.length, s2.length);
 
         /* Formatting */
         let nbsp = String.fromCharCode(160); // code for &nbsp;
@@ -58,35 +61,38 @@ class TwoSeqsPanel extends React.Component {
             }
         }
 
-        /* Draw the border showing the running window */
+        /*
+         * Draw the border showing the running window
+         * @param nseq: sequence number (1 - top or 2 - bottom)
+         * @param k: index in the sequence of the middle character
+         */
         function borderCharStyle(nseq, k) {
-            let center = nchars/2;
-            if (k === center - (windowSize - ws) + 1) {
-                if (k === center + ws) {  // window size == 1
+            if (k === half - (windowSize - ws) + 1) {
+                if (k === half + ws) {  // window size == 1
                     if (nseq === 1) return s.windowTopRight +' '+ s.windowTopLeft;
                     else return s.windowBotRight +' '+ s.windowBotLeft;
                 }
                 if (nseq === 1) return s.windowTopLeft;
                 else return s.windowBotLeft;
             }
-            if (k === center + ws) {
+            if (k === half + ws) {
                 if (nseq === 1) return s.windowTopRight;
                 else return s.windowBotRight;
             }
         }
 
-        let spans1 = w1.split('').map((c,i) =>
-            <span key={i} className={[
+        let spans1 = w1.split('').map((c,k) =>
+            <span key={k} className={[
                 s.seq1,
-                sameCharStyle(i),
-                borderCharStyle(1, i),
+                sameCharStyle(k),
+                borderCharStyle(1, k),
             ].join(' ')} >{c}</span> );
 
-        let spans2 = w2.split('').map((c,i) =>
-            <span key={i} className={[
+        let spans2 = w2.split('').map((c,k) =>
+            <span key={k} className={[
                 s.seq2,
-                sameCharStyle(i),
-                borderCharStyle(2, i),
+                sameCharStyle(k),
+                borderCharStyle(2, k),
             ].join(' ')} >{c}</span> );
 
         return (

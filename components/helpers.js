@@ -9,4 +9,4 @@ function getSequenceAround(seq, index, ws) {
 
 export {
     getSequenceAround,
-}
+};

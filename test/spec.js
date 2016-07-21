@@ -37,6 +37,6 @@ describe('Global component helpers', () => {
     });
     it('getSequenceAround with index bigger than sequence length', () => {
         expect(getSequenceAround("ATGC", 100, 10)).to.be.equal("");
-    })
+    });
 
 });
