@@ -1,7 +1,8 @@
 
-.canvasContainer {
+.root {
     border: 1px solid brown;
-    padding: 30px;
+    margin: 15px;
+    padding: 15px;
 }
 
 .canvas {

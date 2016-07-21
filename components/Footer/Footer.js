@@ -14,12 +14,14 @@ import s from './Footer.css';
 
 function Footer() {
   return (
-    <footer className="mdl-mini-footer">
+    <footer className={"mdl-mini-footer "+ s.root}>
       <div className="mdl-mini-footer__left-section">
         <div className="mdl-logo">© Vital-IT, 2016</div>
+      {/*
         <ul className="mdl-mini-footer__link-list">
           <li><Link to="/">Home</Link></li>
         </ul>
+      */}
       </div>
       <div className="mdl-mini-footer__right-section">
         <ul className="mdl-mini-footer__link-list">

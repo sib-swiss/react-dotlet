@@ -9,6 +9,7 @@
  */
 
 import React from 'react';
+import s from './styles.css';
 import Layout from '../../components/Layout';
 import DotterPanel from '../../components/DotterPanel';
 import InputPanel from '../../components/InputPanel';
@@ -16,8 +17,6 @@ import DensityPanel from '../../components/DensityPanel';
 import TwoSeqsPanel from '../../components/TwoSeqsPanel';
 
 /* Material-UI */
-// Dep to be removed in further versions of material-ui
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
@@ -51,7 +50,6 @@ const muiTheme = getMuiTheme({
 class HomePage extends React.Component {
 
     componentWillMount() {
-        injectTapEventPlugin();
     }
 
     render() {
@@ -60,8 +58,10 @@ class HomePage extends React.Component {
             <Layout>
             <div>
                 <InputPanel />
-                <DotterPanel />
-                <DensityPanel />
+                <div className={s.midPanel}>
+                    <DotterPanel />
+                    <DensityPanel />
+                </div>
                 <TwoSeqsPanel />
             </div>
             </Layout>

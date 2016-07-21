@@ -45,7 +45,7 @@ class DotterPanel extends React.Component {
 
     render() {
         return (
-            <div className={s.canvasContainer}>
+            <div className={s.root}>
                 <canvas id='dotter-canvas'
                         ref={(c) => this._refDotterCanvas = c}
                         className={s.canvas}

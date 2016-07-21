@@ -96,7 +96,7 @@ class TwoSeqsPanel extends React.Component {
             ].join(' ')} >{c}</span> );
 
         return (
-            <div id="two-seqs-panel" className={s.twoSeqsPanel}>
+            <div id="two-seqs-panel" className={s.root}>
             <pre>
                 <div className={s.sequence}>{seqinfo1}</div>
                 <div className={s.sequence}>{ruler}</div>
