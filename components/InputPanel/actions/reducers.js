@@ -5,8 +5,8 @@ import { SCORING_MATRICES } from '../../constants/constants';
 
 
 let defaultState = {
-    s1: "AAAAAAATTTCCCCCC",
-    s2: "AAAGAAATTTC",
+    s1: "AAAAAAATTTCCCCCCAG",
+    s2: "AAAGAAATTTCCCGCGCAG",
     scores: [],
     windowSize: 1,
     scoringMatrix: SCORING_MATRICES.IDENTITY,

@@ -105,7 +105,6 @@ class TwoSeqsPanel extends React.Component {
                 <div className={s.sequence}>{caret}</div>
                 <div className={s.sequence}>{ruler}</div>
                 <div className={s.sequence}>{seqinfo2}</div>
-                {"windowSize: " + windowSize}
             </pre>
             </div>
         );

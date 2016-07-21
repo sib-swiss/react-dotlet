@@ -52,7 +52,7 @@ class DensityPanel extends React.Component {
                     viewBoxObject={{
                         x: 0,
                         y: 0,
-                        width: 500,
+                        width: 450,
                         height: 400
                     }}
                     xAccessor={ (d) => d ? d.x : 0 }

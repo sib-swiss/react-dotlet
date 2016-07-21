@@ -8,8 +8,12 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
+.root {
+}
+
 .content {
-  width: 100%;
-  max-width: 70%;
-  margin: 0 auto;
+    width: 100%;
+    max-width: 75%;
+    margin: 0 auto;
+    padding-bottom: 80px;
 }

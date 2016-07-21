@@ -16,56 +16,35 @@ import InputPanel from '../../components/InputPanel';
 import DensityPanel from '../../components/DensityPanel';
 import TwoSeqsPanel from '../../components/TwoSeqsPanel';
 
-/* Material-UI */
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-
-const col = "#3F51B5";
-
-const muiTheme = getMuiTheme({
-    palette: {
-        textColor: "black",
-        primary1Color: col,
-        //primary2Color: Colors.cyan700,
-        //primary3Color: Colors.lightBlack,
-        //accent1Color: Colors.pinkA200,
-        //accent2Color: Colors.grey100,
-        //accent3Color: Colors.grey500,
-        //alternateTextColor: Colors.white,
-        //canvasColor: Colors.white,
-        //borderColor: Colors.grey300,
-        //disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3),
-        //pickerHeaderColor: Colors.cyan500,
-    },
-    appBar: {
-        height: 50,
-    },
-    textField: {
-        textColor: "black",
-    }
-});
-
+/*
+ * Route page to '/'.
+ */
 
 class HomePage extends React.Component {
-
-    componentWillMount() {
+    componentDidMount() {
+        window.componentHandler.upgradeDom();
+    }
+    componentWillUnmount() {
+        window.componentHandler.downgradeDom();
     }
 
     render() {
         return (
-            <MuiThemeProvider muiTheme={muiTheme}>
             <Layout>
             <div>
                 <InputPanel />
-                <div className={s.midPanel}>
-                    <DotterPanel />
-                    <DensityPanel />
+                <div className={"content-grid mdl-grid "+ s.midPanel}>
+                    <div class="mdl-cell">
+                        <DotterPanel />
+                    </div>
+                    <div class="mdl-cell">
+                        <DensityPanel />
+                    </div>
                 </div>
                 <TwoSeqsPanel />
             </div>
             </Layout>
-            </MuiThemeProvider>
         );
     }
 
