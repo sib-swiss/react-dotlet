@@ -78,7 +78,7 @@ function DnaScoreMatches(s1, s2, scoreMatrix) {
  * @param px (float): position clicked on the canvas (in pixels, != `npoints` !).
  * @param L (int): matrix size (max sequence length).
  */
-function seqPosFromCoordinate(px, L, canvasSize=CANVAS_SIZE) {
+function seqIndexFromCoordinate(px, L, canvasSize=CANVAS_SIZE) {
     let canvasPt = getCanvasPt(CANVAS_SIZE, L);   // size of a "dot" on the canvas, when L is small (else 1)
     let npoints = Math.floor(CANVAS_SIZE / canvasPt);         // number of points in one line when L is small (else CANVAS_SIZE)
     let step = getStep(npoints, L);                // 1 point -> `step` characters
@@ -146,5 +146,5 @@ export {
     DnaSumMatches,
     DnaScoreMatches,
     fillCanvas,
-    seqPosFromCoordinate,
+    seqIndexFromCoordinate,
 };

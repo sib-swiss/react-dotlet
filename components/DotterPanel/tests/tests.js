@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 
-import { DnaScoreMatches, DnaSumMatches, getStep } from '../dotter';
+import { DnaScoreMatches, DnaSumMatches, getStep, seqIndexFromCoordinate } from '../dotter';
 import * as C from '../../constants/constants';
 
 describe('DotterPanel test suite', () => {
@@ -35,10 +35,14 @@ describe('DotterPanel test suite', () => {
         expect(() => getStep(600, 10)).to.throw(RangeError);
     })
 
-    it('dotter.seqPosFromCoordinate', () => {
+    it('dotter.seqIndexFromCoordinate', () => {
         // make sure it's ok when 5 points 6 chars and need to put 2 per point (empty clickable margin)
-        //seqPosFromCoordinate(px, L, 600)
-        //600px 270b -> 540, 2 per bin; 60 left empty --> round to 600
+        expect(seqIndexFromCoordinate(300, 100, 600)).to.be.equal(50-1);
+        expect(seqIndexFromCoordinate(150, 100, 600)).to.be.equal(25-1);
+        expect(seqIndexFromCoordinate(100, 100, 600)).to.be.equal(16);
+        expect(seqIndexFromCoordinate(60, 100, 600)).to.be.equal(10-1);
+        expect(seqIndexFromCoordinate(13, 100, 600)).to.be.equal(2);
+        expect(seqIndexFromCoordinate(300, 12000, 600)).to.be.equal(6000-1);
     });
 
 });
