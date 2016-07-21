@@ -19,10 +19,23 @@ class DotterPanel extends React.Component {
         let dims = cv.getBoundingClientRect();
         let x = e.pageX - dims.left,
             y = e.pageY - dims.top;
-        let L = Math.max(state.s1.length, state.s2.length);
+        let ls1 = state.s1.length,
+            ls2 = state.s2.length;
+        let L = Math.max(ls1, ls2);
         let i = dotter.seqPosFromCoordinate(x, L);
         let j = dotter.seqPosFromCoordinate(y, L);
-        store.dispatch(inspectCoordinate(i, j));
+        store.dispatch(inspectCoordinate(Math.min(i,ls1), Math.min(j,ls2)));
+    }
+
+    /*
+     * Return the index on the sequence `seq` corresponding to pixel coordinate `px` (approximately).
+     * @param px: position clicked on the canvas.
+     * @param L: matrix size (max sequence length).
+     */
+    seqPosFromCoordinate(px, L, canvasSize=CANVAS_SIZE) {
+        let ratio = px / canvasSize;  // x or y: the canvas is square
+        let index = Math.floor(L * ratio);
+        return index;
     }
 
     render() {

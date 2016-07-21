@@ -14,20 +14,33 @@ const scoringMatrices = {
     [SCORING_MATRICES.BLOSUM80]: BLOSUM_80,
     [SCORING_MATRICES.PAM30]: PAM_30,
     [SCORING_MATRICES.PAM70]: PAM_70,
-}
+};
 
-/* Caclulate the size in px of a "point" on the canvas
+/*
+ * Caclulate the size in px of a "point" on the canvas
  * (bigger if the sequence is shorter than the canvas' dimensions in px,
  * to fill it completely).
  */
 function getCanvasPt(canvasSize, lenSeq) {
-    var canvas_pt;
+    var canvasPt;
     if (lenSeq < canvasSize) {
-        canvas_pt = Math.floor(canvasSize / lenSeq);
+        canvasPt = Math.floor(canvasSize / lenSeq);
     } else {
-        canvas_pt = 1;
+        canvasPt = 1;
     }
-    return canvas_pt;
+    return canvasPt;
+}
+
+/*
+ * Calculate the number of sequence characters represented by one point in the canvas.
+ */
+function getStep(npoints, lenSeq) {
+    if (npoints > lenSeq + lenSeq % npoints) {
+        throw new RangeError("There cannot be more canvas points than sequence elements. " +
+                             "Increase points size instead.");
+    }
+    let step = Math.ceil(lenSeq / npoints);
+    return step;
 }
 
 /*
@@ -36,12 +49,10 @@ function getCanvasPt(canvasSize, lenSeq) {
 function DnaSumMatches(s1, s2) {
     let L = Math.min(s1.length, s2.length);
     let match = 0, mismatch = 0;
-
     for (let i=0; i<L; i++) {
          if (s1[i] === s2[i]) { match ++; }
          else { mismatch ++; }
     }
-
     return {
         [MATCH]: match,
         [MISMATCH]: mismatch,
@@ -60,11 +71,18 @@ function DnaScoreMatches(s1, s2, scoreMatrix) {
 
 /*
  * Return the index on the sequence `seq` corresponding to pixel coordinate `px` (approximately).
- * @param L: max sequence length (matrix size)
+ * The problem is that if the sequence length is not a multiple of the canvas size,
+ * there is an empty margin that must not count. So round it up to a multiple,
+ * then cut down if necessary.
+ *
+ * @param px (float): position clicked on the canvas (in pixels, != `npoints` !).
+ * @param L (int): matrix size (max sequence length).
  */
 function seqPosFromCoordinate(px, L, canvasSize=CANVAS_SIZE) {
-    let ratio = px / canvasSize;  // x or y: the canvas is square
-    let index = Math.floor(L * ratio);
+    let canvasPt = getCanvasPt(CANVAS_SIZE, L);   // size of a "dot" on the canvas, when L is small (else 1)
+    let npoints = Math.floor(CANVAS_SIZE / canvasPt);         // number of points in one line when L is small (else CANVAS_SIZE)
+    let step = getStep(npoints, L);                // 1 point -> `step` characters
+    let index = Math.ceil((px / canvasPt) * step) - 1;
     return index;
 }
 
@@ -89,11 +107,12 @@ function fillCanvas(s1, s2, windowSize, scoringMatrix) {
     let ls1 = s1.length;
     let ls2 = s2.length;
     let L = Math.max(ls1, ls2);
-    let canvas_pt = getCanvasPt(CANVAS_SIZE, L);
-    let npoints = CANVAS_SIZE / canvas_pt;
-    let step = L / npoints;                 // n points -> n-1 steps. What if not int?
+    let canvasPt = getCanvasPt(CANVAS_SIZE, L);   // size of a "dot" on the canvas, when L is small (else 1)
+    let npoints = Math.floor(CANVAS_SIZE / canvasPt);   // number of points in one line when L is small (else CANVAS_SIZE)
+    let step = getStep(npoints, L);                // 1 point -> `step` characters
+    // n points -> n-1 steps. What if not int?
 
-    //console.debug(windowSize, ws, L, canvas_pt, step)
+    //console.debug(windowSize, ws, L, canvasPt, step)
 
     for (let i=0; i <= npoints; i++) {      // n-1 steps
         let q1 = i * step;                  // position on seq1. First is 0, last is L
@@ -113,7 +132,7 @@ function fillCanvas(s1, s2, windowSize, scoringMatrix) {
 
             if (score > 0) {
                 ctx.globalAlpha = score / windowSize;
-                ctx.fillRect(q1 * canvas_pt, q2 * canvas_pt, canvas_pt, canvas_pt)
+                ctx.fillRect(q1 * canvasPt, q2 * canvasPt, canvasPt, canvasPt)
             }
         }
     }
@@ -123,6 +142,7 @@ function fillCanvas(s1, s2, windowSize, scoringMatrix) {
 
 export {
     getCanvasPt,
+    getStep,
     DnaSumMatches,
     DnaScoreMatches,
     fillCanvas,

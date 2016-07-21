@@ -46,8 +46,8 @@ class TwoSeqsPanel extends React.Component {
         w2 = formatSeq(w2, j, nchars, fill);
         let ruler = formatSeq("|", 0, nchars, nbsp);  // "|"
         let caret = formatSeq("^", 0, nchars, nbsp);  // "^"
-        let seqinfo1 = formatSeq("Seq1:"+i, 4, nchars, nbsp);
-        let seqinfo2 = formatSeq("Seq2:"+j, 4, nchars, nbsp);
+        let seqinfo1 = formatSeq("Seq1:"+(i+1), 4, nchars, nbsp);
+        let seqinfo2 = formatSeq("Seq2:"+(j+1), 4, nchars, nbsp);
 
         /* Return "s.same" style if the characters match on both substrings */
         function sameCharStyle(k) {
