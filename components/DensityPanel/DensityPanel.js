@@ -42,28 +42,28 @@ class DensityPanel extends React.Component {
         data = [{name: 'dummy', 'values': data}];
         let marginX = 0.1 * minmax.maxX;
         let marginY = 0.1 * minmax.maxY;
-        console.log(3, data, minmax)
         return (
             <div id="density-panel" className={s.root}>
-                <BarChart
-                    data={data}
-                    width={400}
-                    height={400}
-                    viewBoxObject={{
-                        x: 0,
-                        y: 0,
-                        width: 450,
-                        height: 400
-                    }}
-                    xAccessor={ (d) => d ? d.x : 0 }
-                    yAccessor={ (d) => d ? d.y : 0 }
-                />
-               {/*
-                domain={ {x: [0 - marginX, minmax.maxX + marginX],
-                y: [0, minmax.maxY + marginY], } }
-                 */}
-
-                {JSON.stringify(this.state.scores)}
+                <div className={s.centerMe}>
+                    <BarChart
+                        data={data}
+                        width={250}
+                        height={250}
+                        viewBoxObject={{
+                            x: 0,
+                            y: 0,
+                            width: 250,
+                            height: 250,
+                        }}
+                        xAccessor={ (d) => d ? d.x : 0 }
+                        yAccessor={ (d) => d ? d.y : 0 }
+                    />
+                   {/*
+                    domain={ {x: [0 - marginX, minmax.maxX + marginX],
+                    y: [0, minmax.maxY + marginY], } }
+                     */}
+                    {JSON.stringify(this.state.scores)}
+                </div>
             </div>
         );
     }

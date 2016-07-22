@@ -35,10 +35,10 @@ class HomePage extends React.Component {
             <div>
                 <InputPanel />
                 <div className={"content-grid mdl-grid "+ s.midPanel}>
-                    <div class="mdl-cell">
+                    <div className="mdl-cell mdl-cell--7-col">
                         <DotterPanel />
                     </div>
-                    <div class="mdl-cell">
+                    <div className="mdl-cell mdl-cell--5-col">
                         <DensityPanel />
                     </div>
                 </div>

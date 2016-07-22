@@ -36,7 +36,7 @@ class Layout extends React.Component {
                         <span className="mdl-layout-title">Dolet Reborn</span>
                         <div className="mdl-layout-spacer"></div>
                         <div className="mdl-logo">© Vital-IT, 2016</div>
-                        <nav class="mdl-navigation"><Github/></nav>
+                        <nav className="mdl-navigation"><Github/></nav>
                     </Header>
 
                     <main className="mdl-layout__content">
@@ -81,7 +81,7 @@ class Github extends React.Component {
 }
 
 
-const col = "#3F51B5";
+const col = "#3F51B5";  // title bar blue
 
 const muiTheme = getMuiTheme({
     palette: {
@@ -103,7 +103,10 @@ const muiTheme = getMuiTheme({
     },
     textField: {
         textColor: "black",
-    }
+    },
+    raisedButton: {
+        //primaryColor: "#3182BD",   // default rd3 chart blue
+    },
 });
 
 

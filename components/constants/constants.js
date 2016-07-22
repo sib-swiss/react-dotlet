@@ -1,7 +1,7 @@
 
 const MATCH = 'match';
 const MISMATCH = 'mismatch';
-const CANVAS_SIZE = 600;
+const CANVAS_SIZE = 400;
 
 const SCORING_MATRICES = {
     IDENTITY: 'identity',

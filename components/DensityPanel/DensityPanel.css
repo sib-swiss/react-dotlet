@@ -1,9 +1,14 @@
 
 .root {
+    width: 100%;
     margin: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     /*background-color: #3F51B5;*/
+}
+
+.centerMe {
+    margin: 0 auto;
 }

@@ -14,6 +14,10 @@ import MenuItem from 'material-ui/MenuItem';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import RaisedButton from 'material-ui/RaisedButton';
 import Popover from 'material-ui/Popover';
+import FontIcon from 'material-ui/FontIcon';
+import IconButton from 'material-ui/IconButton';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 
 
 class InputPanel extends React.Component {
@@ -41,6 +45,9 @@ class InputPanel extends React.Component {
         this.setState({ scoringMatrix: value });
         store.dispatch(changeScoringMatrix(value));
     };
+    onPrint() {
+        // ...
+    }
 
     componentDidMount() {
         // Trigger any event to initialize the canvas with default parameters already in store.
@@ -49,15 +56,17 @@ class InputPanel extends React.Component {
 
     render() {
         return (<div className={s.root}>
-        <Toolbar style={{paddingBottom: '80px'}}>
-            <ToolbarGroup style={{marginTop: '10px'}}>
-                <SequencePopover label="Sequence 1" callback={this.onChangeSeq1} sequence={this.state.s1}/>
-                <SequencePopover label="Sequence 2" callback={this.onChangeSeq2} sequence={this.state.s2}/>
+        <Toolbar style={{paddingBottom: '64px'}}>
+            <ToolbarGroup style={{marginTop: '3px'}}>
+                <SequencePopover label="Sequence1" callback={this.onChangeSeq1} sequence={this.state.s1}/>
+                <SequencePopover label="Sequence2" callback={this.onChangeSeq2} sequence={this.state.s2}/>
             </ToolbarGroup>
             <ToolbarGroup>
             <TextField hintText="Window size" floatingLabelText="Window size" id="windowSize_input"
                        type="number"
                        style={{width: '110px'}}
+                       inputStyle={{marginTop: '5px'}}
+                       floatingLabelStyle={{marginTop: '-5px'}}
                        floatingLabelFixed={true}
                        onChange={this.onChangeWindowSize}
                        defaultValue={this.state.windowSize}
@@ -66,6 +75,9 @@ class InputPanel extends React.Component {
             <ToolbarGroup>
             <SelectField floatingLabelText="Scoring matrix"
                          floatingLabelFixed={true}
+                         style={{width: '150px'}}
+                         inputStyle={{marginTop: '8px'}}
+                         floatingLabelStyle={{marginTop: '-5px'}}
                          onChange={this.onChangeScoringMatrix}
                          value={this.state.scoringMatrix}
                          >
@@ -82,7 +94,18 @@ class InputPanel extends React.Component {
                 <MenuItem checked={this.state.scoringMatrix === SCORING_MATRICES.PAM70}
                           value={SCORING_MATRICES.PAM70} primaryText="PAM 70" />
             </SelectField>
-        </ToolbarGroup>
+            </ToolbarGroup>
+            {/*
+            <ToolbarGroup style={{marginTop: '15px'}}>
+                <FloatingActionButton onClick={this.zoomIn} mini ><ContentAdd/></FloatingActionButton>
+                <FloatingActionButton onClick={this.zoomOut} mini secondary ><ContentAdd/></FloatingActionButton>
+            </ToolbarGroup>
+            */}
+            <ToolbarGroup style={{marginTop: '8px'}} >
+                <IconButton onClick={this.onPrint} disabled={true} >
+                    <FontIcon className="material-icons">print</FontIcon>
+                </IconButton>
+            </ToolbarGroup>
         </Toolbar>
         </div>);
     }
@@ -108,7 +131,7 @@ class SequencePopover extends React.Component {
 
     render() {
         return (<ToolbarGroup>
-            <RaisedButton label={this.props.label} onClick={this.open}/>
+            <RaisedButton primary label={this.props.label} onClick={this.open}/>
             <Popover
                 open={this.state.open}
                 anchorEl={this.state.anchorEl}
