@@ -2,6 +2,7 @@
 const MATCH = 'match';
 const MISMATCH = 'mismatch';
 const CANVAS_SIZE = 400;
+const CANVAS_ID = "dotter-canvas";
 
 const SCORING_MATRICES = {
     IDENTITY: 'identity',
@@ -21,6 +22,7 @@ export {
     MATCH,
     MISMATCH,
     CANVAS_SIZE,
+    CANVAS_ID,
     SCORING_MATRICES,
     AA,
     DNA,

@@ -3,7 +3,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import s from './DotterPanel.css';
 import * as dotter from './dotter';
 import store from '../../core/store';
-import { CANVAS_SIZE } from '../constants/constants';
+import { CANVAS_SIZE, CANVAS_ID } from '../constants/constants';
 import { inspectCoordinate } from '../actions/actionCreators';
 
 
@@ -46,7 +46,7 @@ class DotterPanel extends React.Component {
     render() {
         return (
             <div className={s.root}>
-                <canvas id='dotter-canvas'
+                <canvas id={CANVAS_ID}
                         ref={(c) => this._refDotterCanvas = c}
                         className={s.canvas}
                         width={CANVAS_SIZE}

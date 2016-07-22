@@ -4,8 +4,9 @@ import store from '../../core/store';
 import s from './InputPanel.css';
 import { changeSequence, changeWindowSize, changeScoringMatrix } from '../actions/actionCreators';
 //import * as validators from './validators';
-import { SCORING_MATRICES, DNA, PROTEIN } from '../constants/constants';
+import { SCORING_MATRICES, DNA, PROTEIN, CANVAS_ID } from '../constants/constants';
 import { guessSequenceType } from './input';
+import { printCanvas } from './helpers';
 
 
 /* Material-UI */
@@ -47,7 +48,7 @@ class InputPanel extends React.Component {
         store.dispatch(changeScoringMatrix(value));
     };
     onPrint() {
-        // ...
+        printCanvas(CANVAS_ID);
     }
 
     componentDidMount() {
@@ -105,7 +106,7 @@ class InputPanel extends React.Component {
             </ToolbarGroup>
             */}
             <ToolbarGroup style={{marginTop: '8px'}} >
-                <IconButton onClick={this.onPrint} disabled={true} >
+                <IconButton onClick={this.onPrint} disabled={false} >
                     <FontIcon className="material-icons">print</FontIcon>
                 </IconButton>
             </ToolbarGroup>
