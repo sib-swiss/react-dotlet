@@ -10,6 +10,11 @@ class InfoPanel extends React.Component {
         this.state = store.getState().input;
     }
 
+    stateFromStore() {
+        return {};
+        //return store.getState();
+    }
+
     componentWillMount() {
         store.subscribe(() => {
             this.setState( this.stateFromStore() );
