@@ -10,6 +10,12 @@
 
 import React from 'react';
 
+
+/*
+ * Wrapper for a common header layout.
+ * Layout.js chooses what to put in it.
+ */
+
 class Header extends React.Component {
 
   componentDidMount() {

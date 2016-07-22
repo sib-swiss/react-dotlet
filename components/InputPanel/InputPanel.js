@@ -16,8 +16,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Popover from 'material-ui/Popover';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 
 
 class InputPanel extends React.Component {
@@ -96,6 +94,8 @@ class InputPanel extends React.Component {
             </SelectField>
             </ToolbarGroup>
             {/*
+             import FloatingActionButton from 'material-ui/FloatingActionButton';
+             import ContentAdd from 'material-ui/svg-icons/content/add';
             <ToolbarGroup style={{marginTop: '15px'}}>
                 <FloatingActionButton onClick={this.zoomIn} mini ><ContentAdd/></FloatingActionButton>
                 <FloatingActionButton onClick={this.zoomOut} mini secondary ><ContentAdd/></FloatingActionButton>

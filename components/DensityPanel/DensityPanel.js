@@ -61,8 +61,8 @@ class DensityPanel extends React.Component {
                    {/*
                     domain={ {x: [0 - marginX, minmax.maxX + marginX],
                     y: [0, minmax.maxY + marginY], } }
-                     */}
                     {JSON.stringify(this.state.scores)}
+                     */}
                 </div>
             </div>
         );

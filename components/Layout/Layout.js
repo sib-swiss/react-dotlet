@@ -5,6 +5,8 @@ import s from './Layout.css';
 /* Material-UI, see theme customization below */
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import FontIcon from 'material-ui/FontIcon';
+import IconButton from 'material-ui/IconButton';
 
 
 /*
@@ -14,6 +16,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
  * </Layout>
  * so that all have the header and center column with content.
  * Change this only to change the common layout to all pages.
+ * It chooses what to put into <Header>.
  */
 
 class Layout extends React.Component {
@@ -37,6 +40,11 @@ class Layout extends React.Component {
                         <div className="mdl-layout-spacer"></div>
                         <div className="mdl-logo">© Vital-IT, 2016</div>
                         <nav className="mdl-navigation"><Github/></nav>
+                        <nav className="mdl-navigation">
+                            <IconButton iconStyle={{color:'white', fontSize: '34px'}} >
+                            <FontIcon className="mdl-navigation material-icons" style={{padding: '8px'}}>help</FontIcon>
+                            </IconButton>
+                        </nav>
                     </Header>
 
                     <main className="mdl-layout__content">
