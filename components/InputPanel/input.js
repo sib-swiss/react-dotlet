@@ -25,6 +25,11 @@ function guessSequenceType(seq, nchars=200) {
 }
 
 
+function commonSeqtype(s1Type, s2Type) {
+    return s1Type === DNA && s2Type === DNA ? DNA : PROTEIN;
+}
+
+
 /*
  * Translate an RNA sequence to protein.
  */
@@ -48,5 +53,6 @@ function translate(seq, phase=0) {
 
 export {
     guessSequenceType,
+    commonSeqtype,
     translate,
 }

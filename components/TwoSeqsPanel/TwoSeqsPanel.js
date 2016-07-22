@@ -16,11 +16,11 @@ class TwoSeqsPanel extends React.Component {
     stateFromStore() {
         let storeState = store.getState();
         return {
-            s1: storeState.input.s1,
-            s2: storeState.input.s2,
-            windowSize: storeState.input.windowSize,
-            i: storeState.dotter.i,
-            j: storeState.dotter.j,
+            s1: storeState.s1,
+            s2: storeState.s2,
+            windowSize: storeState.windowSize,
+            i: storeState.i,
+            j: storeState.j,
         };
     }
 

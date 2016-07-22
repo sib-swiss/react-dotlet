@@ -18,7 +18,7 @@ class DensityPanel extends React.Component {
 
     getStore() {
         return {
-            scores: store.getState().input.scores,
+            scores: store.getState().scores,
         };
     }
 

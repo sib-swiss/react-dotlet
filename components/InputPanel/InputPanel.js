@@ -2,7 +2,7 @@ import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import store from '../../core/store';
 import s from './InputPanel.css';
-import { changeSequence, changeWindowSize, changeScoringMatrix } from './actions/actionCreators';
+import { changeSequence, changeWindowSize, changeScoringMatrix } from '../actions/actionCreators';
 //import * as validators from './validators';
 import { SCORING_MATRICES, DNA, PROTEIN } from '../constants/constants';
 import { guessSequenceType } from './input';
@@ -23,7 +23,7 @@ class InputPanel extends React.Component {
     constructor() {
         super();
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-        this.state = store.getState().input;
+        this.state = store.getState();
     }
 
     onChangeSeq1 = (event, value) => {

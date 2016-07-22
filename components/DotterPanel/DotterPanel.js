@@ -4,7 +4,7 @@ import s from './DotterPanel.css';
 import * as dotter from './dotter';
 import store from '../../core/store';
 import { CANVAS_SIZE } from '../constants/constants';
-import { inspectCoordinate } from './actions/actionCreators';
+import { inspectCoordinate } from '../actions/actionCreators';
 
 
 class DotterPanel extends React.Component {
@@ -14,12 +14,12 @@ class DotterPanel extends React.Component {
     }
 
     componentDidUpdate() {
-        let state = store.getState().input;
+        let state = store.getState();
         dotter.fillCanvas(state.s1, state.s2, state.windowSize, state.scoringMatrix);
     }
 
     _onClick(e) {
-        let state = store.getState().input;
+        let state = store.getState();
         let cv = e.target;
         let dims = cv.getBoundingClientRect();
         let x = e.pageX - dims.left,
