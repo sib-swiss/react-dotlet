@@ -4,7 +4,8 @@ import store from '../../core/store';
 import s from './InputPanel.css';
 import { changeSequence, changeWindowSize, changeScoringMatrix } from './actions/actionCreators';
 //import * as validators from './validators';
-import { SCORING_MATRICES } from '../constants/constants';
+import { SCORING_MATRICES, DNA, PROTEIN } from '../constants/constants';
+import { guessSequenceType } from './input';
 
 
 /* Material-UI */
@@ -26,12 +27,14 @@ class InputPanel extends React.Component {
     }
 
     onChangeSeq1 = (event, value) => {
+        let seqtype = guessSequenceType(value, 200);
         this.setState({ s1: value });
-        store.dispatch(changeSequence(1, value));
+        store.dispatch(changeSequence(1, value, seqtype));
     };
     onChangeSeq2 = (event, value) => {
+        let seqtype = guessSequenceType(value, 200);
         this.setState({ s2: value });
-        store.dispatch(changeSequence(2, value));
+        store.dispatch(changeSequence(2, value, seqtype));
     };
     onChangeWindowSize = (event, value) => {
         if (value !== '') {

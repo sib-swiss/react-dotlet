@@ -1,22 +1,18 @@
 import { expect } from 'chai';
 
 
-//import * as C from '../../constants/constants';
+import { DNA, PROTEIN } from '../../constants/constants';
+import { guessSequenceType } from '../input';
 
 describe('InputPanel test suite', () => {
-    //let s1 = "AAAAAAATTTCCCCCCTTGC";
-    //let s2 = "AAAGAAATTTCCCCCCATGC";
 
-    //it('dotter.DnaSumMatches', () => {
-    //    let sums = DnaSumMatches(s1,s2);
-    //    expect(sums[C.MATCH]).to.be.equal(18);
-    //    expect(sums[C.MISMATCH]).to.be.equal(2);
-    //});
+    it('input.guessSequenceType', () => {
+        expect(guessSequenceType("AUATG")).to.be.equal(DNA);
+        expect(guessSequenceType("AUAKG")).to.be.equal(PROTEIN);
+        expect(guessSequenceType("AUATGKL", 4)).to.be.equal(DNA);
+        expect(guessSequenceType("AUATGKL", 20)).to.be.equal(PROTEIN);
+        expect(guessSequenceType("A".repeat(50000))).to.be.equal(DNA);
+    });
 
-    //it('dotter.DnaScoreMatches', () => {
-    //    let scoreMatrix = {[C.MATCH]: 2, [C.MISMATCH]: -1};
-    //    let score = DnaScoreMatches(s1, s2, scoreMatrix);
-    //    expect(score).to.be.equal(18*2 - 2);
-    //});
 
 });

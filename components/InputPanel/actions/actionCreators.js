@@ -6,11 +6,12 @@ import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX } from './ac
  * @param seqn: sequence nr, 1 or 2
  * @param sequence: sequence string
  */
-function changeSequence(seqn, sequence) {
+function changeSequence(seqn, sequence, seqtype) {
     return {
         type: CHANGE_SEQUENCE,
         seqn: seqn,
         sequence: sequence,
+        seqtype: seqtype,
     };
 }
 

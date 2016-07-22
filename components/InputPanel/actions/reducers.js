@@ -1,7 +1,7 @@
 
 import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX } from './actionTypes';
 import { fillCanvas } from '../../DotterPanel/dotter';
-import { SCORING_MATRICES } from '../../constants/constants';
+import { SCORING_MATRICES, DNA, PROTEIN } from '../../constants/constants';
 
 // s1: YWHAB from Uniprot, len 246
 // s2: YWHAZ Coelacant ortholog
@@ -16,6 +16,8 @@ let defaultState = {
     "IANASKAESKVFYLKMKGDYYRYLAEVAAGEDKKSTVDHSQQVYQEAFEISKKEMTSTHP" +
     "IRLGLALNFSVFYYEILNLPEQACGLAKTAFDDAISELDKLGDESYKDSTLIMQLLRDNL" +
     "TVST",
+    s1Type: PROTEIN,
+    s2Type: PROTEIN,
     scores: [],
     windowSize: 1,
     scoringMatrix: SCORING_MATRICES.IDENTITY,
@@ -23,15 +25,21 @@ let defaultState = {
 
 let inputReducer = (state = defaultState, action) => { switch (action.type) {
 
+    /*
+     * When the sequence changes, draw to the canvas as a side-effect, but actually compute
+     * scores and store only the latter.
+     */
     case CHANGE_SEQUENCE:
         var newState = Object.assign({}, state);
         let scores;
         if (action.seqn === 1) {
             scores = fillCanvas(action.sequence, state.s2, state.windowSize, state.scoringMatrix);
             newState.s1 = action.sequence;
+            newState.s1Type = action.seqtype;
         } else {
             scores = fillCanvas(state.s1, action.sequence, state.windowSize, state.scoringMatrix);
             newState.s2 = action.sequence;
+            newState.s2Type = action.seqtype;
         }
         newState.scores = scores;
         return newState;

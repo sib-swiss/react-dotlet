@@ -12,6 +12,8 @@ const SCORING_MATRICES = {
     PAM70: 'pam 70',
 };
 
+const DNA = 'is DNA string';
+const PROTEIN = 'is protein string';
 const AA = ['A', 'R', 'N', 'D', 'C', 'Q', 'E', 'G', 'H', 'I', 'L', 'K', 'M',
             'F', 'P', 'S', 'T', 'W', 'Y', 'V', 'B', 'J', 'Z', 'X', '*'];
 
@@ -21,4 +23,6 @@ export {
     CANVAS_SIZE,
     SCORING_MATRICES,
     AA,
+    DNA,
+    PROTEIN,
 };
