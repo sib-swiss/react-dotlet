@@ -64,8 +64,40 @@ let reducer = (state = defaultState, action) => { switch (action.type) {
         scores = fillCanvas(state.s1, state.s2, state.windowSize, action.scoringMatrix);
         return Object.assign({}, state, {scores: scores, scoringMatrix: action.scoringMatrix});
 
+    /*
+     * On click on the canvas.
+     */
     case INSPECT_COORDINATE:
         return Object.assign({}, state, {i: action.i, j: action.j});
+
+    /*
+     * When keyboard direction arrows are pressed.
+     * Expects `action.[right|left|top|down]`
+     */
+    case KEYBOARD_DIRECTION:
+        let newDirection;
+        if (action.down) {
+            newDirection = {i: action.i, j: state.j + 1};
+        } else if (action.up) {
+            newDirection = {i: action.i, j: state.j - 1};
+        } else if (action.right) {
+            newDirection = {i: action.i + 1, j: state.j};
+        } else if (action.left) {
+            newDirection = {i: action.i - 1, j: state.j};
+        }
+        return Object.assign({}, state, newDirection);
+
+    /*
+     * When keyboard direction arrows are pressed.
+     * Expects `action.seqn` in [1|2]: the sequence number,
+     * and `action.shift`: the positive or negative shift.
+     */
+    case SLIDE_TWO_SEQS:
+        if (action.seqn === 1) {
+            return Object.assign({}, state, {i: state.i + action.shift});
+        } else {
+            return Object.assign({}, state, {j: state.j + action.shift});
+        }
 
     default:
         return state;

@@ -93,9 +93,10 @@ function scoreMatches(s1, s2, scoreMatrix) {
  * @param L (int): matrix size (max sequence length).
  */
 function seqIndexFromCoordinate(px, L, canvasSize=CANVAS_SIZE) {
-    let canvasPt = getCanvasPt(canvasSize, L);
+    let round = L > 2 * canvasSize;
+    let canvasPt = getCanvasPt(canvasSize, L, round);
     let npoints = Math.floor(canvasSize / canvasPt);
-    let step = getStep(npoints, L);
+    let step = getStep(npoints, L, round);
     let index = Math.ceil((px / canvasPt) * step) - 1;
     return index;
 }
@@ -130,11 +131,11 @@ function fillCanvas(s1, s2, windowSize, scoringMatrix, canvasSize=CANVAS_SIZE) {
     //console.debug(windowSize, ws, L, canvasPt, step)
 
     for (let i=0; i <= npoints; i++) {
-        let q1 = i * step;                                        // position on seq1. First is 0, last is L
+        let q1 = Math.round(i * step);                            // position on seq1. First is 0, last is L
         let subseq1 = helpers.getSequenceAround(s1, q1, ws);      // nucleotides window on seq1
 
         for (let j=0; j <= npoints; j++) {
-            let q2 = j * step;                                    // position on seq2
+            let q2 = Math.round(j * step);                        // position on seq2
             let subseq2 = helpers.getSequenceAround(s2, q2, ws);  // nucleotides window on seq2
             let score = scoreMatches(subseq1, subseq2, matrix);
             if (! (score in scores)) {

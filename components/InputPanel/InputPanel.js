@@ -59,10 +59,16 @@ class InputPanel extends React.Component {
     render() {
         return (<div className={s.root}>
         <Toolbar style={{paddingBottom: '64px'}}>
+
+            {/* Sequences input */}
+
             <ToolbarGroup style={{marginTop: '3px'}}>
                 <SequencePopover label="Sequence1" callback={this.onChangeSeq1} sequence={this.state.s1}/>
                 <SequencePopover label="Sequence2" callback={this.onChangeSeq2} sequence={this.state.s2}/>
             </ToolbarGroup>
+
+            {/* Window size selection */}
+
             <ToolbarGroup>
             <TextField hintText="Window size" floatingLabelText="Window size" id="windowSize_input"
                        type="number"
@@ -74,6 +80,9 @@ class InputPanel extends React.Component {
                        defaultValue={this.state.windowSize}
             />
             </ToolbarGroup>
+
+            {/* Scoring matrix selection */}
+
             <ToolbarGroup>
             <SelectField floatingLabelText="Scoring matrix"
                          floatingLabelFixed={true}
@@ -97,19 +106,15 @@ class InputPanel extends React.Component {
                           value={SCORING_MATRICES.PAM70} primaryText="PAM 70" />
             </SelectField>
             </ToolbarGroup>
-            {/*
-             import FloatingActionButton from 'material-ui/FloatingActionButton';
-             import ContentAdd from 'material-ui/svg-icons/content/add';
-            <ToolbarGroup style={{marginTop: '15px'}}>
-                <FloatingActionButton onClick={this.zoomIn} mini ><ContentAdd/></FloatingActionButton>
-                <FloatingActionButton onClick={this.zoomOut} mini secondary ><ContentAdd/></FloatingActionButton>
-            </ToolbarGroup>
-            */}
+
+            {/* Print button */}
+
             <ToolbarGroup style={{marginTop: '8px'}} >
                 <IconButton onClick={this.onPrint} disabled={false} >
                     <FontIcon className="material-icons">print</FontIcon>
                 </IconButton>
             </ToolbarGroup>
+
         </Toolbar>
         </div>);
     }
