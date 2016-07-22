@@ -22,7 +22,7 @@ const scoringMatrices = {
  * to fill it completely).
  * @param round: whether to allow float sizes (with performance overhead).
  */
-function getCanvasPt(canvasSize, lenSeq, round=false) {
+function getCanvasPt(canvasSize, lenSeq, round=true) {
     var canvasPt;
     if (lenSeq < canvasSize) {
         canvasPt = canvasSize / lenSeq;
@@ -47,7 +47,7 @@ function getNpoints(canvasSize, canvasPt) {
  * Calculate the number of sequence characters represented by one point in the canvas.
  * @param round: whether to allow float sizes (with performance overhead).
  */
-function getStep(npoints, lenSeq, round=false) {
+function getStep(npoints, lenSeq, round=true) {
     if (npoints > lenSeq + lenSeq % npoints) {
         throw new RangeError("There cannot be more canvas points than sequence elements. " +
                              "Increase points size instead.");
@@ -156,6 +156,8 @@ function fillCanvas(s1, s2, windowSize, scoringMatrix, canvasSize=CANVAS_SIZE) {
 
 
 export {
+    scoreMatches,
+    sumMatches,
     getCanvasPt,
     getStep,
     fillCanvas,

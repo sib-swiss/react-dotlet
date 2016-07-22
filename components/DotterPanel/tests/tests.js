@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 
-import { DnaScoreMatches, DnaSumMatches, getStep, seqIndexFromCoordinate } from '../dotter';
+import { scoreMatches, sumMatches, getStep, seqIndexFromCoordinate } from '../dotter';
 import * as C from '../../constants/constants';
 
 describe('DotterPanel test suite', () => {
@@ -9,14 +9,14 @@ describe('DotterPanel test suite', () => {
     let s2 = "AAAGAAATTTCCCCCCATGC";
 
     it('dotter.DnaSumMatches', () => {
-        let sums = DnaSumMatches(s1,s2);
+        let sums = sumMatches(s1,s2);
         expect(sums[C.MATCH]).to.be.equal(18);
         expect(sums[C.MISMATCH]).to.be.equal(2);
     });
 
     it('dotter.DnaScoreMatches', () => {
         let scoreMatrix = {[C.MATCH]: 2, [C.MISMATCH]: -1};
-        let score = DnaScoreMatches(s1, s2, scoreMatrix);
+        let score = scoreMatches(s1, s2, scoreMatrix);
         expect(score).to.be.equal(18*2 - 2);
     });
 
