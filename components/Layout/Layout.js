@@ -41,9 +41,11 @@ class Layout extends React.Component {
                         <div className="mdl-logo">© Vital-IT, 2016</div>
                         <nav className="mdl-navigation"><Github/></nav>
                         <nav className="mdl-navigation">
-                            <IconButton iconStyle={{color:'white', fontSize: '34px'}} >
-                            <FontIcon className="mdl-navigation material-icons" style={{padding: '8px'}}>help</FontIcon>
+                            <a href="http://myhits.isb-sib.ch/util/dotlet/doc/dotlet_help.html" target="_blank">
+                            <IconButton iconStyle={{color:'white', fontSize: '34px'}} style={{padding:'8px'}} >
+                            <FontIcon className="mdl-navigation material-icons">help</FontIcon>
                             </IconButton>
+                            </a>
                         </nav>
                     </Header>
 
