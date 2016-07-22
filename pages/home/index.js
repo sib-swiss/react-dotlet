@@ -15,6 +15,7 @@ import DotterPanel from '../../components/DotterPanel';
 import InputPanel from '../../components/InputPanel';
 import DensityPanel from '../../components/DensityPanel';
 import TwoSeqsPanel from '../../components/TwoSeqsPanel';
+import InfoPanel from '../../components/InfoPanel';
 
 
 /*
@@ -40,6 +41,7 @@ class HomePage extends React.Component {
                     </div>
                     <div className="mdl-cell mdl-cell--5-col">
                         <DensityPanel />
+                        <InfoPanel />
                     </div>
                 </div>
                 <TwoSeqsPanel />

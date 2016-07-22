@@ -33,11 +33,11 @@ let inputReducer = (state = defaultState, action) => { switch (action.type) {
         var newState = Object.assign({}, state);
         let scores;
         if (action.seqn === 1) {
-            scores = fillCanvas(action.sequence, state.s2, state.windowSize, state.scoringMatrix);
+            scores = fillCanvas(action.sequence, state.s2, state.windowSize, state.scoringMatrix, action.seqtype);
             newState.s1 = action.sequence;
             newState.s1Type = action.seqtype;
         } else {
-            scores = fillCanvas(state.s1, action.sequence, state.windowSize, state.scoringMatrix);
+            scores = fillCanvas(state.s1, action.sequence, state.windowSize, state.scoringMatrix, action.seqtype);
             newState.s2 = action.sequence;
             newState.s2Type = action.seqtype;
         }
