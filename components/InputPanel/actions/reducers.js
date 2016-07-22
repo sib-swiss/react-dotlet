@@ -23,6 +23,12 @@ let defaultState = {
     scoringMatrix: SCORING_MATRICES.IDENTITY,
 };
 
+
+function commonSeqtype(s1Type, s2Type) {
+    return s1Type === DNA && s2Type === DNA ? DNA : PROTEIN;
+}
+
+
 let inputReducer = (state = defaultState, action) => { switch (action.type) {
 
     /*
@@ -32,12 +38,15 @@ let inputReducer = (state = defaultState, action) => { switch (action.type) {
     case CHANGE_SEQUENCE:
         var newState = Object.assign({}, state);
         let scores;
+        let seqtype;
         if (action.seqn === 1) {
-            scores = fillCanvas(action.sequence, state.s2, state.windowSize, state.scoringMatrix, action.seqtype);
+            seqtype = commonSeqtype(action.seqtype, state.s2Type);
+            scores = fillCanvas(action.sequence, state.s2, state.windowSize, state.scoringMatrix);
             newState.s1 = action.sequence;
             newState.s1Type = action.seqtype;
         } else {
-            scores = fillCanvas(state.s1, action.sequence, state.windowSize, state.scoringMatrix, action.seqtype);
+            seqtype = commonSeqtype(state.s1Type, action.seqtype);
+            scores = fillCanvas(state.s1, action.sequence, state.windowSize, state.scoringMatrix);
             newState.s2 = action.sequence;
             newState.s2Type = action.seqtype;
         }
