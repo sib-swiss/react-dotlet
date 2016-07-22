@@ -20,11 +20,13 @@ const scoringMatrices = {
  * Caclulate the size in px of a "point" on the canvas
  * (bigger if the sequence is shorter than the canvas' dimensions in px,
  * to fill it completely).
+ * @param round: whether to allow float sizes (with performance overhead).
  */
-function getCanvasPt(canvasSize, lenSeq) {
+function getCanvasPt(canvasSize, lenSeq, round=false) {
     var canvasPt;
     if (lenSeq < canvasSize) {
-        canvasPt = Math.floor(canvasSize / lenSeq);
+        canvasPt = canvasSize / lenSeq;
+        if (round) { canvasPt = Math.floor(canvasPt); }
     } else {
         canvasPt = 1;
     }
@@ -32,14 +34,26 @@ function getCanvasPt(canvasSize, lenSeq) {
 }
 
 /*
- * Calculate the number of sequence characters represented by one point in the canvas.
+ * Calculate the number of points in the canvas given its size in px and the desired point size.
+ * @param canvasSize: canvas size, in pixels.
+ * @param canvasPt: size of a 'point', in pixels.
  */
-function getStep(npoints, lenSeq) {
+function getNpoints(canvasSize, canvasPt) {
+    let npoints = Math.floor(canvasSize / canvasPt)
+    return npoints;
+}
+
+/*
+ * Calculate the number of sequence characters represented by one point in the canvas.
+ * @param round: whether to allow float sizes (with performance overhead).
+ */
+function getStep(npoints, lenSeq, round=false) {
     if (npoints > lenSeq + lenSeq % npoints) {
         throw new RangeError("There cannot be more canvas points than sequence elements. " +
                              "Increase points size instead.");
     }
-    let step = Math.ceil(lenSeq / npoints);
+    let step = lenSeq / npoints;
+    if (round) { step = Math.ceil(step); }
     return step;
 }
 
@@ -107,9 +121,10 @@ function fillCanvas(s1, s2, windowSize, scoringMatrix, canvasSize=CANVAS_SIZE) {
     let ls1 = s1.length;
     let ls2 = s2.length;
     let L = Math.max(ls1, ls2);
-    let canvasPt = getCanvasPt(canvasSize, L);         // size of a "dot" on the canvas, when L is small (else 1)
-    let npoints = Math.floor(canvasSize / canvasPt);   // number of points in one line when L is small (else CANVAS_SIZE)
-    let step = getStep(npoints, L);                    // 1 point -> `step` characters
+    let round = L > 2 * canvasSize;                    // For small sequences, use float pixel coordinates at the expense of performance
+    let canvasPt = getCanvasPt(canvasSize, L, round);  // Size of a "dot" on the canvas, when L is small (else 1)
+    let npoints = getNpoints(canvasSize, canvasPt);    // Number of points in one line when L is small (else CANVAS_SIZE)
+    let step = getStep(npoints, L, round);             // 1 point -> `step` characters
     // n points -> n-1 steps. What if not int?
 
     //console.debug(windowSize, ws, L, canvasPt, step)
