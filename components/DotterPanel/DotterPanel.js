@@ -4,7 +4,7 @@ import s from './DotterPanel.css';
 import * as dotter from './dotter';
 import store from '../../core/store';
 import { CANVAS_SIZE, CANVAS_ID } from '../constants/constants';
-import { inspectCoordinate } from '../actions/actionCreators';
+import { inspectCoordinate, keyboardArrowShiftCoordinate } from '../actions/actionCreators';
 
 
 class DotterPanel extends React.Component {
@@ -13,9 +13,29 @@ class DotterPanel extends React.Component {
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     }
 
+    componentDidMount() {
+        window.addEventListener('keydown', (e) => this._onKeyDown(e), true)
+    }
+    componentWillUnmount() {
+        //window.removeEventListener('scroll', (e) => this._onKeyDown)
+    }
+
     componentDidUpdate() {
         let state = store.getState();
         dotter.fillCanvas(state.s1, state.s2, state.windowSize, state.scoringMatrix);
+    }
+
+    _onKeyDown(e) {
+        var keyCode = e.keyCode;
+        var direction;
+        switch (e.keyCode) {
+            case 37: direction = 'left'; break;
+            case 38: direction = 'up'; break;
+            case 39: direction = 'right'; break;
+            case 40: direction = 'down'; break;
+            default: return;
+        }
+        store.dispatch(keyboardArrowShiftCoordinate(direction));
     }
 
     _onClick(e) {

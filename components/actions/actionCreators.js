@@ -41,10 +41,18 @@ function inspectCoordinate(i, j) {
     };
 }
 
+function keyboardArrowShiftCoordinate(direction) {
+    return {
+        type: KEYBOARD_DIRECTION,
+        direction: direction,
+    };
+}
+
 
 export {
     changeSequence,
     changeWindowSize,
     changeScoringMatrix,
     inspectCoordinate,
+    keyboardArrowShiftCoordinate,
 };

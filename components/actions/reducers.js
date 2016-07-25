@@ -76,14 +76,14 @@ let reducer = (state = defaultState, action) => { switch (action.type) {
      */
     case KEYBOARD_DIRECTION:
         let newDirection;
-        if (action.down) {
-            newDirection = {i: action.i, j: state.j + 1};
-        } else if (action.up) {
-            newDirection = {i: action.i, j: state.j - 1};
-        } else if (action.right) {
-            newDirection = {i: action.i + 1, j: state.j};
-        } else if (action.left) {
-            newDirection = {i: action.i - 1, j: state.j};
+        if (action.direction === 'down') {
+            newDirection = {j: state.j + 1};
+        } else if (action.direction === 'up') {
+            newDirection = {j: state.j - 1};
+        } else if (action.direction === 'right') {
+            newDirection = {i: state.i + 1};
+        } else if (action.direction === 'left') {
+            newDirection = {i: state.i - 1};
         }
         return Object.assign({}, state, newDirection);
 

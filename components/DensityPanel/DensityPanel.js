@@ -42,16 +42,16 @@ class DensityPanel extends React.Component {
                         data={data}
                         width={250}
                         height={250}
-                        viewBoxObject={{
-                            x: 0,
-                            y: 0,
-                            width: 250,
-                            height: 250,
-                        }}
                         xAccessor={ (d) => d ? d.x : 0 }
                         yAccessor={ (d) => d ? d.y : 0 }
                     />
                    {/*
+                    viewBoxObject={{
+                        x: 0,
+                        y: 0,
+                        width: 250,
+                        height: 250,
+                    }}
                     domain={ {x: [0 - marginX, minmax.maxX + marginX],
                     y: [0, minmax.maxY + marginY], } }
                     {JSON.stringify(this.state.scores)}
