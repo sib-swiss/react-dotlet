@@ -1,20 +1,9 @@
 
 import { MATCH, MISMATCH, CANVAS_SIZE, CANVAS_ID } from '../constants/constants';
 import * as helpers from '../helpers';
-import { SCORING_MATRICES } from '../constants/constants';
-import { BLOSUM_45, BLOSUM_62, BLOSUM_80 } from '../constants/scoring_matrices/blosum';
-import { PAM_30, PAM_70 } from '../constants/scoring_matrices/pam';
-import { IDENTITY } from '../constants/scoring_matrices/dna';
+import { SCORING_MATRIX_NAMES, AA_MAP } from '../constants/constants';
+import { SCORING_MATRICES } from '../constants/scoring_matrices/scoring_matrices';
 
-
-const scoringMatrices = {
-    [SCORING_MATRICES.IDENTITY]: IDENTITY,
-    [SCORING_MATRICES.BLOSUM45]: BLOSUM_45,
-    [SCORING_MATRICES.BLOSUM62]: BLOSUM_62,
-    [SCORING_MATRICES.BLOSUM80]: BLOSUM_80,
-    [SCORING_MATRICES.PAM30]: PAM_30,
-    [SCORING_MATRICES.PAM70]: PAM_70,
-};
 
 /*
  * Caclulate the size in px of a "point" on the canvas
@@ -76,10 +65,30 @@ function sumMatches(s1, s2) {
 /*
  * In DNA-DNA comparison, return the similarity score.
  */
-function scoreMatches(s1, s2, scoreMatrix) {
+function calculateMatches(s1, s2, scoringMatrix) {
     let sums = sumMatches(s1, s2);
-    let score = scoreMatrix[MATCH] * sums[MATCH]
-              + scoreMatrix[MISMATCH] * sums[MISMATCH];
+    let score = scoringMatrix[MATCH] * sums[MATCH]
+              + scoringMatrix[MISMATCH] * sums[MISMATCH];
+    return score;
+}
+
+/*
+ * In proteins comparison, return the similarity score.
+ */
+function calculateScore(s1, s2, scoringMatrix) {
+    let score = 0;
+    let L = Math.min(s1.length, s2.length);
+    for (let k=0; k<L; k++) {
+        let c1 = s1[k];
+        let c2 = s2[k];
+        let i = AA_MAP[c1];
+        let j = AA_MAP[c2];
+        score += scoringMatrix[i][j];
+        if (isNaN(score)) {
+            console.log(c1, c2, i, j, scoringMatrix[i][j])
+            console.log(scoringMatrix[i])
+        }
+    }
     return score;
 }
 
@@ -123,13 +132,12 @@ function initBlankCanvas(canvasId) {
 /*
  * Fill the dotter canvas with similarity scores; return the scores density.
  */
-function fillCanvas(s1, s2, windowSize, scoringMatrix) {
+function fillCanvas(s1, s2, windowSize, scoringMatrixName) {
     let ctx = initBlankCanvas(CANVAS_ID);
     let canvasSize = ctx.canvas.width;
 
     let ws = Math.floor(windowSize / 2);   // # of nucleotides on each side
     let scores = {};
-    let matrix = scoringMatrices[scoringMatrix];
 
     let ls1 = s1.length;
     let ls2 = s2.length;
@@ -138,9 +146,14 @@ function fillCanvas(s1, s2, windowSize, scoringMatrix) {
     let canvasPt = getCanvasPt(canvasSize, L, round);  // Size of a "dot" on the canvas, when L is small (else 1)
     let npoints = getNpoints(canvasSize, canvasPt);    // Number of points in one line when L is small (else CANVAS_SIZE)
     let step = getStep(npoints, L, round);             // 1 point -> `step` characters
-    // n points -> n-1 steps. What if not int?
 
-    //console.debug(windowSize, ws, L, canvasPt, step)
+    let scoringFunction;
+    if (scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY) {
+        scoringFunction = calculateMatches;
+    } else {
+        scoringFunction = calculateScore;
+    }
+    let matrix = SCORING_MATRICES[scoringMatrixName];
 
     for (let i=0; i <= npoints; i++) {
         let q1 = Math.round(i * step);                            // position on seq1. First is 0, last is L
@@ -149,15 +162,12 @@ function fillCanvas(s1, s2, windowSize, scoringMatrix) {
         for (let j=0; j <= npoints; j++) {
             let q2 = Math.round(j * step);                        // position on seq2
             let subseq2 = helpers.getSequenceAround(s2, q2, ws);  // nucleotides window on seq2
-            let score = scoreMatches(subseq1, subseq2, matrix);
+            let score = scoringFunction(subseq1, subseq2, matrix);
             if (! (score in scores)) {
                 scores[score] = 0;
             } else {
                 scores[score] += 1;
             }
-
-            //console.debug([i, j], [q1, q2], subseq1, subseq2, score)
-
             if (score > 0) {
                 ctx.globalAlpha = score / windowSize;
                 ctx.fillRect(q1 * canvasPt, q2 * canvasPt, canvasPt, canvasPt);
@@ -182,7 +192,8 @@ function drawPositionLines(i, j, L, canvasSize=CANVAS_SIZE) {
 
 
 export {
-    scoreMatches,
+    calculateMatches,
+    calculateScore,
     sumMatches,
     getCanvasPt,
     getStep,

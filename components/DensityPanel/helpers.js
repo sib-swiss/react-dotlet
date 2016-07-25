@@ -14,9 +14,9 @@ function minMaxObject(d) {
     if (d.length === 0) {
         return { maxX: 1, minX: 0, maxY: 1, minY: 0 };
     }
-    let maxX = 0,
+    let maxX = -Number.MAX_SAFE_INTEGER,
         minX = Number.MAX_SAFE_INTEGER,
-        maxY = 0,
+        maxY = -Number.MAX_SAFE_INTEGER,
         minY = Number.MAX_SAFE_INTEGER;
     for (let key of Object.keys(d)) {
         let val = d[key];

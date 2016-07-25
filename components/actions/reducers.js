@@ -1,8 +1,8 @@
 import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
          INSPECT_COORDINATE, KEYBOARD_DIRECTION, SLIDE_TWO_SEQS } from './actionTypes';
 import { fillCanvas, drawPositionLines } from '../DotterPanel/dotter';
-import { commonSeqtype } from '../InputPanel/input';
-import { SCORING_MATRICES, DNA, PROTEIN } from '../constants/constants';
+import { commonSeqType } from '../InputPanel/input';
+import { SCORING_MATRIX_NAMES, DNA, PROTEIN } from '../constants/constants';
 
 
 // s1: YWHAB from Uniprot, len 246
@@ -22,7 +22,7 @@ let defaultState = {
     s2Type: PROTEIN,
     scores: [],
     windowSize: 1,
-    scoringMatrix: SCORING_MATRICES.IDENTITY,
+    scoringMatrix: SCORING_MATRIX_NAMES.IDENTITY,
     i: 0,
     j: 0,
     matrixSize: 246,
@@ -42,12 +42,12 @@ let reducer = (state = defaultState, action) => {
         let scores;
         let seqtype;
         if (action.seqn === 1) {
-            seqtype = commonSeqtype(action.seqtype, state.s2Type);
+            seqtype = commonSeqType(action.seqtype, state.s2Type);
             scores = fillCanvas(action.sequence, state.s2, state.windowSize, state.scoringMatrix);
             newState.s1 = action.sequence;
             newState.s1Type = action.seqtype;
         } else {
-            seqtype = commonSeqtype(state.s1Type, action.seqtype);
+            seqtype = commonSeqType(state.s1Type, action.seqtype);
             scores = fillCanvas(state.s1, action.sequence, state.windowSize, state.scoringMatrix);
             newState.s2 = action.sequence;
             newState.s2Type = action.seqtype;

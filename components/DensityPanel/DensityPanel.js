@@ -32,6 +32,12 @@ class DensityPanel extends React.Component {
         let minmax = minMaxObject(this.state.scores);
         let data = toDensity(this.state.scores)
         data = object2array(data);
+
+        //let ticks = new Array(data.length).fill(NaN);
+        //ticks[0] = minmax.minX;
+        //ticks[data.length-1] = minmax.maxX;
+        //console.log(data.length, ticks)
+
         data = [{name: 'dummy', 'values': data}];
         let marginX = 0.1 * minmax.maxX;
         let marginY = 0.1 * minmax.maxY;
@@ -46,6 +52,7 @@ class DensityPanel extends React.Component {
                         yAccessor={ (d) => d ? d.y : 0 }
                     />
                    {/*
+                    xAxisTickValues={ticks}
                     viewBoxObject={{
                         x: 0,
                         y: 0,

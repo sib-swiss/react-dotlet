@@ -4,8 +4,8 @@ import store from '../../core/store';
 import s from './InputPanel.css';
 import { changeSequence, changeWindowSize, changeScoringMatrix } from '../actions/actionCreators';
 //import * as validators from './validators';
-import { SCORING_MATRICES, DNA, PROTEIN, CANVAS_ID } from '../constants/constants';
-import { guessSequenceType } from './input';
+import { SCORING_MATRIX_NAMES, DNA, PROTEIN, CANVAS_ID } from '../constants/constants';
+import { guessSequenceType, commonSeqType } from './input';
 import { printCanvas } from './helpers';
 
 
@@ -24,7 +24,17 @@ class InputPanel extends React.Component {
     constructor() {
         super();
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-        this.state = store.getState();
+        this.state = this.getStoreState();
+    }
+
+    getStoreState() {
+        let storeState = store.getState();
+        return {
+            s1: storeState.s1,
+            s2: storeState.s2,
+            windowSize: storeState.windowSize,
+            scoringMatrix: storeState.scoringMatrix,
+        };
     }
 
     onChangeSeq1 = (event, value) => {
@@ -57,7 +67,12 @@ class InputPanel extends React.Component {
     }
 
     render() {
-        return (<div className={s.root}>
+        let seq1type = store.getState().s1Type;
+        let seq2type = store.getState().s2Type;
+        let commonType = commonSeqType(seq1type, seq2type);
+
+        return (
+        <div className={s.root}>
         <Toolbar style={{paddingBottom: '64px'}}>
 
             {/* Sequences input */}
@@ -92,18 +107,29 @@ class InputPanel extends React.Component {
                          onChange={this.onChangeScoringMatrix}
                          value={this.state.scoringMatrix}
                          >
-                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRICES.IDENTITY}
-                          value={SCORING_MATRICES.IDENTITY} primaryText="Identity" />
-                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRICES.BLOSUM45}
-                          value={SCORING_MATRICES.BLOSUM45} primaryText="BLOSUM 45" />
-                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRICES.BLOSUM62}
-                          value={SCORING_MATRICES.BLOSUM62} primaryText="BLOSUM 62" />
-                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRICES.BLOSUM80}
-                          value={SCORING_MATRICES.BLOSUM80} primaryText="BLOSUM 80" />
-                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRICES.PAM30}
-                          value={SCORING_MATRICES.PAM30} primaryText="PAM 30" />
-                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRICES.PAM70}
-                          value={SCORING_MATRICES.PAM70} primaryText="PAM 70" />
+                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.IDENTITY}
+                          value={SCORING_MATRIX_NAMES.IDENTITY}
+                          primaryText="Identity" />
+                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.BLOSUM45}
+                          value={SCORING_MATRIX_NAMES.BLOSUM45}
+                          disabled={commonType === DNA}
+                          primaryText="BLOSUM 45" />
+                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.BLOSUM62}
+                          value={SCORING_MATRIX_NAMES.BLOSUM62}
+                          disabled={commonType === DNA}
+                          primaryText="BLOSUM 62" />
+                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.BLOSUM80}
+                          value={SCORING_MATRIX_NAMES.BLOSUM80}
+                          disabled={commonType === DNA}
+                          primaryText="BLOSUM 80" />
+                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.PAM30}
+                          value={SCORING_MATRIX_NAMES.PAM30}
+                          disabled={commonType === DNA}
+                          primaryText="PAM 30" />
+                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.PAM70}
+                          value={SCORING_MATRIX_NAMES.PAM70}
+                          disabled={commonType === DNA}
+                          primaryText="PAM 70" />
             </SelectField>
             </ToolbarGroup>
 

@@ -1,23 +1,38 @@
 import { expect } from 'chai';
 
 
-import { scoreMatches, sumMatches, getStep, seqIndexFromCoordinate } from '../dotter';
-import * as C from '../../constants/constants';
+import { sumMatches, calculateMatches, calculateScore, getStep, seqIndexFromCoordinate } from '../dotter';
+import { SCORING_MATRIX_NAMES, MATCH, MISMATCH } from '../../constants/constants';
+import { SCORING_MATRICES } from '../../constants/scoring_matrices/scoring_matrices';
+
 
 describe('DotterPanel test suite', () => {
     let s1 = "AAAAAAATTTCCCCCCTTGC";
     let s2 = "AAAGAAATTTCCCCCCATGC";
 
-    it('dotter.DnaSumMatches', () => {
+    it('dotter.sumMatches', () => {
         let sums = sumMatches(s1,s2);
-        expect(sums[C.MATCH]).to.be.equal(18);
-        expect(sums[C.MISMATCH]).to.be.equal(2);
+        expect(sums[MATCH]).to.be.equal(18);
+        expect(sums[MISMATCH]).to.be.equal(2);
     });
 
-    it('dotter.DnaScoreMatches', () => {
-        let scoreMatrix = {[C.MATCH]: 2, [C.MISMATCH]: -1};
-        let score = scoreMatches(s1, s2, scoreMatrix);
+    it('dotter.calculateMatches', () => {
+        let scoreMatrix = {[MATCH]: 2, [MISMATCH]: -1};
+        let score = calculateMatches(s1, s2, scoreMatrix);
         expect(score).to.be.equal(18*2 - 2);
+    });
+
+    it('dotter.calculateScore, sequence of 1 char', () => {
+        let matrix = SCORING_MATRICES[SCORING_MATRIX_NAMES.PAM30];
+        let s1 = "G", s2 = "V";
+        let score = calculateScore(s1, s2, matrix);
+        expect(score).to.be.equal(-5);
+    });
+    it('dotter.calculateScore, more', () => {
+        let matrix = SCORING_MATRICES[SCORING_MATRIX_NAMES.BLOSUM45];
+        let s1 = "ARN", s2 = "NRA";
+        let score = calculateScore(s1, s2, matrix);
+        expect(score).to.be.equal(-1 + 7 + -1);
     });
 
     it('dotter.getStep integer', () => {

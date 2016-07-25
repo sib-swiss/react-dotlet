@@ -25,7 +25,7 @@ function guessSequenceType(seq, nchars=200) {
 }
 
 
-function commonSeqtype(s1Type, s2Type) {
+function commonSeqType(s1Type, s2Type) {
     return s1Type === DNA && s2Type === DNA ? DNA : PROTEIN;
 }
 
@@ -53,6 +53,6 @@ function translate(seq, phase=0) {
 
 export {
     guessSequenceType,
-    commonSeqtype,
+    commonSeqType,
     translate,
 }
