@@ -166,7 +166,7 @@ class SequencePopover extends React.Component {
 
     render() {
         return (<ToolbarGroup>
-            <RaisedButton primary label={this.props.label} onClick={this.open}/>
+            <RaisedButton primary={true} label={this.props.label} onClick={this.open}/>
             <Popover
                 open={this.state.open}
                 anchorEl={this.state.anchorEl}

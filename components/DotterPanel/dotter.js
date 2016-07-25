@@ -183,11 +183,11 @@ function fillCanvas(s1, s2, windowSize, scoringMatrixName) {
  */
 function drawPositionLines(i, j, L, canvasSize=CANVAS_SIZE) {
     let ctx = initBlankCanvas(CANVAS_ID +'-topLayer');
-    let x = coordinateFromSeqIndex(i, L);
-    let y = coordinateFromSeqIndex(j, L);
+    let x = coordinateFromSeqIndex(i, L, canvasSize, false);
+    let y = coordinateFromSeqIndex(j, L, canvasSize, false);
     ctx.fillStyle = "red";
-    ctx.fillRect(x, 0, 1, canvasSize);
-    ctx.fillRect(0, y, canvasSize, 1);
+    ctx.fillRect(x, 1, 1, canvasSize);
+    ctx.fillRect(1, y, canvasSize, 1);
 }
 
 
