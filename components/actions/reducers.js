@@ -54,6 +54,7 @@ let reducer = (state = defaultState, action) => {
         }
         newState.scores = scores;
         newState.matrixSize = Math.max(newState.s1.length, newState.s2.length);
+        newState.i = 0; newState.j = 0;
         drawPositionLines(state.i, state.j, newState.matrixSize);
         return newState;
 
