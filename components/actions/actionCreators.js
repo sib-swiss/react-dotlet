@@ -41,11 +41,26 @@ function inspectCoordinate(i, j) {
     };
 }
 
+/*
+ * When an arrow key is pressed to shift the position by 1 char int he sequence.
+ */
 function keyboardArrowShiftCoordinate(direction) {
     return {
         type: KEYBOARD_DIRECTION,
         direction: direction,
     };
+}
+
+/*
+ * When the sliders above/below the TwoSeqsPanel are moved, to change the alignment.
+ * @param seqn: sequence nr, 1 or 2
+ */
+function moveTwoSeqsSlider(seqn, shift) {
+    return {
+        type: SLIDE_TWO_SEQS,
+        seqn: seqn,
+        shift: shift,
+    }
 }
 
 

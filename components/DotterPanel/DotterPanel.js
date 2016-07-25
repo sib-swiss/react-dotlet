@@ -14,10 +14,10 @@ class DotterPanel extends React.Component {
     }
 
     componentDidMount() {
-        window.addEventListener('keydown', (e) => this._onKeyDown(e), true)
+        window.addEventListener('keydown', this._onKeyDown, true)
     }
     componentWillUnmount() {
-        //window.removeEventListener('scroll', (e) => this._onKeyDown)
+        window.removeEventListener('keydown', this._onKeyDown, true)
     }
 
     componentDidUpdate() {
@@ -52,27 +52,32 @@ class DotterPanel extends React.Component {
         store.dispatch(inspectCoordinate(Math.min(i,ls1), Math.min(j,ls2)));
     }
 
-    /*
-     * Return the index on the sequence `seq` corresponding to pixel coordinate `px` (approximately).
-     * @param px: position clicked on the canvas.
-     * @param L: matrix size (max sequence length).
-     */
-    seqIndexFromCoordinate(px, L, canvasSize=CANVAS_SIZE) {
-        let ratio = px / canvasSize;  // x or y: the canvas is square
-        let index = Math.floor(L * ratio);
-        return index;
-    }
-
     render() {
         return (
-            <div className={s.root}>
+            <div className={s.root} style={{position: 'relative', minHeight: CANVAS_SIZE}}>
                 <canvas id={CANVAS_ID}
-                        ref={(c) => this._refDotterCanvas = c}
                         className={s.canvas}
                         width={CANVAS_SIZE}
                         height={CANVAS_SIZE}
-                        onClick={this._onClick}
+                        style={{
+                            position: 'absolute',
+                            left: 0,
+                            top: 0,
+                            zIndex: 0,
+                        }}
                 ></canvas>
+                <canvas id={CANVAS_ID +'-topLayer'}
+                        width={CANVAS_SIZE}
+                        height={CANVAS_SIZE}
+                        style={{
+                            position: 'absolute',
+                            left: 0,
+                            top: 0,
+                            zIndex: 1,
+                        }}
+                        onClick={this._onClick}
+                >
+                </canvas>
             </div>
         );
     }

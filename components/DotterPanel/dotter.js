@@ -1,5 +1,5 @@
 
-import { MATCH, MISMATCH, CANVAS_SIZE } from '../constants/constants';
+import { MATCH, MISMATCH, CANVAS_SIZE, CANVAS_ID } from '../constants/constants';
 import * as helpers from '../helpers';
 import { SCORING_MATRICES } from '../constants/constants';
 import { BLOSUM_45, BLOSUM_62, BLOSUM_80 } from '../constants/scoring_matrices/blosum';
@@ -84,12 +84,22 @@ function scoreMatches(s1, s2, scoreMatrix) {
 }
 
 /*
- * Return the index on the sequence `seq` corresponding to pixel coordinate `px` (approximately).
+ * Get the position (in px) on the canvas representing the given index in the sequence.
+ * @param L (int): matrix size (max sequence length).
+ */
+function coordinateFromSeqIndex(index, L, canvasSize=CANVAS_SIZE, round=true) {
+    let px = (index/L) * canvasSize;
+    if (round) px = Math.round(px);
+    return px;
+}
+
+/*
+ * Return *approximately* the index on the sequence `seq` corresponding to pixel coordinate `px`.
  * The problem is that if the sequence length is not a multiple of the canvas size,
  * there is an empty margin that must not count. So round it up to a multiple,
  * then cut down if necessary.
  *
- * @param px (float): position clicked on the canvas (in pixels, != `npoints` !).
+ * @param px (float): position clicked on the canvas (in pixels, != `npoints`!).
  * @param L (int): matrix size (max sequence length).
  */
 function seqIndexFromCoordinate(px, L, canvasSize=CANVAS_SIZE) {
@@ -113,8 +123,10 @@ function initBlankCanvas(canvasId) {
 /*
  * Fill the dotter canvas with similarity scores; return the scores density.
  */
-function fillCanvas(s1, s2, windowSize, scoringMatrix, canvasSize=CANVAS_SIZE) {
-    let ctx = initBlankCanvas("dotter-canvas");
+function fillCanvas(s1, s2, windowSize, scoringMatrix) {
+    let ctx = initBlankCanvas(CANVAS_ID);
+    let canvasSize = ctx.canvas.width;
+
     let ws = Math.floor(windowSize / 2);   // # of nucleotides on each side
     let scores = {};
     let matrix = scoringMatrices[scoringMatrix];
@@ -156,11 +168,26 @@ function fillCanvas(s1, s2, windowSize, scoringMatrix, canvasSize=CANVAS_SIZE) {
 }
 
 
+/*
+ * Draw the vertical and horizontal lines showing the current position on the canvas.
+ */
+function drawPositionLines(i, j, L, canvasSize=CANVAS_SIZE) {
+    let ctx = initBlankCanvas(CANVAS_ID +'-topLayer');
+    let x = coordinateFromSeqIndex(i, L);
+    let y = coordinateFromSeqIndex(j, L);
+    ctx.fillStyle = "red";
+    ctx.fillRect(x, 0, 1, canvasSize);
+    ctx.fillRect(0, y, canvasSize, 1);
+}
+
+
 export {
     scoreMatches,
     sumMatches,
     getCanvasPt,
     getStep,
-    fillCanvas,
+    coordinateFromSeqIndex,
     seqIndexFromCoordinate,
+    fillCanvas,
+    drawPositionLines,
 };

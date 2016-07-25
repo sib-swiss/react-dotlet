@@ -1,6 +1,6 @@
 import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
          INSPECT_COORDINATE, KEYBOARD_DIRECTION, SLIDE_TWO_SEQS } from './actionTypes';
-import { fillCanvas } from '../DotterPanel/dotter';
+import { fillCanvas, drawPositionLines } from '../DotterPanel/dotter';
 import { commonSeqtype } from '../InputPanel/input';
 import { SCORING_MATRICES, DNA, PROTEIN } from '../constants/constants';
 
@@ -25,17 +25,20 @@ let defaultState = {
     scoringMatrix: SCORING_MATRICES.IDENTITY,
     i: 0,
     j: 0,
+    matrixSize: 246,
 };
 
 
-let reducer = (state = defaultState, action) => { switch (action.type) {
+let reducer = (state = defaultState, action) => {
+    let newState;
+    switch (action.type) {
 
     /*
      * When the sequence changes, draw to the canvas as a side-effect, but actually compute
-     * scores and store only the latter.
+     * scores and store the latter. Also compute the max seq length, as many methods require it.
      */
     case CHANGE_SEQUENCE:
-        var newState = Object.assign({}, state);
+        newState = Object.assign({}, state);
         let scores;
         let seqtype;
         if (action.seqn === 1) {
@@ -50,6 +53,8 @@ let reducer = (state = defaultState, action) => { switch (action.type) {
             newState.s2Type = action.seqtype;
         }
         newState.scores = scores;
+        newState.matrixSize = Math.max(newState.s1.length, newState.s2.length);
+        drawPositionLines(state.i, state.j, newState.matrixSize);
         return newState;
 
     case CHANGE_WINDOW_SIZE:
@@ -68,6 +73,7 @@ let reducer = (state = defaultState, action) => { switch (action.type) {
      * On click on the canvas.
      */
     case INSPECT_COORDINATE:
+        drawPositionLines(action.i, action.j, state.matrixSize);
         return Object.assign({}, state, {i: action.i, j: action.j});
 
     /*
@@ -85,7 +91,9 @@ let reducer = (state = defaultState, action) => { switch (action.type) {
         } else if (action.direction === 'left') {
             newDirection = {i: state.i - 1};
         }
-        return Object.assign({}, state, newDirection);
+        newState = Object.assign({}, state, newDirection);
+        drawPositionLines(newState.i, newState.j, state.matrixSize);
+        return newState;
 
     /*
      * When keyboard direction arrows are pressed.
@@ -93,11 +101,15 @@ let reducer = (state = defaultState, action) => { switch (action.type) {
      * and `action.shift`: the positive or negative shift.
      */
     case SLIDE_TWO_SEQS:
+        let direction;
         if (action.seqn === 1) {
-            return Object.assign({}, state, {i: state.i + action.shift});
+            direction = {i: state.i + action.shift};
         } else {
-            return Object.assign({}, state, {j: state.j + action.shift});
+            direction = {j: state.j + action.shift};
         }
+        newState = Object.assign({}, state, direction);
+        drawPositionLines(newState.i, newState.j, state.matrixSize);
+        return newState;
 
     default:
         return state;
