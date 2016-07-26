@@ -1,9 +1,13 @@
 import React from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import s from './TwoSeqsPanel.css';
 import store from '../../core/store';
 import * as helpers from '../helpers';
 import { formatSeq } from './helpers';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
+import { moveTwoSeqsSlider } from '../actions/actionCreators';
+
+
+const nbsp = String.fromCharCode(160); // code for &nbsp;
 
 
 class TwoSeqsPanel extends React.Component {
@@ -11,6 +15,14 @@ class TwoSeqsPanel extends React.Component {
         super(props);
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
         this.state = this.stateFromStore();
+        this.state.slider1 = 0;
+        this.state.slider2 = 0;
+
+        this.nchars = 73;            // total number of chars to display, always odd for simplicity.
+        this.half = (this.nchars-1) / 2;  // on each side of `i`, always int if nchars is odd.
+
+        this.ruler = formatSeq("|", 0, this.nchars, nbsp);  // "|"
+        this.caret = formatSeq("^", 0, this.nchars, nbsp);  // "^"
     }
 
     stateFromStore() {
@@ -30,82 +42,111 @@ class TwoSeqsPanel extends React.Component {
         });
     }
 
+    onSliderChange = (seqn, e) => {
+        let value = e.target.value;
+        let shift;
+        if (seqn === 1) {
+            shift = value - this.state.slider1;
+            this.setState({ slider1: value });
+            store.dispatch(moveTwoSeqsSlider(1, shift));
+        } else {
+            shift = value - this.state.slider2;
+            this.setState({ slider2: value });
+            store.dispatch(moveTwoSeqsSlider(2, shift));
+        }
+    };
+
+    /*
+     * Draw the border showing the running window.
+     * @param nseq: sequence number (1 - top or 2 - bottom).
+     * @param k: index in the sequence of the middle character.
+     * @param windowSize: the size in chars of the window to take the average on.
+     * @param ws: precalculated `Math.floor(windowSize / 2)`.
+     */
+    borderCharStyle(nseq, k, windowSize, ws) {
+        if (k === this.half - (windowSize - ws) + 1) {
+            if (k === this.half + ws) {  // window size == 1
+                if (nseq === 1) return s.windowTopRight +' '+ s.windowTopLeft;
+                else return s.windowBotRight +' '+ s.windowBotLeft;
+            }
+            if (nseq === 1) return s.windowTopLeft;
+            else return s.windowBotLeft;
+        }
+        if (k === this.half + ws) {
+            if (nseq === 1) return s.windowTopRight;
+            else return s.windowBotRight;
+        }
+    }
+
+    /*
+     * Return "s.same" style if the characters match on both substrings
+     * @param k: character index in `w1`/`w2`.
+     * @param w1: sequence 1.
+     * @param w2: sequence 2.
+     * @param fill: character used to indicate an inexistent element.
+     */
+    sameCharStyle(k, w1, w2, fill) {
+        if (w1[k] === w2[k] && w1[k] !== fill) {
+            return s.same;
+        } else {
+            return  '';
+        }
+    }
+
     render() {
         let i = this.state.i,
             j = this.state.j,
             s1 = this.state.s1,
             s2 = this.state.s2,
             windowSize = this.state.windowSize;
+        let nchars = this.nchars;
+        let half = this.half;
         let ws = Math.floor(windowSize / 2);
-        let nchars = 73;            // total number of chars to display, always odd for simplicity.
-        let half = (nchars-1) / 2;  // on each side of `i`, always int if nchars is odd.
         let w1 = helpers.getSequenceAround(s1, i, half);
         let w2 = helpers.getSequenceAround(s2, j, half);
 
         /* Formatting */
-        let nbsp = String.fromCharCode(160); // code for &nbsp;
         let fill = nbsp;
         w1 = formatSeq(w1, i, nchars, fill);
         w2 = formatSeq(w2, j, nchars, fill);
-        let ruler = formatSeq("|", 0, nchars, nbsp);  // "|"
-        let caret = formatSeq("^", 0, nchars, nbsp);  // "^"
         let seqinfo1 = formatSeq("Seq1:"+(i+1), 4, nchars, nbsp);
         let seqinfo2 = formatSeq("Seq2:"+(j+1), 4, nchars, nbsp);
-
-        /* Return "s.same" style if the characters match on both substrings */
-        function sameCharStyle(k) {
-            if (w1[k] === w2[k] && w1[k] !== fill) {
-                return s.same;
-            } else {
-                return  '';
-            }
-        }
-
-        /*
-         * Draw the border showing the running window
-         * @param nseq: sequence number (1 - top or 2 - bottom)
-         * @param k: index in the sequence of the middle character
-         */
-        function borderCharStyle(nseq, k) {
-            if (k === half - (windowSize - ws) + 1) {
-                if (k === half + ws) {  // window size == 1
-                    if (nseq === 1) return s.windowTopRight +' '+ s.windowTopLeft;
-                    else return s.windowBotRight +' '+ s.windowBotLeft;
-                }
-                if (nseq === 1) return s.windowTopLeft;
-                else return s.windowBotLeft;
-            }
-            if (k === half + ws) {
-                if (nseq === 1) return s.windowTopRight;
-                else return s.windowBotRight;
-            }
-        }
 
         let spans1 = w1.split('').map((c,k) =>
             <span key={k} className={[
                 s.seq1,
-                sameCharStyle(k),
-                borderCharStyle(1, k),
+                this.sameCharStyle(k, w1, w2, fill),
+                this.borderCharStyle(1, k, windowSize, ws),
             ].join(' ')} >{c}</span> );
 
         let spans2 = w2.split('').map((c,k) =>
             <span key={k} className={[
                 s.seq2,
-                sameCharStyle(k),
-                borderCharStyle(2, k),
+                this.sameCharStyle(k, w1, w2, fill),
+                this.borderCharStyle(2, k, windowSize, ws),
             ].join(' ')} >{c}</span> );
 
         return (
             <div id="two-seqs-panel" className={s.root}>
-            <pre>
-                <div className={s.sequence}>{seqinfo1}</div>
-                <div className={s.sequence}>{ruler}</div>
-                <div className={s.sequence}>{spans1}</div>
-                <div className={s.sequence}>{spans2}</div>
-                <div className={s.sequence}>{caret}</div>
-                <div className={s.sequence}>{ruler}</div>
-                <div className={s.sequence}>{seqinfo2}</div>
-            </pre>
+                <input className="mdl-slider mdl-js-slider" type="range"
+                       min={0} max={s1.length-1} value={this.state.slider1} tabIndex="0"
+                       style={{width: '95%'}}
+                       onChange={this.onSliderChange.bind(null, 1)}
+                />
+                <pre>
+                    <div className={s.sequence}>{seqinfo1}</div>
+                    <div className={s.sequence}>{this.ruler}</div>
+                    <div className={s.sequence}>{spans1}</div>
+                    <div className={s.sequence}>{spans2}</div>
+                    <div className={s.sequence}>{this.caret}</div>
+                    <div className={s.sequence}>{this.ruler}</div>
+                    <div className={s.sequence}>{seqinfo2}</div>
+                </pre>
+                <input className="mdl-slider mdl-js-slider" type="range"
+                       min={0} max={s2.length-1} value={this.state.slider2} tabIndex="0"
+                       style={{width: '95%'}}
+                       onChange={this.onSliderChange.bind(null, 2)}
+                />
             </div>
         );
     }

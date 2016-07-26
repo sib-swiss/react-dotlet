@@ -70,4 +70,5 @@ export {
     changeScoringMatrix,
     inspectCoordinate,
     keyboardArrowShiftCoordinate,
+    moveTwoSeqsSlider,
 };
