@@ -4,10 +4,7 @@ import s from './DensityPanel.css';
 import store from '../../core/store';
 import { toDensity, minMaxObject, object2array } from './helpers';
 
-/* React-D3 */
-import rd3 from 'rd3';
-const BarChart = rd3.BarChart;
-
+import BarChart from '../BarChart/BarChart';
 
 class DensityPanel extends React.Component {
     constructor() {
@@ -32,37 +29,11 @@ class DensityPanel extends React.Component {
         let minmax = minMaxObject(this.state.scores);
         let data = toDensity(this.state.scores)
         data = object2array(data);
-
-        //let ticks = new Array(data.length).fill(NaN);
-        //ticks[0] = minmax.minX;
-        //ticks[data.length-1] = minmax.maxX;
-        //console.log(data.length, ticks)
-
-        data = [{name: 'dummy', 'values': data}];
-        let marginX = 0.1 * minmax.maxX;
-        let marginY = 0.1 * minmax.maxY;
+        
         return (
             <div id="density-panel" className={s.root}>
                 <div className={s.centerMe}>
-                    <BarChart
-                        data={data}
-                        width={250}
-                        height={250}
-                        xAccessor={ (d) => d ? d.x : 0 }
-                        yAccessor={ (d) => d ? d.y : 0 }
-                    />
-                   {/*
-                    xAxisTickValues={ticks}
-                    viewBoxObject={{
-                        x: 0,
-                        y: 0,
-                        width: 250,
-                        height: 250,
-                    }}
-                    domain={ {x: [0 - marginX, minmax.maxX + marginX],
-                    y: [0, minmax.maxY + marginY], } }
-                    {JSON.stringify(this.state.scores)}
-                     */}
+                    <BarChart data={data} width={300} height={200} />
                 </div>
             </div>
         );

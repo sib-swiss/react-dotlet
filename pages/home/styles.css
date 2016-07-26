@@ -1,4 +1,23 @@
 
+/*
+ * Define __ALL__ constants here.
+ */
+:root {
+    --primary-blue: #3F51B5;
+    --darker-blue: #2137AA;
+    --darkest-blue: #132584;
+    --lighter-blue: #5E6EC7;
+    --lisghtest-blue: #8895DC;
+}
+
+
 .midPanel {
     height: 100%;
+}
+
+.rightPanel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }

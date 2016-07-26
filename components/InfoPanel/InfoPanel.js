@@ -23,7 +23,7 @@ class InfoPanel extends React.Component {
 
     render() {
         return (
-            <div id="info-panel">
+            <div id="info-panel" className={s.root}>
                 <ul>
                     <li>Some useful dynamic stats</li>
                     <li>Some even more useful stats</li>

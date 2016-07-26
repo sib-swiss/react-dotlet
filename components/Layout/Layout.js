@@ -115,7 +115,7 @@ const muiTheme = getMuiTheme({
         textColor: "black",
     },
     raisedButton: {
-        //primaryColor: "#3182BD",   // default rd3 chart blue
+        primaryColor: "#5E6EC7",   // default rd3 chart blue
     },
 });
 

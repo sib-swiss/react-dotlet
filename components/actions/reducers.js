@@ -21,7 +21,7 @@ let defaultState = {
     s1Type: PROTEIN,
     s2Type: PROTEIN,
     scores: [],
-    windowSize: 1,
+    windowSize: 5,
     scoringMatrix: SCORING_MATRIX_NAMES.IDENTITY,
     i: 0,
     j: 0,

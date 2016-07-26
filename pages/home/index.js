@@ -23,12 +23,12 @@ import InfoPanel from '../../components/InfoPanel';
  */
 
 class HomePage extends React.Component {
-    componentDidMount() {
-        window.componentHandler.upgradeDom();
-    }
-    componentWillUnmount() {
-        window.componentHandler.downgradeDom();
-    }
+    //componentDidMount() {
+    //    window.componentHandler.upgradeDom();
+    //}
+    //componentWillUnmount() {
+    //    window.componentHandler.downgradeDom();
+    //}
 
     render() {
         return (
@@ -39,7 +39,7 @@ class HomePage extends React.Component {
                     <div className="mdl-cell mdl-cell--7-col">
                         <DotterPanel />
                     </div>
-                    <div className="mdl-cell mdl-cell--5-col">
+                    <div className={"mdl-cell mdl-cell--5-col "+ s.rightPanel}>
                         <DensityPanel />
                         <InfoPanel />
                     </div>
