@@ -2,31 +2,7 @@ import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
          INSPECT_COORDINATE, KEYBOARD_DIRECTION, SLIDE_TWO_SEQS } from './actionTypes';
 import { fillCanvas, drawPositionLines } from '../DotterPanel/dotter';
 import { commonSeqType } from '../InputPanel/input';
-import { SCORING_MATRIX_NAMES, DNA, PROTEIN } from '../constants/constants';
-
-
-// s1: YWHAB from Uniprot, len 246
-// s2: YWHAZ Coelacant ortholog
-let defaultState = {
-    s1: "MTMDKSELVQKAKLAEQAERYDDMAAAMKAVTEQGHELSNEERNLLSVAYKNVVGARRSS" +
-    "WRVISSIEQKTERNEKKQQMGKEYREKIEAELQDICNDVLELLDKYLIPNATQPESKVFY" +
-    "LKMKGDYFRYLSEVASGDNKQTTVSNSQQAYQEAFEISKKEMQPTHPIRLGLALNFSVFY" +
-    "YEILNSPEKACSLAKTAFDEAIAELDTLNEESYKDSTLIMQLLRDNLTLWTSENQGDEGD" +
-    "AGEGEN",
-    s2: "RKPLQTPTPIRRLWTMDTSELVQKAKLAEQAERYDDMAASMKAVTEQGAELSNEERNLLS" +
-    "VAYKNVVGARRSSWRVISSIEQKTEGSEQKQQMAREYREKIEAELRDICNDVLGLLDKYL" +
-    "IANASKAESKVFYLKMKGDYYRYLAEVAAGEDKKSTVDHSQQVYQEAFEISKKEMTSTHP" +
-    "IRLGLALNFSVFYYEILNLPEQACGLAKTAFDDAISELDKLGDESYKDSTLIMQLLRDNL" +
-    "TVST",
-    s1Type: PROTEIN,
-    s2Type: PROTEIN,
-    scores: [],
-    windowSize: 5,
-    scoringMatrix: SCORING_MATRIX_NAMES.IDENTITY,
-    i: 0,
-    j: 0,
-    matrixSize: 246,
-};
+import defaultState from './defaultState';
 
 
 let reducer = (state = defaultState, action) => {
@@ -58,6 +34,9 @@ let reducer = (state = defaultState, action) => {
         drawPositionLines(state.i, state.j, newState.matrixSize);
         return newState;
 
+    /*
+     * When the user changes the size of the sliding window.
+     */
     case CHANGE_WINDOW_SIZE:
         let winsize = action.windowSize;
         if (! winsize) {
@@ -66,6 +45,9 @@ let reducer = (state = defaultState, action) => {
         scores = fillCanvas(state.s1, state.s2, winsize, state.scoringMatrix);
         return Object.assign({}, state, {scores: scores, windowSize: parseInt(winsize)});
 
+    /*
+     * When the user changes the scoring matrix.
+     */
     case CHANGE_SCORING_MATRIX:
         scores = fillCanvas(state.s1, state.s2, state.windowSize, action.scoringMatrix);
         return Object.assign({}, state, {scores: scores, scoringMatrix: action.scoringMatrix});

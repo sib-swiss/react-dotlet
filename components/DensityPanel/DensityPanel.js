@@ -29,7 +29,7 @@ class DensityPanel extends React.Component {
         let minmax = minMaxObject(this.state.scores);
         let data = toDensity(this.state.scores)
         data = object2array(data);
-        
+
         return (
             <div id="density-panel" className={s.root}>
                 <div className={s.centerMe}>

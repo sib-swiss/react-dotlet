@@ -2,6 +2,7 @@
 
 /*
  * Source: https://github.com/adeveloperdiary/react-d3-charts
+ * simplified and updated to D3 v4.
  */
 
 import React from 'react';
@@ -22,6 +23,7 @@ class BarChart extends React.Component {
             width: React.PropTypes.number,
             height: React.PropTypes.number,
             chartId: React.PropTypes.string,
+            color: React.PropTypes.string,
         };
     }
 
@@ -30,10 +32,12 @@ class BarChart extends React.Component {
             width: 300,
             height: 70,
             chartId: 'v_chart',
+            color: "#5E6EC7",
         };
     }
 
     render() {
+        var _this = this;
         var data = this.props.data;
         //console.log("data = "+ JSON.stringify(data, null, 2))
 
@@ -49,7 +53,7 @@ class BarChart extends React.Component {
 
         var x = d3scale.scaleBand()
             .domain(data.map(d => d.x))
-            .rangeRound([0,this.state.width])
+            .rangeRound([0, this.state.width])
             .paddingInner(0.2)
 
         var y = d3scale.scaleLinear()
@@ -58,7 +62,7 @@ class BarChart extends React.Component {
 
         var rectForeground = data.map(function(d, i) {
             return (
-                <rect fill="#5E6EC7" rx="3" ry="3" key={i}
+                <rect fill={_this.props.color} rx="3" ry="3" key={i}
                       x={x(d.x)} y={y(d.y)} className="shadow"
                       height={h-y(d.y)}
                       width={x.bandwidth()}/>

@@ -23,17 +23,20 @@ import InfoPanel from '../../components/InfoPanel';
  */
 
 class HomePage extends React.Component {
-    //componentDidMount() {
-    //    window.componentHandler.upgradeDom();
-    //}
-    //componentWillUnmount() {
-    //    window.componentHandler.downgradeDom();
-    //}
+    componentDidMount() {
+        //window.componentHandler.upgradeDom();
+        window.componentHandler.upgradeElement(this.refs.root);
+    }
+
+    componentWillUnmount() {
+        //window.componentHandler.downgradeDom();
+        window.componentHandler.downgradeElements(this.refs.root);
+    }
 
     render() {
         return (
             <Layout>
-            <div>
+            <div ref="root">
                 <InputPanel />
                 <div className={"content-grid mdl-grid "+ s.midPanel}>
                     <div className="mdl-cell mdl-cell--7-col">
