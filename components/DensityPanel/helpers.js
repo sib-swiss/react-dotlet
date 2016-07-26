@@ -34,7 +34,7 @@ function minMaxObject(d) {
 function object2array(d) {
     var entries = [];
     for (var key of Object.keys(d)) {
-        entries.push({x: key, y: d[key]});
+        entries.push({x: parseInt(key), y: d[key]});
     }
     return entries;
 }

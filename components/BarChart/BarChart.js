@@ -6,8 +6,11 @@
  */
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import * as d3scale from 'd3-scale';
 import * as d3array from 'd3-array';
+import * as d3axis from 'd3-axis';
+import * as d3selection from 'd3-selection';
 
 
 class BarChart extends React.Component {
@@ -37,30 +40,46 @@ class BarChart extends React.Component {
     }
 
     render() {
-        var _this = this;
-        var data = this.props.data;
+        let _this = this;
+        let data = this.props.data;
+        data = data.sort((a,b) => a.x - b.x);
+        let N = data.length;
+        let maxY = d3array.max(data, d => d.y);
+        let maxX = d3array.max(data, d => d.x);
+        let minX = d3array.min(data, d => d.x);
         //console.log("data = "+ JSON.stringify(data, null, 2))
 
         if (data.length === 0) {
             return <div></div>;
         }
 
-        var margin = {top: 5, right: 5, bottom: 5, left: 5},
+        let margin = {top: 5, right: 20, bottom: 30, left: 40},
             w = this.state.width - (margin.left + margin.right),
             h = this.props.height - (margin.top + margin.bottom);
 
-        var transform='translate('+margin.left+','+margin.top+')';
+        let transform = 'translate('+ margin.left +','+ margin.top +')';
 
-        var x = d3scale.scaleBand()
+        /* Axes */
+
+        let x = d3scale.scaleBand()
             .domain(data.map(d => d.x))
-            .rangeRound([0, this.state.width])
-            .paddingInner(0.2)
+            .rangeRound([0, w])
+            .paddingInner(0.2);
 
-        var y = d3scale.scaleLinear()
-            .domain([0, d3array.max(data, d => d.y)])
+        let y = d3scale.scaleLinear()
+            .domain([0, maxY])
             .range([h, 0]);
 
-        var rectForeground = data.map(function(d, i) {
+        let xAxis = d3axis.axisBottom(x)
+            .scale(x)
+            .tickValues([minX, 0, maxX]);
+
+        let yAxis = d3axis.axisLeft(y)
+            .ticks(5);
+
+        /* Bars */
+
+        let rectForeground = data.map(function(d, i) {
             return (
                 <rect fill={_this.props.color} rx="3" ry="3" key={i}
                       x={x(d.x)} y={y(d.y)} className="shadow"
@@ -74,6 +93,8 @@ class BarChart extends React.Component {
                 <svg id={this.props.chartId} width={this.state.width} height={this.props.height}>
                     <g transform={transform}>
                         {rectForeground}
+                        <Axis h={h} axis={yAxis} axisType="y" />
+                        <Axis h={h} axis={xAxis} axisType="x"/>
                     </g>
                 </svg>
             </div>
@@ -81,6 +102,31 @@ class BarChart extends React.Component {
     }
 
 }
+
+
+class Axis extends React.Component {
+    componentDidUpdate() { this.renderAxis(); }
+    componentDidMount() { this.renderAxis(); }
+
+    renderAxis() {
+        var node = ReactDOM.findDOMNode(this);
+        d3selection.select(node).call(this.props.axis);
+    }
+
+    render() {
+        var translate = "translate(0,"+(this.props.h)+")";
+        return (
+            <g className="axis" transform={this.props.axisType=='x'?translate:""} >
+            </g>
+        );
+    }
+}
+
+Axis.propTypes = {
+    h: React.PropTypes.number,
+    axis: React.PropTypes.func,
+    axisType: React.PropTypes.oneOf(['x','y'])
+};
 
 
 export default BarChart;
