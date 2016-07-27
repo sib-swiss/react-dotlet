@@ -51,6 +51,9 @@ class Layout extends React.Component {
  * Material-UI theming
  * See all possible properties here:
  * https://github.com/callemall/material-ui/blob/master/src/styles/getMuiTheme.js
+ *
+ * Default are set here:
+ * https://github.com/callemall/material-ui/blob/master/src/styles/baseThemes/lightBaseTheme.js
  */
 
 
@@ -72,7 +75,12 @@ const muiTheme = getMuiTheme({
         primaryColor: lighterBlue,
     },
     slider: {
-        selectionColor: lighterBlue,
+        selectionColor: colors.grey400,   // the part left to handle... and the handle...
+        handleColorZero: colors.grey400,  // the handle border when at 0
+        handleFillColor: colors.grey400,  // the handle fill when at 0
+        rippleColor: colors.grey500,      // the glow when :hover
+        trackColor: colors.grey400,       // the base line
+        trackColorSelected: colors.grey400,  // the base line, when used
     }
 });
 
