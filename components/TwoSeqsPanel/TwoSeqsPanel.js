@@ -131,6 +131,7 @@ class TwoSeqsPanel extends React.Component {
                     min={0}
                     max={Math.max(s1.length-1, 1)}
                     disabled={s1.length < 1}
+                    step={1}
                     value={i}
                     onChange={this.onSliderChange.bind(null, 1)}
                 />
@@ -149,6 +150,7 @@ class TwoSeqsPanel extends React.Component {
                     min={0}
                     max={Math.max(s2.length-1, 1)}
                     disabled={s2.length < 1}
+                    step={1}
                     value={j}
                     onChange={this.onSliderChange.bind(null, 2)}
                 />

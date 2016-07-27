@@ -184,6 +184,7 @@ function drawPositionLines(i, j, L, canvasSize=CANVAS_SIZE) {
     let ctx = initBlankCanvas(CANVAS_ID +'-topLayer');
     let x = coordinateFromSeqIndex(i, L, canvasSize, false);
     let y = coordinateFromSeqIndex(j, L, canvasSize, false);
+    // If the point size is > 1, make the lines pass in the middle.
     if (L < canvasSize) {
         let canvasPt = getCanvasPt(canvasSize, L, false);
         x += canvasPt/2;

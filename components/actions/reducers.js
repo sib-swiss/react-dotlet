@@ -64,17 +64,17 @@ let reducer = (state = defaultState, action) => {
      * Expects `action.[right|left|top|down]`
      */
     case KEYBOARD_DIRECTION:
-        let newDirection;
+        let keybDirection;
         if (action.direction === 'down' && state.j < state.s2.length-1) {
-            newDirection = {j: state.j + 1};
+            keybDirection = {j: state.j + 1};
         } else if (action.direction === 'up' && state.j > 0) {
-            newDirection = {j: state.j - 1};
+            keybDirection = {j: state.j - 1};
         } else if (action.direction === 'right' && state.i < state.s1.length-1) {
-            newDirection = {i: state.i + 1};
+            keybDirection = {i: state.i + 1};
         } else if (action.direction === 'left' && state.i > 0) {
-            newDirection = {i: state.i - 1};
+            keybDirection = {i: state.i - 1};
         }
-        newState = Object.assign({}, state, newDirection);
+        newState = Object.assign({}, state, keybDirection);
         drawPositionLines(newState.i, newState.j, state.matrixSize);
         return newState;
 
@@ -84,13 +84,13 @@ let reducer = (state = defaultState, action) => {
      * and `action.shift`: the positive or negative shift.
      */
     case SLIDE_TWO_SEQS:
-        let direction;
+        let slideDirection;
         if (action.seqn === 1) {
-            direction = {i: state.i + action.shift};
+            slideDirection = {i: state.i + action.shift};
         } else {
-            direction = {j: state.j + action.shift};
+            slideDirection = {j: state.j + action.shift};
         }
-        newState = Object.assign({}, state, direction);
+        newState = Object.assign({}, state, slideDirection);
         drawPositionLines(newState.i, newState.j, state.matrixSize);
         return newState;
 
