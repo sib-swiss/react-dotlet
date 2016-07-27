@@ -10,7 +10,7 @@ import { inspectCoordinate, keyboardArrowShiftCoordinate } from '../actions/acti
 class DotterPanel extends React.Component {
     constructor() {
         super();
-        this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+        //this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
         this.state = {
             mouseDown: false,
         }
@@ -29,9 +29,16 @@ class DotterPanel extends React.Component {
         window.removeEventListener('keydown', this._onKeyDown, true)
     }
 
-    componentDidUpdate() {
-        let state = store.getState();
-        dotter.fillCanvas(state.s1, state.s2, state.windowSize, state.scoringMatrix);
+    // If ever necessary.
+    // shouldComponentUpdate could also be customized. For the moment it is set by PureRenderMixin.
+    //componentDidUpdate() {
+    //    let state = store.getState();
+    //    dotter.fillCanvas(state.s1, state.s2, state.windowSize, state.scoringMatrix);
+    //}
+
+    // Even better that PureRenderMixin: do not update at all.
+    shouldComponentUpdate() {
+        return false;
     }
 
     /* Events */
