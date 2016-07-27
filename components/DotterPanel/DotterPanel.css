@@ -7,3 +7,6 @@
     border: 1px solid grey;
 }
 
+.mouseDown {
+    cursor: grabbing;
+}

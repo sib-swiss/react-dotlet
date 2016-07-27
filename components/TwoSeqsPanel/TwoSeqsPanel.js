@@ -125,10 +125,14 @@ class TwoSeqsPanel extends React.Component {
         return (
             <div id="two-seqs-panel" className={s.root}>
             <div className={s.second}>
-                <Slider sliderStyle={{margin: 0}}
-                    min={0} max={s1.length-1} value={i} tabIndex="0"
+                <Slider
+                    sliderStyle={{margin: 0}}
+                    tabIndex="0" ref='slider1'
+                    min={0}
+                    max={Math.max(s1.length-1, 1)}
+                    disabled={s1.length < 1}
+                    value={i}
                     onChange={this.onSliderChange.bind(null, 1)}
-                    ref='slider1'
                 />
                 <pre>
                     <div className={s.sequence}>{seqinfo1}</div>
@@ -139,10 +143,14 @@ class TwoSeqsPanel extends React.Component {
                     <div className={s.sequence}>{this.ruler}</div>
                     <div className={s.sequence}>{seqinfo2}</div>
                 </pre>
-                <Slider sliderStyle={{margin: 0}}
-                    min={0} max={s2.length-1} value={j} tabIndex="0"
+                <Slider
+                    sliderStyle={{margin: 0}}
+                    tabIndex="0" ref='slider2'
+                    min={0}
+                    max={Math.max(s2.length-1, 1)}
+                    disabled={s2.length < 1}
+                    value={j}
                     onChange={this.onSliderChange.bind(null, 2)}
-                    ref='slider2'
                 />
             </div>
             </div>

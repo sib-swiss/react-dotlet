@@ -85,8 +85,7 @@ function calculateScore(s1, s2, scoringMatrix) {
         let j = AA_MAP[c2];
         score += scoringMatrix[i][j];
         if (isNaN(score)) {
-            console.log(c1, c2, i, j, scoringMatrix[i][j])
-            console.log(scoringMatrix[i])
+            console.log("NaN score: [c1,c2,i,j,[i,:]]", c1, c2, i, j, scoringMatrix[i])
         }
     }
     return score;
