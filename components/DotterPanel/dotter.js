@@ -96,7 +96,7 @@ function calculateScore(s1, s2, scoringMatrix) {
  * @param L (int): matrix size (max sequence length).
  */
 function coordinateFromSeqIndex(index, L, canvasSize=CANVAS_SIZE, round=true) {
-    let px = (index/L) * canvasSize;
+    let px = index * (canvasSize / L);
     if (round) px = Math.round(px);
     return px;
 }
@@ -184,6 +184,11 @@ function drawPositionLines(i, j, L, canvasSize=CANVAS_SIZE) {
     let ctx = initBlankCanvas(CANVAS_ID +'-topLayer');
     let x = coordinateFromSeqIndex(i, L, canvasSize, false);
     let y = coordinateFromSeqIndex(j, L, canvasSize, false);
+    if (L < canvasSize) {
+        let canvasPt = getCanvasPt(canvasSize, L, false);
+        x += canvasPt/2;
+        y += canvasPt/2;
+    }
     ctx.fillStyle = "red";
     ctx.fillRect(x, 1, 1, canvasSize);
     ctx.fillRect(1, y, canvasSize, 1);
