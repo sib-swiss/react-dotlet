@@ -5,6 +5,7 @@ import store from '../../core/store';
 import * as helpers from '../helpers';
 import { formatSeq } from './helpers';
 import { moveTwoSeqsSlider } from '../actions/actionCreators';
+import Slider from 'material-ui/Slider';
 
 
 const nbsp = String.fromCharCode(160); // code for &nbsp;
@@ -15,8 +16,6 @@ class TwoSeqsPanel extends React.Component {
         super(props);
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
         this.state = this.stateFromStore();
-        this.state.slider1 = 0;
-        this.state.slider2 = 0;
 
         this.nchars = 73;            // total number of chars to display, always odd for simplicity.
         this.half = (this.nchars-1) / 2;  // on each side of `i`, always int if nchars is odd.
@@ -42,16 +41,13 @@ class TwoSeqsPanel extends React.Component {
         });
     }
 
-    onSliderChange = (seqn, e) => {
-        let value = e.target.value;
+    onSliderChange = (seqn, e, value) => {
         let shift;
         if (seqn === 1) {
-            shift = value - this.state.slider1;
-            this.setState({ slider1: value });
+            shift = value - this.state.i;
             store.dispatch(moveTwoSeqsSlider(1, shift));
         } else {
-            shift = value - this.state.slider2;
-            this.setState({ slider2: value });
+            shift = value - this.state.j;
             store.dispatch(moveTwoSeqsSlider(2, shift));
         }
     };
@@ -128,10 +124,11 @@ class TwoSeqsPanel extends React.Component {
 
         return (
             <div id="two-seqs-panel" className={s.root}>
-                <input className="mdl-slider mdl-js-slider" type="range"
-                       min={0} max={s1.length-1} value={this.state.slider1} tabIndex="0"
-                       style={{width: '95%'}}
-                       onChange={this.onSliderChange.bind(null, 1)}
+                <Slider sliderStyle={{margin: 0}}
+                    min={0} max={s1.length-1} value={i} tabIndex="0"
+                    style={{width: '95%'}}
+                    onChange={this.onSliderChange.bind(null, 1)}
+                    ref='slider1'
                 />
                 <pre>
                     <div className={s.sequence}>{seqinfo1}</div>
@@ -142,10 +139,11 @@ class TwoSeqsPanel extends React.Component {
                     <div className={s.sequence}>{this.ruler}</div>
                     <div className={s.sequence}>{seqinfo2}</div>
                 </pre>
-                <input className="mdl-slider mdl-js-slider" type="range"
-                       min={0} max={s2.length-1} value={this.state.slider2} tabIndex="0"
-                       style={{width: '95%'}}
-                       onChange={this.onSliderChange.bind(null, 2)}
+                <Slider sliderStyle={{margin: 0}}
+                    min={0} max={s2.length-1} value={j} tabIndex="0"
+                    style={{width: '95%'}}
+                    onChange={this.onSliderChange.bind(null, 2)}
+                    ref='slider2'
                 />
             </div>
         );

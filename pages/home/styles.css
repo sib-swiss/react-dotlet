@@ -15,7 +15,10 @@
     height: 100%;
 }
 
-.rightPanel {
+.dotterPanelContainer {
+}
+
+.densityPanelContainer {
     display: flex;
     justify-content: center;
     align-items: center;

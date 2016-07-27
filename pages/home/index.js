@@ -27,7 +27,6 @@ class HomePage extends React.Component {
         //window.componentHandler.upgradeDom();
         window.componentHandler.upgradeElement(this.refs.root);
     }
-
     componentWillUnmount() {
         //window.componentHandler.downgradeDom();
         window.componentHandler.downgradeElements(this.refs.root);
@@ -36,13 +35,13 @@ class HomePage extends React.Component {
     render() {
         return (
             <Layout>
-            <div ref="root">
+            <div ref="root" className='test'>
                 <InputPanel />
                 <div className={"content-grid mdl-grid "+ s.midPanel}>
-                    <div className="mdl-cell mdl-cell--7-col">
+                    <div className={"mdl-cell mdl-cell--6-col "+ s.dotterPanelContainer}>
                         <DotterPanel />
                     </div>
-                    <div className={"mdl-cell mdl-cell--5-col "+ s.rightPanel}>
+                    <div className={"mdl-cell mdl-cell--6-col "+ s.densityPanelContainer}>
                         <DensityPanel />
                         <InfoPanel />
                     </div>

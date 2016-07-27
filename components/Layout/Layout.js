@@ -5,6 +5,7 @@ import s from './Layout.css';
 /* Material-UI, see theme customization below */
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import * as colors from 'material-ui/styles/colors';
 
 
 /*
@@ -46,22 +47,20 @@ class Layout extends React.Component {
 }
 
 
-const col = "#3F51B5";  // title bar blue
+/*
+ * Material-UI theming
+ * See all possible properties here:
+ * https://github.com/callemall/material-ui/blob/master/src/styles/getMuiTheme.js
+ */
+
+
+const titleBlue = "#3F51B5";  // title bar blue
+const lighterBlue = "#5E6EC7";
 
 const muiTheme = getMuiTheme({
     palette: {
         textColor: "black",
-        primary1Color: col,
-        //primary2Color: Colors.cyan700,
-        //primary3Color: Colors.lightBlack,
-        //accent1Color: Colors.pinkA200,
-        //accent2Color: Colors.grey100,
-        //accent3Color: Colors.grey500,
-        //alternateTextColor: Colors.white,
-        //canvasColor: Colors.white,
-        //borderColor: Colors.grey300,
-        //disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3),
-        //pickerHeaderColor: Colors.cyan500,
+        primary1Color: titleBlue,
     },
     appBar: {
         height: 50,
@@ -70,8 +69,11 @@ const muiTheme = getMuiTheme({
         textColor: "black",
     },
     raisedButton: {
-        primaryColor: "#5E6EC7",   // default rd3 chart blue
+        primaryColor: lighterBlue,
     },
+    slider: {
+        selectionColor: lighterBlue,
+    }
 });
 
 

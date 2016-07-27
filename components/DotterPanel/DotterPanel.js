@@ -54,7 +54,7 @@ class DotterPanel extends React.Component {
 
     render() {
         return (
-            <div className={s.root} style={{position: 'relative', minHeight: CANVAS_SIZE}}>
+            <div className={s.root} style={{position: 'relative', minHeight: CANVAS_SIZE, minWidth: CANVAS_SIZE}}>
                 <canvas id={CANVAS_ID}
                         className={s.canvas}
                         width={CANVAS_SIZE}
