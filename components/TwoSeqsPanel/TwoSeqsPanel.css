@@ -1,11 +1,11 @@
 
 .root {
     margin: 0 auto;
-    padding: 0px 15px;
+    padding: 10px 25px;
     border: 1px dotted #ccc;
 }
 .second {
-    padding: 15px 10px;
+    margin: 0px 0px;
     overflow: hidden;
 }
 
