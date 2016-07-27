@@ -32,9 +32,7 @@ class DensityPanel extends React.Component {
 
         return (
             <div id="density-panel" className={s.root}>
-                <div className={s.centerMe}>
-                    <BarChart data={data} width={300} height={200} />
-                </div>
+                <BarChart data={data} width={300} height={200} />
             </div>
         );
     }

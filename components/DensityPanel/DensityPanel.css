@@ -1,12 +1,7 @@
 
 .root {
-    margin: 15px;
+    margin: 15px auto;
     flex: 1;
     /*background-color: #3F51B5;*/
 }
 
-/* Center horizontally */
-.centerMe {
-    width: 99%;
-    margin: 0 auto;
-}
