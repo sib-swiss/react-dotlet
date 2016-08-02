@@ -64,7 +64,7 @@ class BarChart extends React.Component {
         let x = d3scale.scaleBand()
             .domain(data.map(d => d.x))
             .rangeRound([0, w])
-            .paddingInner(0.2);
+            .paddingInner(0.1);
 
         let y = d3scale.scaleLinear()
             .domain([0, maxY])
