@@ -25,6 +25,10 @@ class InputPanel extends React.Component {
         super();
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
         this.state = this.getStoreState();
+        Object.assign(this.state, {
+            open: false,
+            activeSequence: 1,
+        });
     }
 
     getStoreState() {
@@ -37,21 +41,32 @@ class InputPanel extends React.Component {
         };
     }
 
-    onChangeSeq1 = (event, value) => {
-        this.setState({ s1: value });
-        store.dispatch(changeSequence(1, value));
+    openTextarea(seqn) {
+        this.setState({
+            open: ! (this.state.open && (seqn === this.state.activeSequence)),
+            activeSequence: seqn,
+        });
+    }
+    onChangeSeq1 = (e) => {
+        //e.stopImmediatePropagation()
+        let value = e.target.value;
+        let s1 = value.replace(/\s/g,'').toUpperCase();
+        this.setState({ s1 });
+        store.dispatch(changeSequence(1, s1));
     };
-    onChangeSeq2 = (event, value) => {
-        this.setState({ s2: value });
-        store.dispatch(changeSequence(2, value));
+    onChangeSeq2 = (e) => {
+        let value = e.target.value;
+        let s2 = value.replace(/\s/g,'').toUpperCase();
+        this.setState({ s2 });
+        store.dispatch(changeSequence(2, s2));
     };
-    onChangeWindowSize = (event, value) => {
+    onChangeWindowSize = (e, value) => {
         if (value !== '') {
             this.setState({ windowSize: value });
             store.dispatch(changeWindowSize(value));
         }
     };
-    onChangeScoringMatrix = (event, index, value) => {
+    onChangeScoringMatrix = (e, index, value) => {
         this.setState({ scoringMatrix: value });
         store.dispatch(changeScoringMatrix(value));
     };
@@ -76,8 +91,8 @@ class InputPanel extends React.Component {
             {/* Sequences input */}
 
             <ToolbarGroup style={{marginTop: '0px'}}>
-                <SequencePopover label="Sequence1" callback={this.onChangeSeq1} sequence={this.state.s1}/>
-                <SequencePopover label="Sequence2" callback={this.onChangeSeq2} sequence={this.state.s2}/>
+                <RaisedButton onClick={this.openTextarea.bind(this, 1)} primary={false} label="Sequence&nbsp;1" />
+                <RaisedButton onClick={this.openTextarea.bind(this, 2)} primary={false} label="Sequence&nbsp;2" />
             </ToolbarGroup>
 
             {/* Window size selection */}
@@ -143,54 +158,18 @@ class InputPanel extends React.Component {
             </ToolbarGroup>
 
         </Toolbar>
-            {/*<textarea style={{width: '100%', boxSizing: 'border-box'}} placeholder={this.state.activeSeq} />*/}
-        <TextField id='asdfasdf' multiLine={true} rowsMax={5}  style={{width: '100%', boxSizing: 'border-box'}} />
+
+            {/* Where we enter the sequence */}
+
+            <textarea className={s.textarea} rows={3}
+                value={this.state.activeSequence === 1 ? this.state.s1 : this.state.s2}
+                style={{display: this.state.open ? 'block' : 'none'}}
+                onChange={this.state.activeSequence === 1 ? this.onChangeSeq1 : this.onChangeSeq2}
+            />
         </div>);
     }
 }
 
-
-class SequencePopover extends React.Component {
-    state = {
-        open: false,
-        anchorEl: null,
-    };
-
-    open = (event) => {
-        this.setState({
-            open: true,
-            anchorEl: event.currentTarget,
-        });
-    };
-
-    close = () => {
-        this.setState({ open: false });
-    };
-
-    render() {
-        return (<ToolbarGroup>
-            <RaisedButton primary={true} label={this.props.label} onClick={this.open}/>
-            <Popover
-                open={this.state.open}
-                anchorEl={this.state.anchorEl}
-                anchorOrigin={{horizontal: 'middle', vertical: 'bottom'}}
-                targetOrigin={{horizontal: 'middle', vertical: 'top'}}
-                onRequestClose={this.close}
-                animated={false}
-                useLayerForClickAway={false}  // otherwise prevents clicks to the underlying elements
-            >
-                <TextField
-                    name={"input_seq_"+this.props.label.replace(' ','_')}
-                    multiLine={true}
-                    rowsMax={10}
-                    onChange={this.props.callback}
-                    defaultValue={this.props.sequence}
-                />
-            </Popover>
-            </ToolbarGroup>
-        );
-    }
-}
 
 
 export default InputPanel;

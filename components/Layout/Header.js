@@ -33,7 +33,7 @@ class Header extends React.Component {
     return (
       <header className="mdl-layout__header" ref="root">
         <div className="mdl-layout__header-row" {...this.props} >
-            <span className="mdl-layout-title">Dolet Reborn</span>
+            <span className="mdl-layout-title">Dotlet Reborn</span>
             <div className="mdl-layout-spacer"></div>
             <div className="mdl-logo">© Vital-IT, 2016</div>
             <nav className="mdl-navigation"><Github/></nav>

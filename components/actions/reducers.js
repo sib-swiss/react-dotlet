@@ -19,7 +19,7 @@ let reducer = (state = defaultState, action) => {
         newState = Object.assign({}, state);
         let s1, s2;
         let scores, seqtype;
-        let seq = action.sequence.toUpperCase();
+        let seq = action.sequence;
         let guessedType = guessSequenceType(seq, 200);
         if (action.seqn === 1) {
             seqtype = commonSeqType(guessedType, state.s2Type);

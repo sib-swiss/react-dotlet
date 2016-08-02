@@ -23,10 +23,10 @@ class DotterPanel extends React.Component {
     /* Lifecycle */
 
     componentDidMount() {
-        window.addEventListener('keydown', this._onKeyDown, true)
+        document.addEventListener('keydown', this._onKeyDown, true);
     }
     componentWillUnmount() {
-        window.removeEventListener('keydown', this._onKeyDown, true)
+        document.removeEventListener('keydown', this._onKeyDown, true);
     }
 
     // If ever necessary.
@@ -44,6 +44,9 @@ class DotterPanel extends React.Component {
     /* Events */
 
     _onKeyDown(e) {
+        if ( document.activeElement.tagName.toLowerCase() === 'textarea') {
+            return;
+        }
         var keyCode = e.keyCode;
         var direction;
         switch (e.keyCode) {

@@ -2,3 +2,14 @@
 .root {
 }
 
+
+.textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font: inherit;
+    line-height: inherit;
+    border-color: #e8e8e8;
+    border-top: none;
+    padding: 8px;
+}
+

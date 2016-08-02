@@ -9,6 +9,7 @@
  */
 
 .root {
+    background-color: #f8f8f8;
 }
 
 .content {
@@ -16,4 +17,5 @@
     max-width: 75%;
     margin: 0 auto;
     padding-bottom: 80px;
+    background-color: white;
 }
