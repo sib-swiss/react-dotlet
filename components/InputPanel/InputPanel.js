@@ -3,10 +3,10 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import store from '../../core/store';
 import s from './InputPanel.css';
 import { changeSequence, changeWindowSize, changeScoringMatrix } from '../actions/actionCreators';
-//import * as validators from './validators';
 import { SCORING_MATRIX_NAMES, DNA, PROTEIN, CANVAS_ID } from '../constants/constants';
 import { guessSequenceType, commonSeqType } from './input';
 import { printCanvas } from './helpers';
+//import * as validators from './validators';
 
 
 /* Material-UI */
@@ -38,14 +38,12 @@ class InputPanel extends React.Component {
     }
 
     onChangeSeq1 = (event, value) => {
-        let seqtype = guessSequenceType(value, 200);
         this.setState({ s1: value });
-        store.dispatch(changeSequence(1, value, seqtype));
+        store.dispatch(changeSequence(1, value));
     };
     onChangeSeq2 = (event, value) => {
-        let seqtype = guessSequenceType(value, 200);
         this.setState({ s2: value });
-        store.dispatch(changeSequence(2, value, seqtype));
+        store.dispatch(changeSequence(2, value));
     };
     onChangeWindowSize = (event, value) => {
         if (value !== '') {

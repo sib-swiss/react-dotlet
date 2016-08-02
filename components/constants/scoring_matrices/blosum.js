@@ -1,6 +1,13 @@
-// Entries for the BLOSUM matrices at a scale of ln(2)/2.0.
-// Ordering:
-// A   R   N   D   C   Q   E   G   H   I   L   K   M   F   P   S   T   W   Y   V   B   J   Z   X   *
+/**
+ * Entries for the BLOSUM matrices at a scale of ln(2)/2.0.
+ * There is no U or O (rare ones).
+ * X: any (unknown).
+ * Z: Glutamine.
+ */
+
+/* Ordering:
+  A   R   N   D   C   Q   E   G   H   I   L   K   M   F   P   S   T   W   Y   V   B   J   Z   X   STOP
+*/
 
 // Distantly related proteins
 let BLOSUM_45 = [

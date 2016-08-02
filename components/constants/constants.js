@@ -5,16 +5,16 @@ const CANVAS_SIZE = 400;
 const CANVAS_ID = "dotter-canvas";
 
 const SCORING_MATRIX_NAMES = {
-    IDENTITY: 'identity',
-    BLOSUM45: 'blosum 45',
-    BLOSUM62: 'blosum 62',
-    BLOSUM80: 'blosum 80',
-    PAM30: 'pam 30',
-    PAM70: 'pam 70',
+    IDENTITY: 'Identity',
+    BLOSUM45: 'BLOSUM_45',
+    BLOSUM62: 'BLOSUM_62',
+    BLOSUM80: 'BLOSUM_80',
+    PAM30: 'PAM_30',
+    PAM70: 'PAM_70',
 };
 
-const DNA = 'is DNA string';
-const PROTEIN = 'is protein string';
+const DNA = 'Type_DNA_string';
+const PROTEIN = 'Type_protein_string';
 
 // Aminoacids, in the same order as in the scoring matrices.
 const AA = ['A', 'R', 'N', 'D', 'C', 'Q', 'E', 'G', 'H', 'I', 'L', 'K', 'M',

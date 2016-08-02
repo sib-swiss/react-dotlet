@@ -1,12 +1,16 @@
 import { DNA, PROTEIN } from '../constants/constants';
 import geneticCode from '../constants/geneticCode';
 
-/*
+/**
  * Guess if a sequence is a protein or DNA.
  * @param nchars: number of chars to test before concluding.
  */
 function guessSequenceType(seq, nchars=200) {
     let L = seq.length;
+    // A protein's RNA length must be a multiple of 3
+    if (L % 3 !== 0) {
+        return DNA;
+    }
     // The longest known protein, Titin, has up to 33K aminoacids.
     if (L === 0 || L > 40000) {
         return DNA;
@@ -25,6 +29,9 @@ function guessSequenceType(seq, nchars=200) {
 }
 
 
+/**
+ * Return `DNA` if both sequences are DNA, and `PROTEIN` otherwise.
+ */
 function commonSeqType(s1Type, s2Type) {
     return s1Type === DNA && s2Type === DNA ? DNA : PROTEIN;
 }

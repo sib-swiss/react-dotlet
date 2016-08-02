@@ -1,7 +1,9 @@
 import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
          INSPECT_COORDINATE, KEYBOARD_DIRECTION, SLIDE_TWO_SEQS } from './actionTypes';
 import { fillCanvas, drawPositionLines } from '../DotterPanel/dotter';
-import { commonSeqType } from '../InputPanel/input';
+import { guessSequenceType, commonSeqType } from '../InputPanel/input';
+import { PROTEIN, DNA } from '../constants/constants';
+import { translateProtein } from '../helpers';
 import defaultState from './defaultState';
 
 
@@ -15,17 +17,19 @@ let reducer = (state = defaultState, action) => {
      */
     case CHANGE_SEQUENCE:
         newState = Object.assign({}, state);
-        let scores;
-        let seqtype;
+        let s1, s2;
+        let scores, seqtype;
+        let seq = action.sequence.toUpperCase();
+        let guessedType = guessSequenceType(seq, 200);
         if (action.seqn === 1) {
-            seqtype = commonSeqType(action.seqtype, state.s2Type);
-            scores = fillCanvas(action.sequence, state.s2, state.windowSize, state.scoringMatrix);
-            newState.s1 = action.sequence.upper();
+            scores = fillCanvas(seq, state.s2, state.windowSize, state.scoringMatrix);
+            seqtype = commonSeqType(guessedType, state.s2Type);
+            newState.s1 = seq;
             newState.s1Type = action.seqtype;
         } else {
-            seqtype = commonSeqType(state.s1Type, action.seqtype);
-            scores = fillCanvas(state.s1, action.sequence, state.windowSize, state.scoringMatrix);
-            newState.s2 = action.sequence.upper();
+            scores = fillCanvas(state.s1, seq, state.windowSize, state.scoringMatrix);
+            seqtype = commonSeqType(state.s1Type, guessedType);
+            newState.s2 = seq;
             newState.s2Type = action.seqtype;
         }
         newState.scores = scores;

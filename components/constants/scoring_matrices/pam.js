@@ -1,6 +1,13 @@
-// Entries for the PAM matrices at a scale of ln(2)/2.0.
-// Ordering:
-//A,  R,  N,  D,  C,  Q,  E,  G,  H,  I,  L,  K,  M,  F,  P,  S,  T,  W,  Y,  V,  B,  J,  Z,  X,  *
+/**
+ * Entries for the PAM matrices at a scale of ln(2)/2.0.
+ * There is no U or O (rare ones).
+ * X: any (unknown).
+ * Z: Glutamine.
+ */
+
+/* Ordering:
+   A,  R,  N,  D,  C,  Q,  E,  G,  H,  I,  L,  K,  M,  F,  P,  S,  T,  W,  Y,  V,  B,  J,  Z,  X,  STOP
+*/
 
 let PAM_30 = [
 [  6, -7, -4, -3, -6, -4, -2, -2, -7, -5, -6, -7, -5, -8, -2,  0, -1,-13, -8, -2, -3, -6, -3, -1,-17],
