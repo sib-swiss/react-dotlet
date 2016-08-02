@@ -182,7 +182,7 @@ function fillCanvas(s1, s2, windowSize, scoringMatrixName) {
 /*
  * Draw the vertical and horizontal lines showing the current position on the canvas.
  */
-function drawPositionLines(i, j, L, canvasSize=CANVAS_SIZE) {
+function drawPositionLines(i, j, ls1, ls2, L, canvasSize=CANVAS_SIZE) {
     let ctx = initBlankCanvas(CANVAS_ID +'-topLayer');
     let x = coordinateFromSeqIndex(i, L, canvasSize, false);
     let y = coordinateFromSeqIndex(j, L, canvasSize, false);

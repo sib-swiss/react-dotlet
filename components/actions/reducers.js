@@ -32,10 +32,12 @@ let reducer = (state = defaultState, action) => {
             newState.s2 = seq;
             newState.s2Type = action.seqtype;
         }
+        let ls1 = newState.s1.length;
+        let ls2 = newState.s2.length;
         newState.scores = scores;
-        newState.matrixSize = Math.max(newState.s1.length, newState.s2.length);
+        newState.matrixSize = Math.max(ls1, ls2);
         newState.i = 0; newState.j = 0;
-        drawPositionLines(state.i, state.j, newState.matrixSize);
+        drawPositionLines(state.i, state.j, ls1, ls2, newState.matrixSize);
         return newState;
 
     /*
@@ -60,7 +62,7 @@ let reducer = (state = defaultState, action) => {
      * On click on the canvas.
      */
     case INSPECT_COORDINATE:
-        drawPositionLines(action.i, action.j, state.matrixSize);
+        drawPositionLines(action.i, action.j, state.s1.length, state.s2.length, state.matrixSize);
         return Object.assign({}, state, {i: action.i, j: action.j});
 
     /*
@@ -79,7 +81,7 @@ let reducer = (state = defaultState, action) => {
             keybDirection = {i: state.i - 1};
         }
         newState = Object.assign({}, state, keybDirection);
-        drawPositionLines(newState.i, newState.j, state.matrixSize);
+        drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length, state.matrixSize);
         return newState;
 
     /*
@@ -95,7 +97,7 @@ let reducer = (state = defaultState, action) => {
             slideDirection = {j: state.j + action.shift};
         }
         newState = Object.assign({}, state, slideDirection);
-        drawPositionLines(newState.i, newState.j, state.matrixSize);
+        drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length, state.matrixSize);
         return newState;
 
     default:
