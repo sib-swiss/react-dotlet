@@ -20,12 +20,12 @@ let reducer = (state = defaultState, action) => {
         if (action.seqn === 1) {
             seqtype = commonSeqType(action.seqtype, state.s2Type);
             scores = fillCanvas(action.sequence, state.s2, state.windowSize, state.scoringMatrix);
-            newState.s1 = action.sequence;
+            newState.s1 = action.sequence.upper();
             newState.s1Type = action.seqtype;
         } else {
             seqtype = commonSeqType(state.s1Type, action.seqtype);
             scores = fillCanvas(state.s1, action.sequence, state.windowSize, state.scoringMatrix);
-            newState.s2 = action.sequence;
+            newState.s2 = action.sequence.upper();
             newState.s2Type = action.seqtype;
         }
         newState.scores = scores;
