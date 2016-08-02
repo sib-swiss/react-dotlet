@@ -3,8 +3,8 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import store from '../../core/store';
 import s from './InputPanel.css';
 import { changeSequence, changeWindowSize, changeScoringMatrix } from '../actions/actionCreators';
-import { SCORING_MATRIX_NAMES, DNA, PROTEIN, CANVAS_ID } from '../constants/constants';
-import { guessSequenceType, commonSeqType } from './input';
+import { SCORING_MATRIX_NAMES, DNA, CANVAS_ID } from '../constants/constants';
+import { commonSeqType } from './input';
 import { printCanvas } from './helpers';
 //import * as validators from './validators';
 
@@ -67,15 +67,15 @@ class InputPanel extends React.Component {
     render() {
         let seq1type = store.getState().s1Type;
         let seq2type = store.getState().s2Type;
-        let commonType = commonSeqType(seq1type, seq2type);
+        let commonType = commonSeqType(seq1type, seq2type);  // to know which matrices are available
 
         return (
         <div className={s.root}>
-        <Toolbar style={{paddingBottom: '64px'}}>
+        <Toolbar style={{paddingBottom: '56px'}}>
 
             {/* Sequences input */}
 
-            <ToolbarGroup style={{marginTop: '3px'}}>
+            <ToolbarGroup style={{marginTop: '0px'}}>
                 <SequencePopover label="Sequence1" callback={this.onChangeSeq1} sequence={this.state.s1}/>
                 <SequencePopover label="Sequence2" callback={this.onChangeSeq2} sequence={this.state.s2}/>
             </ToolbarGroup>
@@ -83,11 +83,13 @@ class InputPanel extends React.Component {
             {/* Window size selection */}
 
             <ToolbarGroup>
-            <TextField hintText="Window size" floatingLabelText="Window size" id="windowSize_input"
+            <TextField floatingLabelText="Window size" id="windowSize_input"
                        type="number"
-                       style={{width: '110px'}}
-                       inputStyle={{marginTop: '5px'}}
-                       floatingLabelStyle={{marginTop: '-5px'}}
+                       style={{width: '110px', marginTop: 0}}
+                       inputStyle={{marginTop: '2px'}}
+                       underlineStyle={{margin: '0.75em 0'}}
+                       underlineFocusStyle={{margin: '0.75em 0'}}
+                       floatingLabelStyle={{marginTop: '-6px'}}
                        floatingLabelFixed={true}
                        onChange={this.onChangeWindowSize}
                        defaultValue={this.state.windowSize}
@@ -99,9 +101,10 @@ class InputPanel extends React.Component {
             <ToolbarGroup>
             <SelectField floatingLabelText="Scoring matrix"
                          floatingLabelFixed={true}
-                         style={{width: '150px'}}
-                         inputStyle={{marginTop: '8px'}}
-                         floatingLabelStyle={{marginTop: '-5px'}}
+                         style={{width: '150px', marginTop: 0}}
+                         inputStyle={{marginTop: '5px'}}
+                         underlineShow={false}
+                         floatingLabelStyle={{marginTop: '-6px'}}
                          onChange={this.onChangeScoringMatrix}
                          value={this.state.scoringMatrix}
                          >
@@ -133,13 +136,15 @@ class InputPanel extends React.Component {
 
             {/* Print button */}
 
-            <ToolbarGroup style={{marginTop: '8px'}} >
-                <IconButton onClick={this.onPrint} disabled={false} >
+            <ToolbarGroup style={{marginTop: '5px'}} >
+                <IconButton onClick={this.onPrint} >
                     <FontIcon className="material-icons">print</FontIcon>
                 </IconButton>
             </ToolbarGroup>
 
         </Toolbar>
+            {/*<textarea style={{width: '100%', boxSizing: 'border-box'}} placeholder={this.state.activeSeq} />*/}
+        <TextField id='asdfasdf' multiLine={true} rowsMax={5}  style={{width: '100%', boxSizing: 'border-box'}} />
         </div>);
     }
 }
