@@ -7,10 +7,15 @@
 .second {
     margin: 0px 0px;
     overflow: hidden;
+    text-align: center;
 }
 
 .sequence {
+    display: block;
     font-size: 18px;
+    /* Make it overflow on both sides */
+    margin-left: -100%;
+    margin-right: -100%;
 }
 .seq1 {
 

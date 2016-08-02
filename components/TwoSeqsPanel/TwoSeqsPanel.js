@@ -136,13 +136,13 @@ class TwoSeqsPanel extends React.Component {
                 />
                 <div className={s.second}>
                     <pre>
-                        <div className={s.sequence}>{seqinfo1}</div>
-                        <div className={s.sequence}>{this.ruler}</div>
-                        <div className={s.sequence}>{spans1}</div>
-                        <div className={s.sequence}>{spans2}</div>
-                        <div className={s.sequence}>{this.caret}</div>
-                        <div className={s.sequence}>{this.ruler}</div>
-                        <div className={s.sequence}>{seqinfo2}</div>
+                        <span className={s.sequence}>{seqinfo1}</span>
+                        <span className={s.sequence}>{this.ruler}</span>
+                        <span className={s.sequence}>{spans1}</span>
+                        <span className={s.sequence}>{spans2}</span>
+                        <span className={s.sequence}>{this.caret}</span>
+                        <span className={s.sequence}>{this.ruler}</span>
+                        <span className={s.sequence}>{seqinfo2}</span>
                     </pre>
                 </div>
                 <Slider
