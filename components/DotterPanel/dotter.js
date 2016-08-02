@@ -193,8 +193,8 @@ function drawPositionLines(i, j, ls1, ls2, L, canvasSize=CANVAS_SIZE) {
         y += canvasPt/2;
     }
     ctx.fillStyle = "red";
-    ctx.fillRect(x, 1, 1, canvasSize);
-    ctx.fillRect(1, y, canvasSize, 1);
+    ctx.fillRect(x, 1, 1, (ls2/L) * canvasSize);
+    ctx.fillRect(1, y, (ls1/L) * canvasSize, 1);
 }
 
 
