@@ -10,7 +10,7 @@
 
 import { expect } from 'chai';
 
-import { getSequenceAround } from '../components/helpers';
+import { getSequenceAround, translateProtein } from '../components/helpers';
 
 
 describe('Global component helpers', () => {
@@ -38,5 +38,22 @@ describe('Global component helpers', () => {
     it('getSequenceAround with index bigger than sequence length', () => {
         expect(getSequenceAround("ATGC", 100, 10)).to.be.equal("");
     });
+
+    it('input.translateProtein', () => {
+        expect(translateProtein("TTT")).to.be.equal('F');
+        expect(translateProtein("UUU")).to.be.equal('F');
+        expect(translateProtein("ATTT", 1)).to.be.equal('F');
+        expect(translateProtein("AGTTT", 2)).to.be.equal('F');
+        expect(translateProtein("AGCTTT", 0)).to.be.equal('SF');
+
+        //expect((_) => translateprotein("tuu")).to.throw(error);
+        //expect((_) => translateprotein("tuu", 1)).to.throw(error);
+        //expect((_) => translateprotein("tttt")).to.throw(error);
+        expect(translateProtein("TUU")).to.be.equal('X');
+        expect(translateProtein("TUU", 1)).to.be.equal('TUU');
+        expect(translateProtein("TTTT")).to.be.equal('TTTT');
+    });
+
+
 
 });
