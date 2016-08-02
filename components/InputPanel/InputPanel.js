@@ -91,8 +91,10 @@ class InputPanel extends React.Component {
             {/* Sequences input */}
 
             <ToolbarGroup style={{marginTop: '0px'}}>
-                <RaisedButton onClick={this.openTextarea.bind(this, 1)} primary={false} label="Sequence&nbsp;1" />
-                <RaisedButton onClick={this.openTextarea.bind(this, 2)} primary={false} label="Sequence&nbsp;2" />
+                <RaisedButton onClick={this.openTextarea.bind(this, 1)}
+                    secondary={this.state.open && this.state.activeSequence === 1} label="Sequence&nbsp;1" />
+                <RaisedButton onClick={this.openTextarea.bind(this, 2)}
+                    secondary={this.state.open && this.state.activeSequence === 2} label="Sequence&nbsp;2" />
             </ToolbarGroup>
 
             {/* Window size selection */}
@@ -163,6 +165,7 @@ class InputPanel extends React.Component {
 
             <textarea className={s.textarea} rows={3}
                 value={this.state.activeSequence === 1 ? this.state.s1 : this.state.s2}
+                placeholder={this.state.activeSequence === 1 ? 'Sequence 1:' : 'Sequence 2:'}
                 style={{display: this.state.open ? 'block' : 'none'}}
                 onChange={this.state.activeSequence === 1 ? this.onChangeSeq1 : this.onChangeSeq2}
             />
