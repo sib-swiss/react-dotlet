@@ -1,5 +1,5 @@
 import React from 'react';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
+//import PureRenderMixin from 'react-addons-pure-render-mixin';
 import s from './DotterPanel.css';
 import * as dotter from './dotter';
 import store from '../../core/store';
@@ -13,7 +13,7 @@ class DotterPanel extends React.Component {
         //this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
         this.state = {
             mouseDown: false,
-        }
+        };
         this._onMouseDown = this._onMouseDown.bind(this);
         this._onMouseMove = this._onMouseMove.bind(this);
         this._onMouseUp = this._onMouseUp.bind(this);

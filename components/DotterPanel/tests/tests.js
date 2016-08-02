@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 
 
-import { sumMatches, calculateMatches, calculateScore, getStep, seqIndexFromCoordinate } from '../dotter';
+import { getStep, seqIndexFromCoordinate } from '../dotter';
+import { sumMatches, calculateMatches, calculateScore } from '../../common/scoring';
 import { SCORING_MATRIX_NAMES, MATCH, MISMATCH } from '../../constants/constants';
 import { SCORING_MATRICES } from '../../constants/scoring_matrices/scoring_matrices';
 

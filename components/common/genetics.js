@@ -1,12 +1,6 @@
-import geneticCode from './constants/geneticCode';
 
+import geneticCode from '../constants/geneticCode';
 
-/**
- * Get the slice of `seq` centered on `index` with `ws` elements on each side.
- */
-function getSequenceAround(seq, index, ws) {
-    return seq.slice(Math.max(index - ws, 0), Math.min(index + ws + 1, seq.length));
-}
 
 /**
  * Translate an RNA sequence to protein.
@@ -60,8 +54,9 @@ function phaseProtein(seq, phase) {
 }
 
 
-
 export {
-    getSequenceAround,
     translateProtein,
+    reverseComplementDNA,
+    phaseProtein,
 };
+

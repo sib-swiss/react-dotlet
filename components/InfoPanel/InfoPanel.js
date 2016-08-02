@@ -7,12 +7,11 @@ class InfoPanel extends React.Component {
     constructor() {
         super();
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-        this.state = store.getState().input;
+        this.state = store.getState();
     }
 
     stateFromStore() {
-        return {};
-        //return store.getState();
+        return store.getState();
     }
 
     componentWillMount() {
@@ -25,8 +24,8 @@ class InfoPanel extends React.Component {
         return (
             <div id="info-panel" className={s.root}>
                 <ul>
-                    <li>Some useful dynamic stats</li>
-                    <li>Some even more useful stats</li>
+                    <li>{"Score at ("+ this.state.i + ", "+ this.state.j +") : " + this.state.score}</li>
+                    <li>{"Some even more useful stats"}</li>
                 </ul>
             </div>
         );

@@ -1,11 +1,12 @@
 
-import { MATCH, MISMATCH, CANVAS_SIZE, CANVAS_ID } from '../constants/constants';
-import * as helpers from '../helpers';
-import { SCORING_MATRIX_NAMES, AA_MAP } from '../constants/constants';
+import { CANVAS_SIZE, CANVAS_ID } from '../constants/constants';
+import * as helpers from '../common/helpers';
+import { SCORING_MATRIX_NAMES } from '../constants/constants';
 import { SCORING_MATRICES } from '../constants/scoring_matrices/scoring_matrices';
+import { calculateMatches, calculateScore } from '../common/scoring';
 
 
-/*
+/**
  * Caclulate the size in px of a "point" on the canvas
  * (bigger if the sequence is shorter than the canvas' dimensions in px,
  * to fill it completely).
@@ -22,17 +23,16 @@ function getCanvasPt(canvasSize, lenSeq, round=true) {
     return canvasPt;
 }
 
-/*
+/**
  * Calculate the number of points in the canvas given its size in px and the desired point size.
  * @param canvasSize: canvas size, in pixels.
  * @param canvasPt: size of a 'point', in pixels.
  */
 function getNpoints(canvasSize, canvasPt) {
-    let npoints = Math.floor(canvasSize / canvasPt)
-    return npoints;
+    return Math.floor(canvasSize / canvasPt)
 }
 
-/*
+/**
  * Calculate the number of sequence characters represented by one point in the canvas.
  * @param round: whether to allow float sizes (with performance overhead).
  */
@@ -46,52 +46,7 @@ function getStep(npoints, lenSeq, round=true) {
     return step;
 }
 
-/*
- * In DNA-DNA comparison, sum the number of matches/mismatches.
- */
-function sumMatches(s1, s2) {
-    let L = Math.min(s1.length, s2.length);
-    let match = 0, mismatch = 0;
-    for (let i=0; i<L; i++) {
-         if (s1[i] === s2[i]) { match ++; }
-         else { mismatch ++; }
-    }
-    return {
-        [MATCH]: match,
-        [MISMATCH]: mismatch,
-    };
-}
-
-/*
- * In DNA-DNA comparison, return the similarity score.
- */
-function calculateMatches(s1, s2, scoringMatrix) {
-    let sums = sumMatches(s1, s2);
-    let score = scoringMatrix[MATCH] * sums[MATCH]
-              + scoringMatrix[MISMATCH] * sums[MISMATCH];
-    return score;
-}
-
-/*
- * In proteins comparison, return the similarity score.
- */
-function calculateScore(s1, s2, scoringMatrix) {
-    let score = 0;
-    let L = Math.min(s1.length, s2.length);
-    for (let k=0; k<L; k++) {
-        let c1 = s1[k];
-        let c2 = s2[k];
-        let i = AA_MAP[c1];
-        let j = AA_MAP[c2];
-        score += scoringMatrix[i][j];
-        if (isNaN(score)) {
-            console.log("NaN score: [c1,c2,i,j,[i,:]]", c1, c2, i, j, scoringMatrix[i])
-        }
-    }
-    return score;
-}
-
-/*
+/**
  * Get the position (in px) on the canvas representing the given index in the sequence.
  * @param L (int): matrix size (max sequence length).
  */
@@ -101,7 +56,7 @@ function coordinateFromSeqIndex(index, L, canvasSize=CANVAS_SIZE, round=true) {
     return px;
 }
 
-/*
+/**
  * Return *approximately* the index on the sequence `seq` corresponding to pixel coordinate `px`.
  * The problem is that if the sequence length is not a multiple of the canvas size,
  * there is an empty margin that must not count. So round it up to a multiple,
@@ -115,8 +70,7 @@ function seqIndexFromCoordinate(px, L, canvasSize=CANVAS_SIZE) {
     let canvasPt = getCanvasPt(canvasSize, L, round);
     let npoints = Math.floor(canvasSize / canvasPt);
     let step = getStep(npoints, L, round);
-    let index = Math.ceil((px / canvasPt) * step) - 1;
-    return index;
+    return Math.ceil((px / canvasPt) * step) - 1;
 }
 
 function initBlankCanvas(canvasId) {
@@ -128,7 +82,7 @@ function initBlankCanvas(canvasId) {
     return ctx;
 }
 
-/*
+/**
  * Fill the dotter canvas with similarity scores; return the scores density.
  */
 function fillCanvas(s1, s2, windowSize, scoringMatrixName) {
@@ -178,8 +132,7 @@ function fillCanvas(s1, s2, windowSize, scoringMatrixName) {
     return scores;
 }
 
-
-/*
+/**
  * Draw the vertical and horizontal lines showing the current position on the canvas.
  */
 function drawPositionLines(i, j, ls1, ls2, L, canvasSize=CANVAS_SIZE) {
@@ -199,9 +152,6 @@ function drawPositionLines(i, j, ls1, ls2, L, canvasSize=CANVAS_SIZE) {
 
 
 export {
-    calculateMatches,
-    calculateScore,
-    sumMatches,
     getCanvasPt,
     getStep,
     coordinateFromSeqIndex,

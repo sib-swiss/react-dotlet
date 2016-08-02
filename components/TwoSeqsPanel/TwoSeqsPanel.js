@@ -2,7 +2,7 @@ import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import s from './TwoSeqsPanel.css';
 import store from '../../core/store';
-import * as helpers from '../helpers';
+import * as helpers from '../common/helpers';
 import { formatSeq } from './helpers';
 import { moveTwoSeqsSlider } from '../actions/actionCreators';
 import Slider from 'material-ui/Slider';

@@ -1,6 +1,5 @@
-import { translateProtein } from '../helpers';
 
-/*
+/**
  * Complement a sub-sequence `subseq` with fillers around it when it is smaller than `size`.
  * `subseq` was extracted from a bigger original sequence, and is of length `size`
  * unless it was taken from a border, in which case it is shorter.

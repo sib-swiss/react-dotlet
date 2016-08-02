@@ -10,7 +10,8 @@
 
 import { expect } from 'chai';
 
-import { getSequenceAround, translateProtein } from '../components/helpers';
+import { getSequenceAround } from '../components/common/helpers';
+import { translateProtein } from '../components/common/genetics';
 
 
 describe('Global component helpers', () => {
