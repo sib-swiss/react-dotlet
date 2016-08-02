@@ -2,7 +2,7 @@
 import { CANVAS_SIZE, CANVAS_ID } from '../constants/constants';
 import * as helpers from '../common/helpers';
 import { SCORING_MATRIX_NAMES } from '../constants/constants';
-import { SCORING_MATRICES } from '../constants/scoring_matrices/scoring_matrices';
+import { SCORING_MATRICES, MIN_MAX } from '../constants/scoring_matrices/scoring_matrices';
 import { calculateMatches, calculateScore } from '../common/scoring';
 
 
@@ -107,6 +107,10 @@ function fillCanvas(s1, s2, windowSize, scoringMatrixName) {
         scoringFunction = calculateScore;
     }
     let matrix = SCORING_MATRICES[scoringMatrixName];
+    let minMax = MIN_MAX[scoringMatrixName];
+    let minScore = minMax[0] * windowSize;
+    let maxScore = minMax[1] * windowSize;
+    let scoresRange = maxScore - minScore;
 
     for (let i=0; i <= npoints; i++) {
         let q1 = Math.round(i * step);                            // position on seq1. First is 0, last is L
@@ -123,10 +127,8 @@ function fillCanvas(s1, s2, windowSize, scoringMatrixName) {
             } else {
                 scores[score] += 1;
             }
-            if (score > 0) {
-                ctx.globalAlpha = score / windowSize;
-                ctx.fillRect(q1 * canvasPt, q2 * canvasPt, canvasPt, canvasPt);
-            }
+            ctx.globalAlpha = (score - minScore) / scoresRange;
+            ctx.fillRect(q1 * canvasPt, q2 * canvasPt, canvasPt, canvasPt);
         }
     }
     return scores;
