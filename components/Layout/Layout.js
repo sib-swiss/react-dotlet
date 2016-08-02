@@ -74,6 +74,7 @@ const muiTheme = getMuiTheme({
     raisedButton: {
         primaryColor: lighterBlue,
         secondaryTextColor: "black",
+        secondaryColor: "#FB4049",
     },
     slider: {
         selectionColor: colors.grey400,   // the part left to handle... and the handle...
