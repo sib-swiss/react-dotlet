@@ -25,15 +25,26 @@ class InfoPanel extends React.Component {
         });
     }
 
+    calculateMean(scores) {
+        let mean = 0;
+        let n = 0;
+        for (let key of Object.keys(scores)) {
+            let val = scores[key];
+            mean += key * val;
+            n += val;
+        }
+        return n > 0 ? (mean / n).toFixed(2) : 0;
+    }
+
     render() {
 
         let i = this.state.i,
             j = this.state.j,
             s1 = this.state.s1,
             s2 = this.state.s2,
+            scores = this.state.scores,
             windowSize = this.state.windowSize,
             scoringMatrixName = this.state.scoringMatrix;
-
 
         let scoringFunction;
         if (scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY) {
@@ -46,13 +57,14 @@ class InfoPanel extends React.Component {
         let ws = Math.floor(windowSize / 2);
         let ss1 = getSequenceAround(s1, i, ws);
         let ss2 = getSequenceAround(s2, j, ws);
-        let score = scoringFunction(ss1, ss2, matrix);
+        let localScore = scoringFunction(ss1, ss2, matrix);
+        let mean = this.calculateMean(scores);
 
         return (
             <div id="info-panel" className={s.root}>
                 <ul>
-                    <li>{"Score at ("+ i + ", "+ j +") : "+ score +" ("+ s1[i] +", "+ s2[j] +")"}</li>
-                    <li>{"Some even more useful stats"}</li>
+                    <li>{"Score at ("+ (i+1) + ","+ (j+1) +") : "+ localScore +" ("+ s1[i] +"/"+ s2[j] +")"}</li>
+                    <li>{"Mean score: "+ mean}</li>
                 </ul>
             </div>
         );

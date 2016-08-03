@@ -1,13 +1,14 @@
 
 function toDensity(d) {
+    let density = {};
     let sum = 0;
     for (let v of Object.values(d)) {
         sum += v;
     }
     for (let key of Object.keys(d)) {
-        d[key] = d[key] / sum;
+        density[key] = d[key] / sum;
     }
-    return d;
+    return density;
 }
 
 function minMaxObject(d) {

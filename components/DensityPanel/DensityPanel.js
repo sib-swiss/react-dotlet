@@ -10,10 +10,10 @@ class DensityPanel extends React.Component {
     constructor() {
         super();
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-        this.state = this.getStore();
+        this.state = this.stateFromStore();
     }
 
-    getStore() {
+    stateFromStore() {
         return {
             scores: store.getState().scores,
         };
@@ -21,13 +21,13 @@ class DensityPanel extends React.Component {
 
     componentWillMount() {
         store.subscribe(() => {
-            this.setState( this.getStore() );
+            this.setState( this.stateFromStore() );
         });
     }
 
     render() {
         let minmax = minMaxObject(this.state.scores);
-        let data = toDensity(this.state.scores)
+        let data = toDensity(this.state.scores);
         data = object2array(data);
 
         return (

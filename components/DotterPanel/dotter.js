@@ -5,6 +5,10 @@ import { SCORING_MATRIX_NAMES } from '../constants/constants';
 import { SCORING_MATRICES, MIN_MAX } from '../constants/scoring_matrices/scoring_matrices';
 import { calculateMatches, calculateScore } from '../common/scoring';
 
+/**
+ * Plotting functions in the main canvas.
+ */
+
 
 /**
  * Caclulate the size in px of a "point" on the canvas
@@ -121,7 +125,7 @@ function fillCanvas(s1, s2, windowSize, scoringMatrixName) {
             let q2 = Math.round(j * step);                        // position on seq2
             if (q2 >= ls2) break;
             let subseq2 = helpers.getSequenceAround(s2, q2, ws);  // nucleotides window on seq2
-            let score = scoringFunction(subseq1, subseq2, matrix);
+            let score = scoringFunction(subseq1, subseq2, matrix);  // always an int
             if (! (score in scores)) {
                 scores[score] = 0;
             } else {
