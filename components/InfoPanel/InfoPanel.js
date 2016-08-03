@@ -63,7 +63,7 @@ class InfoPanel extends React.Component {
         return (
             <div id="info-panel" className={s.root}>
                 <ul>
-                    <li>{"Score at ("+ (i+1) + ","+ (j+1) +") : "+ localScore +" ("+ s1[i] +"/"+ s2[j] +")"}</li>
+                    <li>{`Score at (${i+1}:${s1[i]}, ${j+1}:${s2[j]}) : ${localScore}`}</li>
                     <li>{"Mean score: "+ mean}</li>
                 </ul>
             </div>
