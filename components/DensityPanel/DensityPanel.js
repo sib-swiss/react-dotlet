@@ -15,7 +15,7 @@ class DensityPanel extends React.Component {
 
     stateFromStore() {
         return {
-            scores: store.getState().scores,
+            density: store.getState().density,
         };
     }
 
@@ -26,8 +26,8 @@ class DensityPanel extends React.Component {
     }
 
     render() {
-        let minmax = minMaxObject(this.state.scores);
-        let data = toDensity(this.state.scores);
+        let minmax = minMaxObject(this.state.density);
+        let data = toDensity(this.state.density);
         data = object2array(data);
 
         return (

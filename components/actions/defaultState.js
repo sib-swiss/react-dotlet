@@ -26,12 +26,19 @@ let defaultState = {
     s2: '',
     s1Type: PROTEIN,
     s2Type: PROTEIN,
-    scores: [],
+    density: [],
     windowSize: 5,
     scoringMatrix: SCORING_MATRIX_NAMES.IDENTITY,
     i: 0,
     j: 0,
     matrixSize: 0,
+    greyScale: {
+        minBound: 0,
+        maxBound: 255,
+        initialAlphas: new Uint8ClampedArray([0]),
+        minAlpha: 0,
+        maxAlpha: 255,
+    },
 };
 
 Object.assign(defaultState, orthologExample);

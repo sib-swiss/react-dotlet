@@ -5,6 +5,7 @@ import * as dotter from './dotter';
 import store from '../../core/store';
 import { CANVAS_SIZE, CANVAS_ID } from '../constants/constants';
 import { inspectCoordinate, keyboardArrowShiftCoordinate } from '../actions/actionCreators';
+import GreyScaleSlider from '../GreyScale/GreyScale';
 
 
 class DotterPanel extends React.Component {
@@ -99,7 +100,8 @@ class DotterPanel extends React.Component {
 
     render() {
         return (
-            <div className={s.root} style={{position: 'relative', minHeight: CANVAS_SIZE, minWidth: CANVAS_SIZE}}>
+            <div className={s.root}>
+            <div style={{position: 'relative', minHeight: CANVAS_SIZE, minWidth: CANVAS_SIZE}}>
 
                 {/* Bottom layer: the dot plot */}
 
@@ -133,6 +135,10 @@ class DotterPanel extends React.Component {
                         onClick={this._onClick}
                 >
                 </canvas>
+
+
+            </div>
+                <GreyScaleSlider />
             </div>
         );
     }

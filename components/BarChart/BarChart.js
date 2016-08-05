@@ -59,6 +59,16 @@ class BarChart extends React.Component {
 
         let transform = 'translate('+ margin.left +','+ margin.top +')';
 
+        let xTicks = [minX, maxX];
+        // Find the score closest to 0 to add a tick
+        let last = data[0].x;
+        for (let d of data) {
+            if (d.x >= 0) {
+                xTicks.splice(1, 0, d.x);
+                break;
+            }
+        }
+
         /* Axes */
 
         let x = d3scale.scaleBand()
@@ -72,7 +82,7 @@ class BarChart extends React.Component {
 
         let xAxis = d3axis.axisBottom(x)
             .scale(x)
-            .tickValues([minX, 0, maxX]);
+            .tickValues(xTicks);
 
         let yAxis = d3axis.axisLeft(y)
             .ticks(5);
@@ -114,10 +124,9 @@ class Axis extends React.Component {
     }
 
     render() {
-        var translate = "translate(0,"+(this.props.h)+")";
+        var translate = "translate(0,"+ this.props.h +")";
         return (
-            <g className="axis" transform={this.props.axisType=='x'?translate:""} >
-            </g>
+            <g className="axis" transform={this.props.axisType == 'x' ? translate : ""} />
         );
     }
 }

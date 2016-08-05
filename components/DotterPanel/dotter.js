@@ -78,20 +78,22 @@ function seqIndexFromCoordinate(px, L, canvasSize=CANVAS_SIZE) {
 }
 
 function initBlankCanvas(canvasId) {
-    let cv = document.getElementById(canvasId);
-    if (cv === null) { throw new ReferenceError("Canvas not found"); }
-    let ctx = cv.getContext('2d');
-    let canvas = ctx.canvas;
+    let canvas = document.getElementById(canvasId);
+    if (canvas === null) { throw new ReferenceError("Canvas not found"); }
+    let ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    return ctx;
+    return canvas;
 }
+
 
 /**
  * Fill the dotter canvas with similarity scores; return the scores density.
+ * It never stores the matrix in memory: it draws a point and forgets about it.
  */
-function fillCanvas(s1, s2, windowSize, scoringMatrixName) {
-    let ctx = initBlankCanvas(CANVAS_ID);
-    let canvasSize = ctx.canvas.width;
+function fillCanvas(s1, s2, windowSize, scoringMatrixName, greyScale) {
+    let canvas = initBlankCanvas(CANVAS_ID);
+    let canvasSize = canvas.width;
+    let ctx = canvas.getContext('2d');
 
     let ws = Math.floor(windowSize / 2);   // # of nucleotides on each side
     let scores = {};
@@ -114,7 +116,9 @@ function fillCanvas(s1, s2, windowSize, scoringMatrixName) {
     let minMax = MIN_MAX[scoringMatrixName];
     let minScore = minMax[0] * windowSize;
     let maxScore = minMax[1] * windowSize;
-    let scoresRange = maxScore - minScore;
+    let scoresRange = maxScore - minScore;   // now any (score / scoresRange) is between 0 and 1
+    let minGrey = greyScale.minBound / 255;  // between 0 and 1 for `ctx.globalAlpha`
+    let maxGrey = greyScale.maxBound / 255;
 
     for (let i=0; i <= npoints; i++) {
         let q1 = Math.round(i * step);                            // position on seq1. First is 0, last is L
@@ -131,7 +135,9 @@ function fillCanvas(s1, s2, windowSize, scoringMatrixName) {
             } else {
                 scores[score] += 1;
             }
-            ctx.globalAlpha = (score - minScore) / scoresRange;
+            let alpha = (score - minScore) / scoresRange;         // the grey if no special grey scale is set ([0,100])
+            alpha = Math.min(maxGrey, Math.max(minGrey, alpha));  // correct for user-specified grey scale
+            ctx.globalAlpha = alpha;
             ctx.fillRect(q1 * canvasPt, q2 * canvasPt, canvasPt, canvasPt);
         }
     }
@@ -142,7 +148,8 @@ function fillCanvas(s1, s2, windowSize, scoringMatrixName) {
  * Draw the vertical and horizontal lines showing the current position on the canvas.
  */
 function drawPositionLines(i, j, ls1, ls2, L, canvasSize=CANVAS_SIZE) {
-    let ctx = initBlankCanvas(CANVAS_ID +'-topLayer');
+    let canvas = initBlankCanvas(CANVAS_ID +'-topLayer');
+    let ctx = canvas.getContext('2d');
     let x = coordinateFromSeqIndex(i, L, canvasSize, false);
     let y = coordinateFromSeqIndex(j, L, canvasSize, false);
     // If the point size is > 1, make the lines pass in the middle.
@@ -156,6 +163,41 @@ function drawPositionLines(i, j, ls1, ls2, L, canvasSize=CANVAS_SIZE) {
     ctx.fillRect(1, y, (ls1/L) * canvasSize, 1);
 }
 
+/**
+ * Return an array of the grey intensities of all points in the canvas, in the same
+ * order as in `ctx.getImageData().data`.
+ */
+function getAlphaValues() {
+    let canvas = document.getElementById(CANVAS_ID);
+    let ctx = canvas.getContext('2d');
+    let imageData = ctx.getImageData(0,0,canvas.width, canvas.height);
+    let data = imageData.data;  // [red,green,blue,alpha, red,green,blue,alpha, ...] each 0-255
+    let alphas = new Uint8ClampedArray(data.length / 4);
+    for (let i = 0; i < data.length; i += 4) {
+        alphas[i/4] = data[i + 3];
+    }
+    return alphas;
+}
+
+/**
+ * Redraw the canvas after clamping the alpha values
+ * @param initialAlphas: initial alpha values
+ *  (saved in store in order to come back to the initial state.
+ *   Otherwise we could read then directly from the canvas with `ctx.getImageData()`).
+ * @param minBound: (int8) all alphas lower than `minBound` become equal to `minBound`.
+ * @param maxBound: (int8) all alphas bigger than `maxBound` become equal to `maxBound`.
+ */
+function greyScale(initialAlphas, minBound, maxBound) {
+    let canvas = document.getElementById(CANVAS_ID);
+    let ctx = canvas.getContext('2d');
+    let imageData = ctx.getImageData(0,0,canvas.width, canvas.height);
+    let data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+        data[i+3] = Math.min(maxBound, Math.max(minBound, initialAlphas[i/4]));
+    }
+    ctx.putImageData(imageData, 0, 0);
+}
+
 
 export {
     getCanvasPt,
@@ -164,4 +206,6 @@ export {
     seqIndexFromCoordinate,
     fillCanvas,
     drawPositionLines,
+    getAlphaValues,
+    greyScale,
 };

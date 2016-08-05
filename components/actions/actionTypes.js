@@ -1,10 +1,11 @@
 
-const CHANGE_SEQUENCE = "change sequence";
-const CHANGE_WINDOW_SIZE = "change window size";
-const CHANGE_SCORING_MATRIX = "change scoring matrix";
-const INSPECT_COORDINATE = "inspect coordinate";
-const KEYBOARD_DIRECTION = "move in canvas with keyboard";
-const SLIDE_TWO_SEQS = "move slider in TwoSeqsPanel";
+const CHANGE_SEQUENCE = "CHANGE_SEQUENCE";
+const CHANGE_WINDOW_SIZE = "CHANGE_WINDOW_SIZE";
+const CHANGE_SCORING_MATRIX = "CHANGE_SCORING_MATRIX";
+const INSPECT_COORDINATE = "INSPECT_COORDINATE";
+const KEYBOARD_DIRECTION = "KEYBOARD_DIRECTION";
+const SLIDE_TWO_SEQS = "SLIDE_TWO_SEQS";
+const CHANGE_GREY_SCALE = "CHANGE_GREY_SCALE"
 
 export {
     CHANGE_SEQUENCE,
@@ -13,4 +14,5 @@ export {
     INSPECT_COORDINATE,
     KEYBOARD_DIRECTION,
     SLIDE_TWO_SEQS,
+    CHANGE_GREY_SCALE,
 };

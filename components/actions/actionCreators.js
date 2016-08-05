@@ -1,8 +1,13 @@
-import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
-         INSPECT_COORDINATE, KEYBOARD_DIRECTION, SLIDE_TWO_SEQS } from './actionTypes';
+import { CHANGE_SEQUENCE,
+         CHANGE_WINDOW_SIZE,
+         CHANGE_SCORING_MATRIX,
+         INSPECT_COORDINATE,
+         KEYBOARD_DIRECTION,
+         SLIDE_TWO_SEQS,
+         CHANGE_GREY_SCALE
+       } from './actionTypes';
 
-
-/*
+/**
  * Change one of the input sequences.
  * @param seqn: sequence nr, 1 or 2
  * @param sequence: sequeinspectCoordinatence string
@@ -30,7 +35,7 @@ function changeScoringMatrix(scoringMatrix) {
     };
 }
 
-/*
+/**
  * When the canvas is clicked.
  */
 function inspectCoordinate(i, j) {
@@ -41,7 +46,7 @@ function inspectCoordinate(i, j) {
     };
 }
 
-/*
+/**
  * When an arrow key is pressed to shift the position by 1 char int he sequence.
  */
 function keyboardArrowShiftCoordinate(direction) {
@@ -51,7 +56,7 @@ function keyboardArrowShiftCoordinate(direction) {
     };
 }
 
-/*
+/**
  * When the sliders above/below the TwoSeqsPanel are moved, to change the alignment.
  * @param seqn: sequence nr, 1 or 2
  */
@@ -63,6 +68,15 @@ function moveTwoSeqsSlider(seqn, shift) {
     }
 }
 
+function changeGreyScale(minBound, maxBound) {
+    return {
+        type: CHANGE_GREY_SCALE,
+        minBound: minBound,
+        maxBound: maxBound,
+    }
+}
+
+
 
 export {
     changeSequence,
@@ -71,4 +85,5 @@ export {
     inspectCoordinate,
     keyboardArrowShiftCoordinate,
     moveTwoSeqsSlider,
+    changeGreyScale,
 };

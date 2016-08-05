@@ -42,7 +42,7 @@ class InfoPanel extends React.Component {
             j = this.state.j,
             s1 = this.state.s1,
             s2 = this.state.s2,
-            scores = this.state.scores,
+            density = this.state.density,
             windowSize = this.state.windowSize,
             scoringMatrixName = this.state.scoringMatrix;
 
@@ -58,7 +58,7 @@ class InfoPanel extends React.Component {
         let ss1 = getSequenceAround(s1, i, ws);
         let ss2 = getSequenceAround(s2, j, ws);
         let localScore = scoringFunction(ss1, ss2, matrix);
-        let mean = this.calculateMean(scores);
+        let mean = this.calculateMean(density);
 
         return (
             <div id="info-panel" className={s.root}>
