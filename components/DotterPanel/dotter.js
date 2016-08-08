@@ -247,10 +247,10 @@ function rescaleInitAlphas(ls1, ls2) {
 }
 
 /**
- * Redraw the canvas after clamping the alpha values
+ * Redraw the canvas after clamping the alpha values and rescaling the remaining scores interval.
  * @param initialAlphas: initial alpha values
  *  (saved in store in order to come back to the initial state.
- *   Otherwise we could read then directly from the canvas with `ctx.getImageData()`).
+ *   Otherwise we could read them directly from the canvas with `ctx.getImageData()`).
  * @param minBound: (int8) all alphas lower than `minBound` become equal to `minBound`.
  * @param maxBound: (int8) all alphas bigger than `maxBound` become equal to `maxBound`.
  */
