@@ -5,6 +5,8 @@ import store from '../../core/store';
 import { toDensity, minMaxObject, object2array } from './helpers';
 
 import BarChart from '../BarChart/BarChart';
+import GreyScaleSlider from '../GreyScale/GreyScale';
+
 
 class DensityPanel extends React.Component {
     constructor() {
@@ -33,6 +35,7 @@ class DensityPanel extends React.Component {
         return (
             <div id="density-panel" className={s.root}>
                 <BarChart data={data} width={300} height={200} />
+                <GreyScaleSlider style={{paddingLeft: '40px', paddingRight: '20px'}}/>
             </div>
         );
     }

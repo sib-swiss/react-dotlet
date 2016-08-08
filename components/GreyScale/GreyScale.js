@@ -9,9 +9,13 @@ class GreyScaleSlider extends React.Component {
     constructor() {
         super();
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-        this.state = this.stateFromStore();
-        this.onChangeMinBound = this.onChangeMinBound.bind(this);
-        this.onChangeMaxBound = this.onChangeMaxBound.bind(this);
+        let storeState = this.stateFromStore();
+        this.state = Object.assign(storeState, {
+            widthMin: storeState.maxBound * 100/255,
+            widthMax: (255 - storeState.minBound) * 100/255,
+            max1: storeState.maxBound,
+            min2: storeState.minBound,
+        });
     }
 
     stateFromStore() {
@@ -19,8 +23,6 @@ class GreyScaleSlider extends React.Component {
         return {
             minBound: storeState.greyScale.minBound,
             maxBound: storeState.greyScale.maxBound,
-            minAlpha: storeState.greyScale.minAlpha,
-            maxAlpha: storeState.greyScale.maxAlpha,
         };
     }
 
@@ -31,34 +33,64 @@ class GreyScaleSlider extends React.Component {
     }
 
     onChangeMinBound(e, value) {
-        store.dispatch(changeGreyScale(value, this.state.maxBound));
+        if (value <= this.state.maxBound) {
+            store.dispatch(changeGreyScale(value, this.state.maxBound));
+        } else {
+            this.setState({minBound: this.state.maxBound});
+        }
     }
     onChangeMaxBound(e, value) {
-        store.dispatch(changeGreyScale(this.state.minBound, value));
+        if (value >= this.state.minBound) {
+            store.dispatch(changeGreyScale(this.state.minBound, value));
+        }
+    }
+
+    onRelaxMinBound(e, value) {
+        console.log(e, value, e.target.value, this.state.max1, this.state.minBound, this.state.maxBound)
+        this.setState({
+            widthMax: (255 - value) * 100/255,
+            min2: value,
+        });
+    }
+    onRelaxMaxBound(e, value) {
+        console.log(e, value, e.target.value, this.state.max1, this.state.minBound, this.state.maxBound)
+        this.setState({
+            widthMin: value * 100/255,
+            max1: value,
+        });
     }
 
     render() {
-        let min = this.state.minBound;
-        let max = this.state.maxBound;
-        console.debug('GreyScale:', min, max)
-        return (<div>
+        let minBound = this.state.minBound;
+        let maxBound = this.state.maxBound;
+        //let w1 = maxBound * 100/255;
+        //let w2 = (255 - minBound) * 100/255;
+        let w1 = this.state.widthMin;
+        let w2 = this.state.widthMax;
+        console.debug(minBound, maxBound, w1, w2)
+        return (<div style={Object.assign(this.props.style, {})}>
             <Slider
+                style={{width: w1+'%', float: 'left'}}
                 id='greyscale-slider-min'
                 sliderStyle={{margin: 0}}
                 tabIndex="0" ref='greyscale-slider-min'
-                min={0} max={255}
+                min={0} max={this.state.max1}
                 step={1}
-                value={min}
-                onChange={this.onChangeMinBound}
+                value={minBound}
+                onChange={this.onChangeMinBound.bind(this)}
+                onDragStop={this.onRelaxMinBound.bind(this)}
             />
             <Slider
+                style={{width: w2+'%', float: 'right'}}
                 id='greyscale-slider-max'
+                axis='x-reverse'
                 sliderStyle={{margin: 0}}
                 tabIndex="0" ref='greyscale-slider-max'
-                min={0} max={255}
+                min={this.state.min2} max={255}
                 step={1}
-                value={max}
-                onChange={this.onChangeMaxBound}
+                value={255 - maxBound}
+                onChange={this.onChangeMaxBound.bind(this)}
+                onDragStop={this.onRelaxMaxBound.bind(this)}
             />
         </div>);
     }

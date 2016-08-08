@@ -5,7 +5,6 @@ import * as dotter from './dotter';
 import store from '../../core/store';
 import { CANVAS_SIZE, CANVAS_ID } from '../constants/constants';
 import { inspectCoordinate, keyboardArrowShiftCoordinate } from '../actions/actionCreators';
-import GreyScaleSlider from '../GreyScale/GreyScale';
 
 
 class DotterPanel extends React.Component {
@@ -138,7 +137,6 @@ class DotterPanel extends React.Component {
 
 
             </div>
-                <GreyScaleSlider />
             </div>
         );
     }
