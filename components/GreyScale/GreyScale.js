@@ -38,28 +38,26 @@ class GreyScaleSlider extends React.Component {
     }
 
     render() {
-        let min = this.state.minAlpha;
-        let max = this.state.maxAlpha;
-        console.debug('GreyScale:', min, max, this.state.minBound, this.state.maxBound)
+        let min = this.state.minBound;
+        let max = this.state.maxBound;
+        console.debug('GreyScale:', min, max)
         return (<div>
             <Slider
                 id='greyscale-slider-min'
                 sliderStyle={{margin: 0}}
-                tabIndex="0" ref='greyscale-slider'
-                min={min} max={max}
+                tabIndex="0" ref='greyscale-slider-min'
+                min={0} max={255}
                 step={1}
-                disabled={max <= min}
-                value={this.state.minBound}
+                value={min}
                 onChange={this.onChangeMinBound}
             />
             <Slider
                 id='greyscale-slider-max'
                 sliderStyle={{margin: 0}}
-                tabIndex="0" ref='greyscale-slider'
-                min={min} max={max}
+                tabIndex="0" ref='greyscale-slider-max'
+                min={0} max={255}
                 step={1}
-                disabled={max <= min}
-                value={this.state.maxBound}
+                value={max}
                 onChange={this.onChangeMaxBound}
             />
         </div>);

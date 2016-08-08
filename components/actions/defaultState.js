@@ -35,8 +35,6 @@ let defaultState = {
         minBound: 0,
         maxBound: 255,
         initialAlphas: new Uint8ClampedArray([0]),
-        minAlpha: 0,
-        maxAlpha: 255,
     },
 };
 

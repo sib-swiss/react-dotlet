@@ -113,8 +113,6 @@ let reducer = (state = defaultState, action) => {
             minBound: action.minBound,
             maxBound: action.maxBound,
             initialAlphas: state.greyScale.initialAlphas,
-            minAlpha: state.greyScale.minAlpha,
-            maxAlpha: state.greyScale.maxAlpha,
         };
         // Back to default state: can forget about initialAlphas: they are stored in the canvas anyway. Just redraw.
         if (action.minBound === defaultMinBound && action.maxBound === defaultMaxBound) {
@@ -125,8 +123,6 @@ let reducer = (state = defaultState, action) => {
             // Record intial state while slider is still at initial position.
             if (state.greyScale.minBound === defaultMinBound && state.greyScale.maxBound === defaultMaxBound) {
                 scale.initialAlphas = getAlphaValues(state.s1.length, state.s2.length);
-                scale.minAlpha = scale.initialAlphas.reduce((a,b) => Math.min(a,b));
-                scale.maxAlpha = scale.initialAlphas.reduce((a,b) => Math.max(a,b));
             }
             // Update the canvas
             greyScale(scale.initialAlphas, scale.minBound, scale.maxBound,
