@@ -125,12 +125,13 @@ let reducer = (state = defaultState, action) => {
         } else {
             // Record intial state while slider is still at initial position.
             if (state.greyScale.minBound === defaultMinBound && state.greyScale.maxBound === defaultMaxBound) {
-                scale.initialAlphas = getAlphaValues();
+                scale.initialAlphas = getAlphaValues(state.s1.length, state.s2.length, state.matrixSize);
                 scale.minAlpha = scale.initialAlphas.reduce((a,b) => Math.min(a,b));
                 scale.maxAlpha = scale.initialAlphas.reduce((a,b) => Math.max(a,b));
             }
             // Update the canvas
-            greyScale(scale.initialAlphas, scale.minBound, scale.maxBound)
+            greyScale(scale.initialAlphas, scale.minAlpha, scale.maxAlpha, scale.minBound, scale.maxBound,
+                      state.s1.length, state.s2.length, state.matrixSize);
         }
         return Object.assign({}, state, {greyScale: scale});
 

@@ -96,7 +96,7 @@ function fillCanvas(s1, s2, windowSize, scoringMatrixName, greyScale) {
     let ctx = canvas.getContext('2d');
 
     let ws = Math.floor(windowSize / 2);   // # of nucleotides on each side
-    let scores = {};
+    let density = {};
 
     let ls1 = s1.length;
     let ls2 = s2.length;
@@ -117,8 +117,8 @@ function fillCanvas(s1, s2, windowSize, scoringMatrixName, greyScale) {
     let minScore = minMax[0] * windowSize;
     let maxScore = minMax[1] * windowSize;
     let scoresRange = maxScore - minScore;   // now any (score / scoresRange) is between 0 and 1
-    let minGrey = greyScale.minBound / 255;  // between 0 and 1 for `ctx.globalAlpha`
-    let maxGrey = greyScale.maxBound / 255;
+    //let minGrey = greyScale.minBound / 255;  // between 0 and 1 for `ctx.globalAlpha`
+    //let maxGrey = greyScale.maxBound / 255;
 
     for (let i=0; i <= npoints; i++) {
         let q1 = Math.round(i * step);                            // position on seq1. First is 0, last is L
@@ -130,47 +130,64 @@ function fillCanvas(s1, s2, windowSize, scoringMatrixName, greyScale) {
             if (q2 >= ls2) break;
             let subseq2 = helpers.getSequenceAround(s2, q2, ws);  // nucleotides window on seq2
             let score = scoringFunction(subseq1, subseq2, matrix);  // always an int
-            if (! (score in scores)) {
-                scores[score] = 0;
+            if (! (score in density)) {
+                density[score] = 0;
             } else {
-                scores[score] += 1;
+                density[score] += 1;
             }
             let alpha = (score - minScore) / scoresRange;         // the grey if no special grey scale is set ([0,100])
-            alpha = Math.min(maxGrey, Math.max(minGrey, alpha));  // correct for user-specified grey scale
+            //alpha = Math.min(maxGrey, Math.max(minGrey, alpha));  // correct for user-specified grey scale
             ctx.globalAlpha = alpha;
             ctx.fillRect(q1 * canvasPt, q2 * canvasPt, canvasPt, canvasPt);
         }
     }
-    return scores;
+    return density;
+}
+
+
+/**
+ * Return the ImageData corresponding to the non-empty region of the canvas
+ * (when one sequence is shorter than the other, a region is blank; its
+ *  zero alpha values mess up with scaling).
+ * @param ls1: length of sequence 1.
+ * @param ls2: length of sequence 2.
+ * @param canvasSize
+ */
+function getImageData(ls1, ls2) {
+    let canvas = document.getElementById(CANVAS_ID);
+    let ctx = canvas.getContext('2d');
+    let L = Math.max(ls1, ls2);
+    let d1 = coordinateFromSeqIndex(ls1, L, CANVAS_SIZE);
+    let d2 = coordinateFromSeqIndex(ls2, L, CANVAS_SIZE);
+    let imageData = ctx.getImageData(0,0, d1, d2);
+    return imageData;
 }
 
 /**
  * Draw the vertical and horizontal lines showing the current position on the canvas.
  */
-function drawPositionLines(i, j, ls1, ls2, L, canvasSize=CANVAS_SIZE) {
+function drawPositionLines(i, j, ls1, ls2, L) {
     let canvas = initBlankCanvas(CANVAS_ID +'-topLayer');
     let ctx = canvas.getContext('2d');
-    let x = coordinateFromSeqIndex(i, L, canvasSize, false);
-    let y = coordinateFromSeqIndex(j, L, canvasSize, false);
+    let x = coordinateFromSeqIndex(i, L, CANVAS_SIZE, false);
+    let y = coordinateFromSeqIndex(j, L, CANVAS_SIZE, false);
     // If the point size is > 1, make the lines pass in the middle.
-    if (L < canvasSize) {
-        let canvasPt = getCanvasPt(canvasSize, L, false);
+    if (L < CANVAS_SIZE) {
+        let canvasPt = getCanvasPt(CANVAS_SIZE, L, false);
         x += canvasPt/2;
         y += canvasPt/2;
     }
     ctx.fillStyle = "red";
-    ctx.fillRect(x, 1, 1, (ls2/L) * canvasSize);
-    ctx.fillRect(1, y, (ls1/L) * canvasSize, 1);
+    ctx.fillRect(x, 1, 1, (ls2/L) * CANVAS_SIZE);
+    ctx.fillRect(1, y, (ls1/L) * CANVAS_SIZE, 1);
 }
 
 /**
  * Return an array of the grey intensities of all points in the canvas, in the same
  * order as in `ctx.getImageData().data`.
  */
-function getAlphaValues() {
-    let canvas = document.getElementById(CANVAS_ID);
-    let ctx = canvas.getContext('2d');
-    let imageData = ctx.getImageData(0,0,canvas.width, canvas.height);
+function getAlphaValues(ls1, ls2, L) {
+    let imageData = getImageData(ls1, ls2);
     let data = imageData.data;  // [red,green,blue,alpha, red,green,blue,alpha, ...] each 0-255
     let alphas = new Uint8ClampedArray(data.length / 4);
     for (let i = 0; i < data.length; i += 4) {
@@ -187,13 +204,21 @@ function getAlphaValues() {
  * @param minBound: (int8) all alphas lower than `minBound` become equal to `minBound`.
  * @param maxBound: (int8) all alphas bigger than `maxBound` become equal to `maxBound`.
  */
-function greyScale(initialAlphas, minBound, maxBound) {
+function greyScale(initialAlphas, minAlpha, maxAlpha, minBound, maxBound, ls1, ls2, L, canvasSize=CANVAS_SIZE) {
     let canvas = document.getElementById(CANVAS_ID);
     let ctx = canvas.getContext('2d');
-    let imageData = ctx.getImageData(0,0,canvas.width, canvas.height);
+    let imageData = getImageData(ls1, ls2);
     let data = imageData.data;
+    let scaleFactor = (maxAlpha - minAlpha) / (maxBound - minBound);  // > 1
+    console.log(minAlpha, maxAlpha)
     for (let i = 0; i < data.length; i += 4) {
-        data[i+3] = Math.min(maxBound, Math.max(minBound, initialAlphas[i/4]));
+        //data[i+3] = Math.min(maxBound, Math.max(minBound, initialAlphas[i/4]));
+        let alpha = initialAlphas[i/4];
+        if (alpha < minBound) {
+            data[i+3] = minAlpha;
+        } else {
+            data[i+3] = alpha + alpha * scaleFactor;
+        }
     }
     ctx.putImageData(imageData, 0, 0);
 }

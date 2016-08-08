@@ -60,7 +60,7 @@ class BarChart extends React.Component {
         let transform = 'translate('+ margin.left +','+ margin.top +')';
 
         let xTicks = [minX, maxX];
-        // Find the score closest to 0 to add a tick
+        // Find the score closest to 0 to add a tick. Use bisection method if necessary.
         let last = data[0].x;
         for (let d of data) {
             if (d.x >= 0) {

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 
-import { getStep, seqIndexFromCoordinate } from '../dotter';
+import { getStep, seqIndexFromCoordinate, greyScale } from '../dotter';
 import { sumMatches, calculateMatches, calculateScore } from '../../common/scoring';
 import { SCORING_MATRIX_NAMES, MATCH, MISMATCH } from '../../constants/constants';
 import { SCORING_MATRICES } from '../../constants/scoring_matrices/scoring_matrices';
@@ -59,6 +59,10 @@ describe('DotterPanel test suite', () => {
         expect(seqIndexFromCoordinate(60, 100, 600)).to.be.equal(10-1);
         expect(seqIndexFromCoordinate(13, 100, 600)).to.be.equal(2);
         expect(seqIndexFromCoordinate(300, 12000, 600)).to.be.equal(6000-1);
+    });
+
+    it('dotter.greyScale', () => {
+        expect(greyScale([0.1, 0.2, 0.5], 0,1, 0,1)).to.be.equal([0.1, 0.2, 0.5]);
     });
 
 });
