@@ -10,7 +10,8 @@ class GreyScaleSlider extends React.Component {
         super();
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
         this.state = this.stateFromStore();
-        this.onChangeGreyScale = this.onChangeGreyScale.bind(this);
+        this.onChangeMinBound = this.onChangeMinBound.bind(this);
+        this.onChangeMaxBound = this.onChangeMaxBound.bind(this);
     }
 
     stateFromStore() {
@@ -29,27 +30,39 @@ class GreyScaleSlider extends React.Component {
         });
     }
 
-    onChangeGreyScale(e, value) {
-        store.dispatch(changeGreyScale(value, this.state.maxAlpha));
+    onChangeMinBound(e, value) {
+        store.dispatch(changeGreyScale(value, this.state.maxBound));
+    }
+    onChangeMaxBound(e, value) {
+        store.dispatch(changeGreyScale(this.state.minBound, value));
     }
 
     render() {
         let min = this.state.minAlpha;
         let max = this.state.maxAlpha;
-        console.debug(min, max, this.state.minBound)
-        return (
+        console.debug('GreyScale:', min, max, this.state.minBound, this.state.maxBound)
+        return (<div>
             <Slider
-                id='greyscale-slider'
+                id='greyscale-slider-min'
                 sliderStyle={{margin: 0}}
                 tabIndex="0" ref='greyscale-slider'
                 min={min} max={max}
                 step={1}
-                disabled={max === min}
+                disabled={max <= min}
                 value={this.state.minBound}
-                onChange={this.onChangeGreyScale}
+                onChange={this.onChangeMinBound}
             />
-
-        );
+            <Slider
+                id='greyscale-slider-max'
+                sliderStyle={{margin: 0}}
+                tabIndex="0" ref='greyscale-slider'
+                min={min} max={max}
+                step={1}
+                disabled={max <= min}
+                value={this.state.maxBound}
+                onChange={this.onChangeMaxBound}
+            />
+        </div>);
     }
 }
 
