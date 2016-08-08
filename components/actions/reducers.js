@@ -129,8 +129,7 @@ let reducer = (state = defaultState, action) => {
                 scale.maxAlpha = scale.initialAlphas.reduce((a,b) => Math.max(a,b));
             }
             // Update the canvas
-            greyScale(scale.initialAlphas, state.scoringMatrix,
-                      scale.minAlpha, scale.maxAlpha, scale.minBound, scale.maxBound,
+            greyScale(scale.initialAlphas, scale.minBound, scale.maxBound,
                       state.s1.length, state.s2.length);
         }
         return Object.assign({}, state, {greyScale: scale});

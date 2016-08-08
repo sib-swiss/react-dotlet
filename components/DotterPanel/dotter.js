@@ -4,6 +4,7 @@ import * as helpers from '../common/helpers';
 import { SCORING_MATRIX_NAMES } from '../constants/constants';
 import { SCORING_MATRICES, MIN_MAX } from '../constants/scoring_matrices/scoring_matrices';
 import { calculateMatches, calculateScore } from '../common/scoring';
+import * as d3scale from 'd3-scale';
 
 /**
  * Plotting functions in the main canvas.
@@ -125,17 +126,19 @@ function fillCanvas(s1, s2, windowSize, scoringMatrixName, greyScale) {
     let minScore = minMax[0] * windowSize;
     let maxScore = minMax[1] * windowSize;
     let scoresRange = maxScore - minScore;   // now any (score / scoresRange) is between 0 and 1
-    //let minGrey = greyScale.minBound / 255;  // between 0 and 1 for `ctx.globalAlpha`
-    //let maxGrey = greyScale.maxBound / 255;
 
     for (let i=0; i <= npoints; i++) {
         let q1 = Math.round(i * step);                            // position on seq1. First is 0, last is L
-        if (q1 >= ls1) break;
+        if (q1 >= ls1) {
+            break;
+        }
         let subseq1 = helpers.getSequenceAround(s1, q1, ws);      // nucleotides window on seq1
 
         for (let j=0; j <= npoints; j++) {
             let q2 = Math.round(j * step);                        // position on seq2
-            if (q2 >= ls2) break;
+            if (q2 >= ls2) {
+                break;
+            }
             let subseq2 = helpers.getSequenceAround(s2, q2, ws);  // nucleotides window on seq2
             let score = scoringFunction(subseq1, subseq2, matrix);  // always an int
             if (! (score in density)) {
@@ -144,11 +147,13 @@ function fillCanvas(s1, s2, windowSize, scoringMatrixName, greyScale) {
                 density[score] += 1;
             }
             let alpha = (score - minScore) / scoresRange;         // the grey if no special grey scale is set ([0,100])
-            //alpha = Math.min(maxGrey, Math.max(minGrey, alpha));  // correct for user-specified grey scale
             ctx.globalAlpha = alpha;
             ctx.fillRect(q1 * canvasPt, q2 * canvasPt, canvasPt, canvasPt);
         }
     }
+
+    // Rescale greys so that the min score is at 0 and the max at 255
+    rescaleInitAlphas(ls1, ls2);
 
     return density;
 }
@@ -198,6 +203,8 @@ function getImageData(ls1, ls2) {
 /**
  * Return an array of the grey intensities of all points in the canvas, in the same
  * order as in `ctx.getImageData().data`.
+ * @param ls1: length of sequence 1.
+ * @param ls2: length of sequence 2.
  */
 function getAlphaValues(ls1, ls2) {
     let imageData = getImageData(ls1, ls2);
@@ -210,6 +217,36 @@ function getAlphaValues(ls1, ls2) {
 }
 
 /**
+ * At the beginning, alpha values are scaled according to the minimal and
+ * maximal *possible* scores. Here we scale them according to the actual min and max values,
+ * to improve contrast. i.e. min alpha -> 0, max alpha -> 255.
+ * @param ls1: length of sequence 1.
+ * @param ls2: length of sequence 2.
+ */
+function rescaleInitAlphas(ls1, ls2) {
+    let imageData = getImageData(ls1, ls2);
+    let data = imageData.data;
+    let minAlpha = 255;
+    let maxAlpha = 0;
+    for (let i = 3; i < data.length; i += 4) {
+        if (data[i] < minAlpha) {
+            minAlpha = data[i];
+        } else if (data[i] > maxAlpha) {
+            maxAlpha = data[i];
+        }
+    }
+    let scale = d3scale.scaleLinear()
+        .domain([minAlpha, maxAlpha])
+        .range([0, 255]);
+    for (let i = 0; i < data.length; i += 4) {
+        data[i+3] = Math.round(scale(data[i+3]));
+    }
+    let canvas = document.getElementById(CANVAS_ID);
+    let ctx = canvas.getContext('2d');
+    ctx.putImageData(imageData, 0, 0);
+}
+
+/**
  * Redraw the canvas after clamping the alpha values
  * @param initialAlphas: initial alpha values
  *  (saved in store in order to come back to the initial state.
@@ -217,22 +254,20 @@ function getAlphaValues(ls1, ls2) {
  * @param minBound: (int8) all alphas lower than `minBound` become equal to `minBound`.
  * @param maxBound: (int8) all alphas bigger than `maxBound` become equal to `maxBound`.
  */
-function greyScale(initialAlphas, scoringMatrixName, minAlpha, maxAlpha, minBound, maxBound, ls1, ls2) {
-    let minMax = MIN_MAX[scoringMatrixName];
-    let minScore = minMax[0];
-    let maxScore = minMax[1];
-    let scaleFactor = (maxAlpha - minAlpha) / (maxBound - minBound);  // > 1
-
+function greyScale(initialAlphas, minBound, maxBound, ls1, ls2) {
+    let scale = d3scale.scaleLinear()
+        .domain([minBound, maxBound])
+        .range([0, 255]);
     let imageData = getImageData(ls1, ls2);
     let data = imageData.data;
-    console.log('grey', minAlpha, maxAlpha)
     for (let i = 0; i < data.length; i += 4) {
-        //data[i+3] = Math.min(maxBound, Math.max(minBound, initialAlphas[i/4]));
         let alpha = initialAlphas[i/4];
         if (alpha < minBound) {
-            data[i+3] = minAlpha;
+            data[i+3] = 0;
+        } else if (alpha > maxBound) {
+            data[i+3] = 255;
         } else {
-            data[i+3] = alpha //+ alpha * scaleFactor;
+            data[i+3] = scale(alpha);
         }
     }
     let canvas = document.getElementById(CANVAS_ID);
