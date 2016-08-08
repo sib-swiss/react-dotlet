@@ -37,9 +37,8 @@ let reducer = (state = defaultState, action) => {
         seq = undefined;  // free space
         let ls1 = newState.s1.length;
         let ls2 = newState.s2.length;
-        newState.matrixSize = Math.max(ls1, ls2);
         newState.i = 0; newState.j = 0;
-        drawPositionLines(0, 0, ls1, ls2, newState.matrixSize);
+        drawPositionLines(0, 0, ls1, ls2);
         newState.density = fillCanvas(newState.s1, newState.s2, state.windowSize, state.scoringMatrix, state.greyScale);
         return newState;
 
@@ -65,7 +64,7 @@ let reducer = (state = defaultState, action) => {
      * Expects `action.i`, `action.j`.
      */
     case INSPECT_COORDINATE:
-        drawPositionLines(action.i, action.j, state.s1.length, state.s2.length, state.matrixSize);
+        drawPositionLines(action.i, action.j, state.s1.length, state.s2.length);
         return Object.assign({}, state, {i: action.i, j: action.j});
 
     /*
@@ -84,7 +83,7 @@ let reducer = (state = defaultState, action) => {
             keybDirection = {i: state.i - 1};
         }
         newState = Object.assign({}, state, keybDirection);
-        drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length, state.matrixSize);
+        drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length);
         return newState;
 
     /*
@@ -100,7 +99,7 @@ let reducer = (state = defaultState, action) => {
             slideDirection = {j: state.j + action.shift};
         }
         newState = Object.assign({}, state, slideDirection);
-        drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length, state.matrixSize);
+        drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length);
         return newState;
 
     /*
@@ -125,13 +124,14 @@ let reducer = (state = defaultState, action) => {
         } else {
             // Record intial state while slider is still at initial position.
             if (state.greyScale.minBound === defaultMinBound && state.greyScale.maxBound === defaultMaxBound) {
-                scale.initialAlphas = getAlphaValues(state.s1.length, state.s2.length, state.matrixSize);
+                scale.initialAlphas = getAlphaValues(state.s1.length, state.s2.length);
                 scale.minAlpha = scale.initialAlphas.reduce((a,b) => Math.min(a,b));
                 scale.maxAlpha = scale.initialAlphas.reduce((a,b) => Math.max(a,b));
             }
             // Update the canvas
-            greyScale(scale.initialAlphas, scale.minAlpha, scale.maxAlpha, scale.minBound, scale.maxBound,
-                      state.s1.length, state.s2.length, state.matrixSize);
+            greyScale(scale.initialAlphas, state.scoringMatrix,
+                      scale.minAlpha, scale.maxAlpha, scale.minBound, scale.maxBound,
+                      state.s1.length, state.s2.length);
         }
         return Object.assign({}, state, {greyScale: scale});
 

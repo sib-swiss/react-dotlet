@@ -87,6 +87,14 @@ function initBlankCanvas(canvasId) {
 
 
 /**
+ * Calculate the local alignment scores.
+ */
+function calculateScores() {
+
+}
+
+
+/**
  * Fill the dotter canvas with similarity scores; return the scores density.
  * It never stores the matrix in memory: it draws a point and forgets about it.
  */
@@ -141,9 +149,33 @@ function fillCanvas(s1, s2, windowSize, scoringMatrixName, greyScale) {
             ctx.fillRect(q1 * canvasPt, q2 * canvasPt, canvasPt, canvasPt);
         }
     }
+
     return density;
 }
 
+
+/**
+ * Draw the vertical and horizontal lines showing the current position on the canvas.
+ */
+function drawPositionLines(i, j, ls1, ls2) {
+    let canvas = initBlankCanvas(CANVAS_ID +'-topLayer');
+    let ctx = canvas.getContext('2d');
+    let L = Math.max(ls1, ls2);
+    let x = coordinateFromSeqIndex(i, L, CANVAS_SIZE, false);
+    let y = coordinateFromSeqIndex(j, L, CANVAS_SIZE, false);
+    // If the point size is > 1, make the lines pass in the middle.
+    if (L < CANVAS_SIZE) {
+        let canvasPt = getCanvasPt(CANVAS_SIZE, L, false);
+        x += canvasPt/2;
+        y += canvasPt/2;
+    }
+    ctx.fillStyle = "red";
+    ctx.fillRect(x, 1, 1, (ls2/L) * CANVAS_SIZE);
+    ctx.fillRect(1, y, (ls1/L) * CANVAS_SIZE, 1);
+}
+
+
+//---------------------- GREY SCALE ------------------------//
 
 /**
  * Return the ImageData corresponding to the non-empty region of the canvas
@@ -164,29 +196,10 @@ function getImageData(ls1, ls2) {
 }
 
 /**
- * Draw the vertical and horizontal lines showing the current position on the canvas.
- */
-function drawPositionLines(i, j, ls1, ls2, L) {
-    let canvas = initBlankCanvas(CANVAS_ID +'-topLayer');
-    let ctx = canvas.getContext('2d');
-    let x = coordinateFromSeqIndex(i, L, CANVAS_SIZE, false);
-    let y = coordinateFromSeqIndex(j, L, CANVAS_SIZE, false);
-    // If the point size is > 1, make the lines pass in the middle.
-    if (L < CANVAS_SIZE) {
-        let canvasPt = getCanvasPt(CANVAS_SIZE, L, false);
-        x += canvasPt/2;
-        y += canvasPt/2;
-    }
-    ctx.fillStyle = "red";
-    ctx.fillRect(x, 1, 1, (ls2/L) * CANVAS_SIZE);
-    ctx.fillRect(1, y, (ls1/L) * CANVAS_SIZE, 1);
-}
-
-/**
  * Return an array of the grey intensities of all points in the canvas, in the same
  * order as in `ctx.getImageData().data`.
  */
-function getAlphaValues(ls1, ls2, L) {
+function getAlphaValues(ls1, ls2) {
     let imageData = getImageData(ls1, ls2);
     let data = imageData.data;  // [red,green,blue,alpha, red,green,blue,alpha, ...] each 0-255
     let alphas = new Uint8ClampedArray(data.length / 4);
@@ -204,22 +217,26 @@ function getAlphaValues(ls1, ls2, L) {
  * @param minBound: (int8) all alphas lower than `minBound` become equal to `minBound`.
  * @param maxBound: (int8) all alphas bigger than `maxBound` become equal to `maxBound`.
  */
-function greyScale(initialAlphas, minAlpha, maxAlpha, minBound, maxBound, ls1, ls2, L, canvasSize=CANVAS_SIZE) {
-    let canvas = document.getElementById(CANVAS_ID);
-    let ctx = canvas.getContext('2d');
+function greyScale(initialAlphas, scoringMatrixName, minAlpha, maxAlpha, minBound, maxBound, ls1, ls2) {
+    let minMax = MIN_MAX[scoringMatrixName];
+    let minScore = minMax[0];
+    let maxScore = minMax[1];
+    let scaleFactor = (maxAlpha - minAlpha) / (maxBound - minBound);  // > 1
+
     let imageData = getImageData(ls1, ls2);
     let data = imageData.data;
-    let scaleFactor = (maxAlpha - minAlpha) / (maxBound - minBound);  // > 1
-    console.log(minAlpha, maxAlpha)
+    console.log('grey', minAlpha, maxAlpha)
     for (let i = 0; i < data.length; i += 4) {
         //data[i+3] = Math.min(maxBound, Math.max(minBound, initialAlphas[i/4]));
         let alpha = initialAlphas[i/4];
         if (alpha < minBound) {
             data[i+3] = minAlpha;
         } else {
-            data[i+3] = alpha + alpha * scaleFactor;
+            data[i+3] = alpha //+ alpha * scaleFactor;
         }
     }
+    let canvas = document.getElementById(CANVAS_ID);
+    let ctx = canvas.getContext('2d');
     ctx.putImageData(imageData, 0, 0);
 }
 
