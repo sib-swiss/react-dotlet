@@ -23,6 +23,9 @@ function getCanvasPt(canvasSize, L, round=true) {
         if (round) {
             canvasPt = Math.floor(canvasPt);
         }
+        //else {
+        //    canvasPt = Math.round(canvasPt)
+        //}
     } else {
         canvasPt = 1;
     }
@@ -121,8 +124,10 @@ function oneAlpha(alphas, i, j, a, _, canvasSize=CANVAS_SIZE) {
 }
 function fillAlphas(alphas, i, j, a, size, canvasSize=CANVAS_SIZE) {
     console.log(i, j, a, size);
-    for (let x=i; x < i+size; i++) {
-        for (let y=j; y < j+size; j++) {
+    i = Math.round(i)
+    j = Math.round(j)
+    for (let x=i; x < i+size; x++) {
+        for (let y=j; y < j+size; y++) {
             alphas[x * canvasSize + y] = a;
         }
     }
@@ -162,8 +167,8 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
     let scoresRange = maxScore - minScore;   // now any (score / scoresRange) is between 0 and 1
 
     let addAlpha = canvasPt === 1 ? oneAlpha : fillAlphas;
-    let lastx = 0;
-    let lasty = 0;
+    let lastRowIndex = 0;
+    let lastColIndex = 0;
 
     console.warn(npoints * canvasPt === canvasSize)
 
@@ -172,10 +177,10 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
         let q2 = Math.round(row * step);                            // position on seq2. First is 0, last is L
         if (q2 >= ls2) {                          // bigger than sequence 2 - skip
             for (let col=0; col < npoints; col++) {
-                let j = col * canvasPt;
+                let j = Math.floor(col * canvasPt);
                 addAlpha(alphas, i, j, 255, canvasPt);  // fill in the bottom margin
             }
-            lasty = row + canvasPt;
+            lastRowIndex = i + canvasPt;
             continue;
         }
         let subseq2 = helpers.getSequenceAround(s2, q2, ws);      // nucleotides window on seq2
@@ -185,7 +190,7 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
             let q1 = Math.round(col * step);                        // position on seq2
             if (q1 >= ls1) {                     // bigger than sequence 1 - skip
                 addAlpha(alphas, i, j, 255, canvasPt);  // fill in the right margin, 255=black, 0=white
-                lastx = col + canvasPt;
+                lastColIndex = j + canvasPt;
                 continue;
             }
             let subseq1 = helpers.getSequenceAround(s1, q1, ws);  // nucleotides window on seq2
@@ -197,7 +202,6 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
                 density[score] += 1;
             }
             let alpha = Math.round(255 * (score - minScore) / scoresRange);
-            //console.debug(5555, i, j, alpha)
             addAlpha(alphas, i, j, alpha, canvasPt);
         }
     }
@@ -209,8 +213,8 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
     return {
         density,
         alphas,
-        lastx,
-        lasty,
+        lastRowIndex,
+        lastColIndex,
     };
 }
 
