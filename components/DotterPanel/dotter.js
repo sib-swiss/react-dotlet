@@ -258,13 +258,23 @@ function greyScale(initialAlphas, minBound, maxBound, ls1, ls2) {
     let scale = d3scale.scaleLinear()
         .domain([minBound, maxBound])
         .range([0, 255]);
+    let black, white;
+    // Usual case, min < max.
+    if (minBound <= maxBound) {
+        black = (a) => a >= maxBound;
+        white = (a) => a <= minBound;
+    // Reversed case, when the sliders cross: reverse colors.
+    } else {
+        black = (a) => a <= maxBound;
+        white = (a) => a >= minBound;
+    }
     let imageData = getImageData(ls1, ls2);
     let data = imageData.data;
     for (let i = 0; i < data.length; i += 4) {
         let alpha = initialAlphas[i/4];
-        if (alpha < minBound) {
+        if (white(alpha)) {
             data[i+3] = 0;
-        } else if (alpha > maxBound) {
+        } else if (black(alpha)) {
             data[i+3] = 255;
         } else {
             data[i+3] = scale(alpha);

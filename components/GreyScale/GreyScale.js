@@ -23,21 +23,21 @@ class GreyScaleSlider extends React.Component {
     }
 
     onChangeMinBound(e, value) {
-        if (value <= this.state.max) {
+        //if (value <= this.state.max) {
             store.dispatch(changeGreyScale(value, this.state.max));
             this.setState({min: value});
-        } else {
-            this.setState({min: this.state.max});
-        }
+        //} else {
+        //    this.setState({min: this.state.max});
+        //}
     }
     onChangeMaxBound(e, v) {
         let value = 255 - v;
-        if (value >= this.state.min) {
+        //if (value >= this.state.min) {
             store.dispatch(changeGreyScale(this.state.min, value));
             this.setState({max: value});
-        } else {
-            this.setState({max: 225 - this.state.min});
-        }
+        //} else {
+        //    this.setState({max: 225 - this.state.min});
+        //}
     }
 
     //onRelaxMinBound(e, x) {
@@ -75,7 +75,7 @@ class GreyScaleSlider extends React.Component {
         //console.debug('-', [min, 255], 255-max)
         return (<div style={Object.assign(this.props.style, {})}>
             <Slider
-                style={{width: w1+'%', float: 'left', marginRight: '-'+w1+'%'}}
+                style={{width: w1+'%', float: 'left'}}
                 id='greyscale-slider-min'
                 sliderStyle={{margin: 0}}
                 tabIndex="0" ref='greyscale-slider-min'
@@ -99,6 +99,7 @@ class GreyScaleSlider extends React.Component {
     }
 }
 
+// <Slider style={{width: w1+'%', float: 'left'}}, marginRight: '-'+w1+'%'}}
 //min={0} max={max}
 //min={0} max={255-min}
 //onDragStop={this.onRelaxMinBound}
