@@ -123,9 +123,9 @@ function oneAlpha(alphas, i, j, a, _, canvasSize=CANVAS_SIZE) {
     alphas[i * canvasSize + j] = a;
 }
 function fillAlphas(alphas, i, j, a, size, canvasSize=CANVAS_SIZE) {
-    console.log(i, j, a, size);
     i = Math.round(i)
     j = Math.round(j)
+    size = Math.round(size)
     for (let x=i; x < i+size; x++) {
         for (let y=j; y < j+size; y++) {
             alphas[x * canvasSize + y] = a;
@@ -167,8 +167,8 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
     let scoresRange = maxScore - minScore;   // now any (score / scoresRange) is between 0 and 1
 
     let addAlpha = canvasPt === 1 ? oneAlpha : fillAlphas;
-    let lastRowIndex = 0;
-    let lastColIndex = 0;
+    let lastRowIndex = canvasSize-1;
+    let lastColIndex = canvasSize-1;
 
     console.warn(npoints * canvasPt === canvasSize)
 
@@ -195,7 +195,6 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
             }
             let subseq1 = helpers.getSequenceAround(s1, q1, ws);  // nucleotides window on seq2
             let score = scoringFunction(subseq1, subseq2, matrix);  // always an int
-            //console.debug(score, subseq1, subseq2)
             if (! (score in density)) {
                 density[score] = 0;
             } else {
@@ -205,10 +204,9 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
             addAlpha(alphas, i, j, alpha, canvasPt);
         }
     }
-    console.debug(alphas)
 
     // Rescale greys so that the min score is at 0 and the max at 255
-    //rescaleInitAlphas(alphas, lastx, lasty);
+    rescaleInitAlphas(alphas, lastRowIndex, lastColIndex);
 
     return {
         density,
@@ -245,7 +243,6 @@ function drawPositionLines(i, j, ls1, ls2, canvasSize=CANVAS_SIZE) {
     let round = roundPixels(L, canvasSize);
     let x = coordinateFromSeqIndex(i, L, canvasSize, round);
     let y = coordinateFromSeqIndex(j, L, canvasSize, round);
-    console.debug(1234, x, y)
     // If the point size is > 1, make the lines pass in the middle.
     if (L < CANVAS_SIZE) {
         let canvasPt = getCanvasPt(canvasSize, L, round);
@@ -301,12 +298,13 @@ function getAlphaValues(ls1, ls2) {
  * @param lastx: last horizontal pixel index to consider.
  * @param lasty: last vertical pixel index to consider.
  */
-function rescaleInitAlphas(alphas, lastx, lasty, canvasSize=CANVAS_SIZE) {
+function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, canvasSize=CANVAS_SIZE) {
     // Get the current min and max
+    console.debug(lastRowIndex, lastColIndex)
     let minAlpha = 255;
     let maxAlpha = 0;
-    for (let i=0; i<lastx; i++) {
-        for (let j=0; j<lasty; j++) {
+    for (let i=0; i < lastRowIndex; i++) {
+        for (let j=0; j < lastColIndex; j++) {
             let k = i * canvasSize + j;
             if (alphas[k] < minAlpha) {
                 minAlpha = alphas[k];
@@ -315,6 +313,7 @@ function rescaleInitAlphas(alphas, lastx, lasty, canvasSize=CANVAS_SIZE) {
             }
         }
     }
+    console.debug(minAlpha, maxAlpha)
     // Rescale to fill the interval 0-255
     let scale = d3scale.scaleLinear()
         .domain([minAlpha, maxAlpha])

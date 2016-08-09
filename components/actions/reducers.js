@@ -122,7 +122,7 @@ let reducer = (state = defaultState, action) => {
         // Back to default state: can forget about initialAlphas: they are stored in the canvas anyway. Just redraw.
         if (action.minBound === defaultMinBound && action.maxBound === defaultMaxBound) {
             scale.initialAlphas = new Uint8ClampedArray([0]);
-            scores = calculateScores(state.s1, state.s2, state.windowSize, action.scoringMatrix, scale);
+            scores = calculateScores(state.s1, state.s2, state.windowSize, state.scoringMatrix, scale);
             fillCanvas(scores.alphas);
         // Otherwise, scale according to the new grey scale.
         } else {
