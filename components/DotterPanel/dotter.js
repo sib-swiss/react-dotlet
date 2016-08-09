@@ -50,15 +50,17 @@ function getCanvasPt(canvasSize, L, round=true) {
 
 function seqToPixelScale(ls1, ls2, canvasSize=CANVAS_SIZE) { //, round=true) {
     let L = Math.max(ls1, ls2);
-    let seqToPixel = d3.scaleLinear()
-        .domain([0, L-1])
+    let seqToPx = d3scale.scaleLinear()
+        .domain([0, L])
         .rangeRound([0, canvasSize]);
+    return seqToPx;
 }
 function pixelToIndexScale(ls1, ls2, canvasSize=CANVAS_SIZE) { //, round=true) {
     let L = Math.max(ls1, ls2);
-    let seqToPixel = d3.scaleLinear()
+    let pixelToSeq = d3scale.scaleLinear()
         .domain([0, canvasSize])
-        .rangeRound([0, L-1]);
+        .rangeRound([0, L]);
+    return pixelToSeq;
 }
 
 /**
@@ -119,13 +121,24 @@ function initBlankCanvas(canvasId) {
     return canvas;
 }
 
+/**
+ * Add a grey value for position (i, j) to the initial array `alphas`,
+ * i.e. at position `i * width + j`.
+ * @param alphas: initial Uint8ClampedArray of grey values (0-255).
+ * @param i: pixel vertical coordinate (row index).
+ * @param j: pixel horizontal coordinate (col index).
+ * @param a: int8 alpha value (0-255).
+ * @param _: to imitate the signature of `fillAlphas`.
+ * @param canvasSize
+ */
 function oneAlpha(alphas, i, j, a, _, canvasSize=CANVAS_SIZE) {
     alphas[i * canvasSize + j] = a;
 }
+/**
+ * Add grey values for all pixels in rectangle (i, j, i+size, j+size).
+ * Same arguments as for `oneAlpha`.
+ */
 function fillAlphas(alphas, i, j, a, size, canvasSize=CANVAS_SIZE) {
-    i = Math.round(i)
-    j = Math.round(j)
-    size = Math.round(size)
     for (let x=i; x < i+size; x++) {
         for (let y=j; y < j+size; y++) {
             alphas[x * canvasSize + y] = a;
@@ -133,6 +146,12 @@ function fillAlphas(alphas, i, j, a, size, canvasSize=CANVAS_SIZE) {
     }
 }
 
+/**
+ * In what condition should use an integer number of pixels per char,
+ * or chars per pixel.
+ * Float values decrease performance and drawing precision,
+ * but the drawings fill the whole canvas.
+ */
 function roundPixels(L, canvasSize=CANVAS_SIZE) {
     //return L > 2 * canvasSize;
     return false;
@@ -149,7 +168,7 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
     let ls1 = s1.length;
     let ls2 = s2.length;
     let L = Math.max(ls1, ls2);
-    let round = roundPixels(L);                    // For small sequences, use float pixel coordinates at the expense of performance
+    let round = roundPixels(L);
     let canvasPt = getCanvasPt(canvasSize, L, round);  // Size of a "dot" on the canvas, when L is small (else 1)
     let npoints = getNpoints(canvasSize, canvasPt);    // Number of points in one line when L is small (else CANVAS_SIZE)
     let step = getStep(npoints, L, round);             // 1 point -> `step` characters
@@ -167,30 +186,30 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
     let scoresRange = maxScore - minScore;   // now any (score / scoresRange) is between 0 and 1
 
     let addAlpha = canvasPt === 1 ? oneAlpha : fillAlphas;
-    let lastRowIndex = canvasSize-1;
-    let lastColIndex = canvasSize-1;
 
-    console.warn(npoints * canvasPt === canvasSize)
+    let seqToPixel = seqToPixelScale(ls1, ls2, canvasSize);
+    let lastRowIndex = seqToPixel(ls2)-1;  // -1 because of rounding errors, but it should not amtter in any case
+    let lastColIndex = seqToPixel(ls1)-1;
+
+    console.debug('assert', npoints * canvasPt === canvasSize);
 
     for (let row=0; row < npoints; row++) {       // rows - seq2
-        let i = row * canvasPt;
+        let i = Math.floor(row * canvasPt);
         let q2 = Math.round(row * step);                            // position on seq2. First is 0, last is L
         if (q2 >= ls2) {                          // bigger than sequence 2 - skip
             for (let col=0; col < npoints; col++) {
                 let j = Math.floor(col * canvasPt);
-                addAlpha(alphas, i, j, 255, canvasPt);  // fill in the bottom margin
+                addAlpha(alphas, i, j, 0, canvasPt);  // fill in the bottom margin
             }
-            lastRowIndex = i + canvasPt;
             continue;
         }
         let subseq2 = helpers.getSequenceAround(s2, q2, ws);      // nucleotides window on seq2
 
         for (let col=0; col < npoints; col++) {   // columns - seq1
-            let j = col * canvasPt;
+            let j = Math.floor(col * canvasPt);
             let q1 = Math.round(col * step);                        // position on seq2
             if (q1 >= ls1) {                     // bigger than sequence 1 - skip
-                addAlpha(alphas, i, j, 255, canvasPt);  // fill in the right margin, 255=black, 0=white
-                lastColIndex = j + canvasPt;
+                addAlpha(alphas, i, j, 0, canvasPt);  // fill in the right margin, 255=black, 0=white
                 continue;
             }
             let subseq1 = helpers.getSequenceAround(s1, q1, ws);  // nucleotides window on seq2
@@ -300,7 +319,6 @@ function getAlphaValues(ls1, ls2) {
  */
 function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, canvasSize=CANVAS_SIZE) {
     // Get the current min and max
-    console.debug(lastRowIndex, lastColIndex)
     let minAlpha = 255;
     let maxAlpha = 0;
     for (let i=0; i < lastRowIndex; i++) {
@@ -313,7 +331,6 @@ function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, canvasSize=CANVAS
             }
         }
     }
-    console.debug(minAlpha, maxAlpha)
     // Rescale to fill the interval 0-255
     let scale = d3scale.scaleLinear()
         .domain([minAlpha, maxAlpha])

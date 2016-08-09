@@ -45,7 +45,7 @@ let defaultState = {
     },
 };
 
-Object.assign(defaultState, orthologExample);
+Object.assign(defaultState, smallExample);
 
 
 export default defaultState;
