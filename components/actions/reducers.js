@@ -1,6 +1,6 @@
 import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
          INSPECT_COORDINATE, KEYBOARD_DIRECTION, SLIDE_TWO_SEQS, CHANGE_GREY_SCALE } from './actionTypes';
-import { fillCanvas, drawPositionLines, greyScale, getAlphaValues } from '../DotterPanel/dotter';
+import { calculateScores, fillCanvas, drawPositionLines, greyScale, getAlphaValues } from '../DotterPanel/dotter';
 import { guessSequenceType, commonSeqType } from '../InputPanel/input';
 //import { PROTEIN, DNA } from '../constants/constants';
 //import { translateProtein } from '../common/genetics';
@@ -10,6 +10,7 @@ import defaultState from './defaultState';
 let reducer = (state = defaultState, action) => {
     let newState;
     let density;
+    let scores;
 
     switch (action.type) {
 
@@ -37,9 +38,11 @@ let reducer = (state = defaultState, action) => {
         seq = undefined;  // free space
         let ls1 = newState.s1.length;
         let ls2 = newState.s2.length;
-        newState.i = 0; newState.j = 0;
+        scores = calculateScores(newState.s1, newState.s2, state.windowSize, state.scoringMatrix, state.greyScale);
+        fillCanvas(scores.alphas);
         drawPositionLines(0, 0, ls1, ls2);
-        newState.density = fillCanvas(newState.s1, newState.s2, state.windowSize, state.scoringMatrix, state.greyScale);
+        newState.density = scores.density;
+        newState.i = 0; newState.j = 0;
         return newState;
 
     /*
@@ -48,16 +51,18 @@ let reducer = (state = defaultState, action) => {
      */
     case CHANGE_WINDOW_SIZE:
         let winsize = action.windowSize || 1;
-        density = fillCanvas(state.s1, state.s2, winsize, state.scoringMatrix, state.greyScale);
-        return Object.assign({}, state, {density: density, windowSize: parseInt(winsize)});
+        scores = calculateScores(state.s1, state.s2, winsize, state.scoringMatrix, state.greyScale);
+        fillCanvas(scores.alphas);
+        return Object.assign({}, state, {density: scores.density, windowSize: parseInt(winsize)});
 
     /*
      * When the user changes the scoring matrix.
      * Expects `action.scoringMatrix`.
      */
     case CHANGE_SCORING_MATRIX:
-        density = fillCanvas(state.s1, state.s2, state.windowSize, action.scoringMatrix, state.greyScale);
-        return Object.assign({}, state, {density: density, scoringMatrix: action.scoringMatrix});
+        scores = calculateScores(state.s1, state.s2, state.windowSize, action.scoringMatrix, state.greyScale);
+        fillCanvas(scores.alphas);
+        return Object.assign({}, state, {density: scores.density, scoringMatrix: action.scoringMatrix});
 
     /*
      * On click on the canvas.
@@ -117,7 +122,8 @@ let reducer = (state = defaultState, action) => {
         // Back to default state: can forget about initialAlphas: they are stored in the canvas anyway. Just redraw.
         if (action.minBound === defaultMinBound && action.maxBound === defaultMaxBound) {
             scale.initialAlphas = new Uint8ClampedArray([0]);
-            fillCanvas(state.s1, state.s2, state.windowSize, state.scoringMatrix, scale);
+            scores = calculateScores(state.s1, state.s2, state.windowSize, action.scoringMatrix, scale);
+            fillCanvas(scores.alphas);
         // Otherwise, scale according to the new grey scale.
         } else {
             // Record intial state while slider is still at initial position.

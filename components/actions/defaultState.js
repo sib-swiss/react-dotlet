@@ -7,7 +7,15 @@ const smallExample = {
     s1Type: DNA,
     s2Type: DNA,
     scoringMatrix: SCORING_MATRIX_NAMES.BLOSUM80,
-    matrixSize: 13,
+};
+
+const smallestExample = {
+    s1: "ATGC",
+    s2: "KCTGCT",
+    s1Type: DNA,
+    s2Type: DNA,
+    scoringMatrix: SCORING_MATRIX_NAMES.BLOSUM80,
+    windowSize: 1,
 };
 
 // s1: YWHAB from Uniprot, len 246
@@ -18,7 +26,6 @@ const orthologExample = {
     s1Type: PROTEIN,
     s2Type: PROTEIN,
     scoringMatrix: SCORING_MATRIX_NAMES.BLOSUM80,
-    matrixSize: 246,
 };
 
 let defaultState = {
@@ -38,7 +45,7 @@ let defaultState = {
     },
 };
 
-Object.assign(defaultState, orthologExample);
+Object.assign(defaultState, smallestExample);
 
 
 export default defaultState;

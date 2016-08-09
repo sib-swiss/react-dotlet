@@ -16,6 +16,7 @@ import InputPanel from '../../components/InputPanel';
 import DensityPanel from '../../components/DensityPanel';
 import TwoSeqsPanel from '../../components/TwoSeqsPanel';
 import InfoPanel from '../../components/InfoPanel';
+import { CANVAS_SIZE } from '../../components/constants/constants';
 
 
 /*
@@ -39,7 +40,7 @@ class HomePage extends React.Component {
                 <InputPanel />
                 <div className={"content-grid mdl-grid "+ s.midPanel}>
                     <div className={"mdl-cell mdl-cell--6-col "+ s.dotterPanelContainer}>
-                        <DotterPanel />
+                        <DotterPanel canvasSize={CANVAS_SIZE} />
                     </div>
                     <div className={"mdl-cell mdl-cell--6-col "+ s.densityPanelContainer}>
                         <DensityPanel />

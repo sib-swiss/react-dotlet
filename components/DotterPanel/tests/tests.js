@@ -6,6 +6,8 @@ import { sumMatches, calculateMatches, calculateScore } from '../../common/scori
 import { SCORING_MATRIX_NAMES, MATCH, MISMATCH } from '../../constants/constants';
 import { SCORING_MATRICES } from '../../constants/scoring_matrices/scoring_matrices';
 
+import { mount, shallow } from 'enzyme';
+
 
 describe('DotterPanel test suite', () => {
     let s1 = "AAAAAAATTTCCCCCCTTGC";
@@ -61,8 +63,5 @@ describe('DotterPanel test suite', () => {
         expect(seqIndexFromCoordinate(300, 12000, 600)).to.be.equal(6000-1);
     });
 
-    it('dotter.greyScale', () => {
-        expect(greyScale([0.1, 0.2, 0.5], 0,1, 0,1)).to.be.equal([0.1, 0.2, 0.5]);
-    });
 
 });

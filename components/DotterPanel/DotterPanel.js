@@ -3,13 +3,13 @@ import React from 'react';
 import s from './DotterPanel.css';
 import * as dotter from './dotter';
 import store from '../../core/store';
-import { CANVAS_SIZE, CANVAS_ID } from '../constants/constants';
+import { CANVAS_ID } from '../constants/constants';
 import { inspectCoordinate, keyboardArrowShiftCoordinate } from '../actions/actionCreators';
 
 
 class DotterPanel extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         //this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
         this.state = {
             mouseDown: false,
@@ -77,7 +77,7 @@ class DotterPanel extends React.Component {
      * and fire an action.
      */
     inspect(event) {
-        // Get convas coordinates
+        // Get canvas coordinates
         let canvas = event.target;
         let dims = canvas.getBoundingClientRect();
         let x = event.pageX - dims.left,
@@ -98,16 +98,17 @@ class DotterPanel extends React.Component {
     }
 
     render() {
+        let canvasSize = this.props.canvasSize;
         return (
             <div className={s.root}>
-            <div style={{position: 'relative', minHeight: CANVAS_SIZE, minWidth: CANVAS_SIZE}}>
+            <div style={{position: 'relative', minHeight: canvasSize, minWidth: canvasSize}}>
 
                 {/* Bottom layer: the dot plot */}
 
                 <canvas id={CANVAS_ID}
                         className={s.canvas}
-                        width={CANVAS_SIZE}
-                        height={CANVAS_SIZE}
+                        width={canvasSize}
+                        height={canvasSize}
                         style={{
                             position: 'absolute',
                             left: 0,
@@ -120,8 +121,8 @@ class DotterPanel extends React.Component {
 
                 <canvas id={CANVAS_ID +'-topLayer'}
                         className={this.state.mouseDown ? s.mouseDown : ''}
-                        width={CANVAS_SIZE}
-                        height={CANVAS_SIZE}
+                        width={canvasSize}
+                        height={canvasSize}
                         style={{
                             position: 'absolute',
                             left: 0,
