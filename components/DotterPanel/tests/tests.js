@@ -2,7 +2,6 @@ import { expect } from 'chai';
 
 
 import { getStep, seqIndexFromCoordinate, greyScale, getCanvasPtSize, getNpoints } from '../dotter';
-import { seqIndexToPixelScale, pixelToSeqIndexScale  } from '../dotter';
 import { sumMatches, calculateMatches, calculateScore } from '../../common/scoring';
 import { SCORING_MATRIX_NAMES, MATCH, MISMATCH } from '../../constants/constants';
 import { SCORING_MATRICES } from '../../constants/scoring_matrices/scoring_matrices';

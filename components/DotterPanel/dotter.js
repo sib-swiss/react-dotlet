@@ -121,8 +121,6 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
     let maxScore = minMax[1] * windowSize;
     let scoresRange = maxScore - minScore;   // now any (score / scoresRange) is between 0 and 1
 
-    let seqToPixel = seqIndexToPixelScale(ls1, ls2, canvasSize);
-    let pixelToSeq = pixelToSeqIndexScale(ls1, ls2, canvasSize);
     let lastRowIndex = coordinateFromSeqIndex(ls2, L, canvasSize);
     let lastColIndex = coordinateFromSeqIndex(ls1, L, canvasSize);
 
@@ -311,6 +309,4 @@ export {
     drawPositionLines,
     getAlphaValues,
     greyScale,
-    seqIndexToPixelScale,
-    pixelToSeqIndexScale,
 };
