@@ -27,22 +27,6 @@ function getCanvasPtSize(canvasSize, L) {
     return canvasPt;
 }
 
-
-function seqIndexToPixelScale(ls1, ls2, canvasSize=CANVAS_SIZE) {
-    let L = Math.max(ls1, ls2);
-    let seqToPx = d3scale.scaleLinear()
-        .domain([0, L])
-        .rangeRound([0, canvasSize-1]);
-    return seqToPx;
-}
-function pixelToSeqIndexScale(ls1, ls2, canvasSize=CANVAS_SIZE) {
-    let L = Math.max(ls1, ls2);
-    let pixelToSeq = d3scale.scaleLinear()
-        .domain([0, canvasSize-1])
-        .rangeRound([0, L]);
-    return pixelToSeq;
-}
-
 /**
  * Calculate the number of points in the canvas given its size in px and the desired point size.
  * @param canvasSize: (int) canvas size, in pixels.
@@ -68,11 +52,11 @@ function getStep(npoints, lenSeq, round=true) {
 
 /**
  * Get the position (in px) on the canvas representing the given index in the sequence.
- * @param L (int): matrix size (max sequence length).
+ * @param index: (int) the index of a char in the sequence.
+ * @param L: (int) matrix size (max sequence length).
  */
 function coordinateFromSeqIndex(index, L, canvasSize=CANVAS_SIZE) {
-    let px = Math.floor(index * (canvasSize / L));
-    return px;
+    return Math.floor((canvasSize / L) * index);
 }
 
 /**
@@ -84,7 +68,7 @@ function coordinateFromSeqIndex(index, L, canvasSize=CANVAS_SIZE) {
  * @param L (int): matrix size (max sequence length).
  */
 function seqIndexFromCoordinate(px, L, canvasSize=CANVAS_SIZE) {
-    return Math.floor((L/canvasSize) * px);
+    return Math.floor((L / canvasSize) * px);
 }
 
 function initBlankCanvas(canvasId) {
@@ -105,19 +89,8 @@ function initBlankCanvas(canvasId) {
  * @param _: to imitate the signature of `fillAlphas`.
  * @param canvasSize
  */
-function oneAlpha(alphas, i, j, a, _, canvasSize=CANVAS_SIZE) {
+function addAlpha(alphas, i, j, a, _, canvasSize=CANVAS_SIZE) {
     alphas[i * canvasSize + j] = a;
-}
-/**
- * Add grey values for all pixels in rectangle (i, j, i+size, j+size).
- * Same arguments as for `oneAlpha`.
- */
-function fillAlphas(alphas, i, j, a, size, canvasSize=CANVAS_SIZE) {
-    for (let x=i; x < i+size; x++) {
-        for (let y=j; y < j+size; y++) {
-            alphas[x * canvasSize + y] = a;
-        }
-    }
 }
 
 
@@ -150,8 +123,8 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
 
     let seqToPixel = seqIndexToPixelScale(ls1, ls2, canvasSize);
     let pixelToSeq = pixelToSeqIndexScale(ls1, ls2, canvasSize);
-    let lastRowIndex = seqToPixel(ls2);  // -1 because of rounding errors, but it should not matter in any case
-    let lastColIndex = seqToPixel(ls1);
+    let lastRowIndex = coordinateFromSeqIndex(ls2, L, canvasSize);
+    let lastColIndex = coordinateFromSeqIndex(ls1, L, canvasSize);
 
     /* Iterate over pixels. At worst it is several times the same char,
      * but as soon as the sequence is as big as the canvas, there will be that
@@ -170,7 +143,7 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
                 density[score] += 1;
             }
             let alpha = Math.round(255 * (score - minScore) / scoresRange);
-            oneAlpha(alphas, i, j, alpha, canvasPt);
+            addAlpha(alphas, i, j, alpha, canvasPt);
         }
     }
     /* Rescale greys so that the min score is at 0 and the max at 255 */
