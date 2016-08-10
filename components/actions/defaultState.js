@@ -3,7 +3,7 @@ import { SCORING_MATRIX_NAMES, DNA, PROTEIN } from '../constants/constants';
 
 const smallExample = {
     s1: "ATGC",
-    s2: "ATTAGGCGAGGAG",
+    s2: "ATTAGGCGAGG",
     s1Type: DNA,
     s2Type: DNA,
     scoringMatrix: SCORING_MATRIX_NAMES.BLOSUM80,

@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 
 
-import { getStep, seqIndexFromCoordinate, greyScale } from '../dotter';
+import { getStep, seqIndexFromCoordinate, greyScale, getCanvasPtSize, getNpoints } from '../dotter';
+import { seqIndexToPixelScale, pixelToSeqIndexScale  } from '../dotter';
 import { sumMatches, calculateMatches, calculateScore } from '../../common/scoring';
 import { SCORING_MATRIX_NAMES, MATCH, MISMATCH } from '../../constants/constants';
 import { SCORING_MATRICES } from '../../constants/scoring_matrices/scoring_matrices';
@@ -61,6 +62,71 @@ describe('DotterPanel test suite', () => {
         expect(seqIndexFromCoordinate(60, 100, 600)).to.be.equal(10-1);
         expect(seqIndexFromCoordinate(13, 100, 600)).to.be.equal(2);
         expect(seqIndexFromCoordinate(300, 12000, 600)).to.be.equal(6000-1);
+    });
+
+    it('dotter.seqToPixelScale', () => {
+        var scale = seqIndexToPixelScale(20, 400, 400);
+        expect(scale(400)).to.be.equal(400);
+        expect(scale(20)).to.be.equal(20);
+        var scale = seqIndexToPixelScale(20, 800, 400);
+        expect(scale(400)).to.be.equal(200);
+        expect(scale(20)).to.be.equal(10);
+        var scale = seqIndexToPixelScale(20, 700, 400);
+        expect(scale(700)).to.be.equal(400);
+    });
+
+    it('dotter.pixelToSeqIndexScale', () => {
+        var scale = pixelToSeqIndexScale(4, 4, 400);
+        console.log(0, scale(0))
+        console.log(50, scale(50))
+        console.log(66, scale(66))
+        console.log(67, scale(67))
+        console.log(99, scale(99))
+        console.log(100, scale(100))
+        console.log(120, scale(120))
+        console.log(140, scale(140))
+        console.log(199, scale(199))
+        console.log(200, scale(200))
+        console.log(201, scale(201))
+        console.log(249, scale(249))
+        console.log(250, scale(250))
+        console.log(299, scale(299))
+        console.log(300, scale(300))
+        console.log(332, scale(332))
+        console.log(333, scale(333))
+        console.log(350, scale(350))
+        console.log(400, scale(400))
+        expect(scale(0)).to.be.equal(0);
+        expect(scale(50)).to.be.equal(0);
+        expect(scale(51)).to.be.equal(0);
+        expect(scale(66)).to.be.equal(0);
+        expect(scale(67)).to.be.equal(0);
+        //expect(scale(99)).to.be.equal(0);
+        //expect(scale(100)).to.be.equal(1);
+        //expect(scale(101)).to.be.equal(1);
+    });
+
+    it('dotter.getCanvasPtSize', () => {
+        let canvasSize = 400;
+        let canvasPt = getCanvasPtSize(canvasSize, 11);
+        expect(canvasPt).to.be.equal(canvasSize / 11);
+        let npoints = getNpoints(canvasSize, canvasPt);
+        expect(Math.ceil(npoints * canvasPt)).to.be.equal(canvasSize);
+    });
+
+    it ('scale', () => {
+        var L = 5, CS = 400;
+        var scale;
+        if (L <= CS) {
+            scale = function(px) {
+                return Math.floor(CS/L) * px;
+            }
+        }
+        else {
+            scale = function(idx) {
+                return Math.floor((CS/L) * idx);
+            }
+        }
     });
 
 

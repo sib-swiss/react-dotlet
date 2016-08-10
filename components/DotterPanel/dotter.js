@@ -14,59 +14,39 @@ import * as d3scale from 'd3-scale';
  * Caclulate the size in px of a "point" on the canvas
  * (bigger if the sequence is shorter than the canvas' dimensions in px,
  * to fill it completely).
- * @param round: whether to allow float sizes (with performance overhead).
+ * It does not need to be rounded because we round the final pixel value anyway;
+ * moreover, it will be used to divide other arbitrary integer values.
  */
-function getCanvasPt(canvasSize, L, round=true) {
+function getCanvasPtSize(canvasSize, L) {
     var canvasPt;
     if (L < canvasSize) {
         canvasPt = canvasSize / L;
-        if (round) {
-            canvasPt = Math.floor(canvasPt);
-        }
-        //else {
-        //    canvasPt = Math.round(canvasPt)
-        //}
     } else {
         canvasPt = 1;
     }
     return canvasPt;
 }
 
-//function getDrawingSize(l, canvasSize, round=true) {
-//    let drawingSize = canvasSize;
-//    let margin = 0;
-//    if (round) {
-//        if (l <= canvasSize) {
-//            let pixelsPerChar = Math.floor(canvasSize / l);
-//            margin = canvasSize % l;
-//            drawingSize = pixelsPerChar * l;
-//        } else {
-//            let charsPerPixel = Math.ceil(l / canvasSize);
-//            let nPixels = l / charsPerPixel;
-//        }
-//    }
-//    return drawingSize;
-//}
 
-function seqToPixelScale(ls1, ls2, canvasSize=CANVAS_SIZE) { //, round=true) {
+function seqIndexToPixelScale(ls1, ls2, canvasSize=CANVAS_SIZE) {
     let L = Math.max(ls1, ls2);
     let seqToPx = d3scale.scaleLinear()
         .domain([0, L])
-        .rangeRound([0, canvasSize]);
+        .rangeRound([0, canvasSize-1]);
     return seqToPx;
 }
-function pixelToIndexScale(ls1, ls2, canvasSize=CANVAS_SIZE) { //, round=true) {
+function pixelToSeqIndexScale(ls1, ls2, canvasSize=CANVAS_SIZE) {
     let L = Math.max(ls1, ls2);
     let pixelToSeq = d3scale.scaleLinear()
-        .domain([0, canvasSize])
+        .domain([0, canvasSize-1])
         .rangeRound([0, L]);
     return pixelToSeq;
 }
 
 /**
  * Calculate the number of points in the canvas given its size in px and the desired point size.
- * @param canvasSize: canvas size, in pixels.
- * @param canvasPt: size of a 'point', in pixels.
+ * @param canvasSize: (int) canvas size, in pixels.
+ * @param canvasPt: (float) size of a 'point', in pixels.
  */
 function getNpoints(canvasSize, canvasPt) {
     return Math.floor(canvasSize / canvasPt)
@@ -90,9 +70,8 @@ function getStep(npoints, lenSeq, round=true) {
  * Get the position (in px) on the canvas representing the given index in the sequence.
  * @param L (int): matrix size (max sequence length).
  */
-function coordinateFromSeqIndex(index, L, canvasSize=CANVAS_SIZE, round=true) {
-    let px = index * (canvasSize / L);
-    if (round) px = Math.round(px);
+function coordinateFromSeqIndex(index, L, canvasSize=CANVAS_SIZE) {
+    let px = Math.floor(index * (canvasSize / L));
     return px;
 }
 
@@ -101,16 +80,11 @@ function coordinateFromSeqIndex(index, L, canvasSize=CANVAS_SIZE, round=true) {
  * The problem is that if the sequence length is not a multiple of the canvas size,
  * there is an empty margin that must not count. So round it up to a multiple,
  * then cut down if necessary.
- *
  * @param px (float): position clicked on the canvas (in pixels, != `npoints`!).
  * @param L (int): matrix size (max sequence length).
  */
 function seqIndexFromCoordinate(px, L, canvasSize=CANVAS_SIZE) {
-    let round = roundPixels(L, canvasSize);
-    let canvasPt = getCanvasPt(canvasSize, L, round);
-    let npoints = Math.floor(canvasSize / canvasPt);
-    let step = getStep(npoints, L, round);
-    return Math.ceil((px / canvasPt) * step) - 1;
+    return Math.floor((L/canvasSize) * px);
 }
 
 function initBlankCanvas(canvasId) {
@@ -146,16 +120,6 @@ function fillAlphas(alphas, i, j, a, size, canvasSize=CANVAS_SIZE) {
     }
 }
 
-/**
- * In what condition should use an integer number of pixels per char,
- * or chars per pixel.
- * Float values decrease performance and drawing precision,
- * but the drawings fill the whole canvas.
- */
-function roundPixels(L, canvasSize=CANVAS_SIZE) {
-    //return L > 2 * canvasSize;
-    return false;
-}
 
 /**
  * Calculate the local alignment scores.
@@ -168,10 +132,9 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
     let ls1 = s1.length;
     let ls2 = s2.length;
     let L = Math.max(ls1, ls2);
-    let round = roundPixels(L);
-    let canvasPt = getCanvasPt(canvasSize, L, round);  // Size of a "dot" on the canvas, when L is small (else 1)
+    let canvasPt = getCanvasPtSize(canvasSize, L);  // Size of a "dot" on the canvas, when L is small (else 1)
     let npoints = getNpoints(canvasSize, canvasPt);    // Number of points in one line when L is small (else CANVAS_SIZE)
-    let step = getStep(npoints, L, round);             // 1 point -> `step` characters
+    let step = getStep(npoints, L, false);             // 1 point -> `step` characters
 
     let scoringFunction;
     if (scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY) {
@@ -185,33 +148,20 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
     let maxScore = minMax[1] * windowSize;
     let scoresRange = maxScore - minScore;   // now any (score / scoresRange) is between 0 and 1
 
-    let addAlpha = canvasPt === 1 ? oneAlpha : fillAlphas;
+    let seqToPixel = seqIndexToPixelScale(ls1, ls2, canvasSize);
+    let pixelToSeq = pixelToSeqIndexScale(ls1, ls2, canvasSize);
+    let lastRowIndex = seqToPixel(ls2);  // -1 because of rounding errors, but it should not matter in any case
+    let lastColIndex = seqToPixel(ls1);
 
-    let seqToPixel = seqToPixelScale(ls1, ls2, canvasSize);
-    let lastRowIndex = seqToPixel(ls2)-1;  // -1 because of rounding errors, but it should not amtter in any case
-    let lastColIndex = seqToPixel(ls1)-1;
-
-    console.debug('assert', npoints * canvasPt === canvasSize);
-
-    for (let row=0; row < npoints; row++) {       // rows - seq2
-        let i = Math.floor(row * canvasPt);
-        let q2 = Math.round(row * step);                            // position on seq2. First is 0, last is L
-        if (q2 >= ls2) {                          // bigger than sequence 2 - skip
-            for (let col=0; col < npoints; col++) {
-                let j = Math.floor(col * canvasPt);
-                addAlpha(alphas, i, j, 0, canvasPt);  // fill in the bottom margin
-            }
-            continue;
-        }
+    /* Iterate over pixels. At worst it is several times the same char,
+     * but as soon as the sequence is as big as the canvas, there will be that
+     * many computations anyway, so it must be fast in all cases.
+     */
+    for (let i=0; i < lastRowIndex; i++) {
+        let q2 = seqIndexFromCoordinate(i, L, canvasSize);
         let subseq2 = helpers.getSequenceAround(s2, q2, ws);      // nucleotides window on seq2
-
-        for (let col=0; col < npoints; col++) {   // columns - seq1
-            let j = Math.floor(col * canvasPt);
-            let q1 = Math.round(col * step);                        // position on seq2
-            if (q1 >= ls1) {                     // bigger than sequence 1 - skip
-                addAlpha(alphas, i, j, 0, canvasPt);  // fill in the right margin, 255=black, 0=white
-                continue;
-            }
+        for (let j=0; j < lastColIndex; j++) {
+            let q1 = seqIndexFromCoordinate(j, L, canvasSize);
             let subseq1 = helpers.getSequenceAround(s1, q1, ws);  // nucleotides window on seq2
             let score = scoringFunction(subseq1, subseq2, matrix);  // always an int
             if (! (score in density)) {
@@ -220,11 +170,10 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
                 density[score] += 1;
             }
             let alpha = Math.round(255 * (score - minScore) / scoresRange);
-            addAlpha(alphas, i, j, alpha, canvasPt);
+            oneAlpha(alphas, i, j, alpha, canvasPt);
         }
     }
-
-    // Rescale greys so that the min score is at 0 and the max at 255
+    /* Rescale greys so that the min score is at 0 and the max at 255 */
     rescaleInitAlphas(alphas, lastRowIndex, lastColIndex);
 
     return {
@@ -247,7 +196,6 @@ function fillCanvas(alphas) {
     for (let k=0; k < 4 * alphas.length; k += 4) {
         imageData.data[k+3] = alphas[k/4];
     }
-    ctx.imageSmoothingEnabled = false;
     ctx.putImageData(imageData, 0, 0);
 }
 
@@ -259,12 +207,11 @@ function drawPositionLines(i, j, ls1, ls2, canvasSize=CANVAS_SIZE) {
     let canvas = initBlankCanvas(CANVAS_ID +'-topLayer');
     let ctx = canvas.getContext('2d');
     let L = Math.max(ls1, ls2);
-    let round = roundPixels(L, canvasSize);
-    let x = coordinateFromSeqIndex(i, L, canvasSize, round);
-    let y = coordinateFromSeqIndex(j, L, canvasSize, round);
+    let x = coordinateFromSeqIndex(i, L, canvasSize);
+    let y = coordinateFromSeqIndex(j, L, canvasSize);
     // If the point size is > 1, make the lines pass in the middle.
     if (L < CANVAS_SIZE) {
-        let canvasPt = getCanvasPt(canvasSize, L, round);
+        let canvasPt = getCanvasPtSize(canvasSize, L);
         x += canvasPt/2;
         y += canvasPt/2;
     }
@@ -381,8 +328,9 @@ function greyScale(initialAlphas, minBound, maxBound, ls1, ls2) {
 
 
 export {
-    getCanvasPt,
+    getCanvasPtSize,
     getStep,
+    getNpoints,
     coordinateFromSeqIndex,
     seqIndexFromCoordinate,
     calculateScores,
@@ -390,4 +338,6 @@ export {
     drawPositionLines,
     getAlphaValues,
     greyScale,
+    seqIndexToPixelScale,
+    pixelToSeqIndexScale,
 };
