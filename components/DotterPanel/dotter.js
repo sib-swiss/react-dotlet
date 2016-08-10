@@ -89,7 +89,7 @@ function initBlankCanvas(canvasId) {
  * @param _: to imitate the signature of `fillAlphas`.
  * @param canvasSize
  */
-function addAlpha(alphas, i, j, a, _, canvasSize=CANVAS_SIZE) {
+function addAlpha(alphas, i, j, a, canvasSize=CANVAS_SIZE) {
     alphas[i * canvasSize + j] = a;
 }
 
@@ -105,9 +105,6 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
     let ls1 = s1.length;
     let ls2 = s2.length;
     let L = Math.max(ls1, ls2);
-    let canvasPt = getCanvasPtSize(canvasSize, L);  // Size of a "dot" on the canvas, when L is small (else 1)
-    let npoints = getNpoints(canvasSize, canvasPt);    // Number of points in one line when L is small (else CANVAS_SIZE)
-    let step = getStep(npoints, L, false);             // 1 point -> `step` characters
 
     let scoringFunction;
     if (scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY) {
@@ -141,7 +138,7 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
                 density[score] += 1;
             }
             let alpha = Math.round(255 * (score - minScore) / scoresRange);
-            addAlpha(alphas, i, j, alpha, canvasPt);
+            addAlpha(alphas, i, j, alpha);
         }
     }
     /* Rescale greys so that the min score is at 0 and the max at 255 */
