@@ -130,7 +130,7 @@ function drawPositionLines(i, j, ls1, ls2, canvasSize=CANVAS_SIZE) {
     let y = coordinateFromSeqIndex(j, L, canvasSize);
     // If the point size is > 1, make the lines pass in the middle.
     if (L < CANVAS_SIZE) {
-        let canvasPt = getCanvasPtSize(canvasSize, L);
+        let canvasPt = canvasSize / L;
         x += canvasPt/2;
         y += canvasPt/2;
     }

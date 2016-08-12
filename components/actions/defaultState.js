@@ -28,6 +28,7 @@ const orthologExample = {
     scoringMatrix: SCORING_MATRIX_NAMES.BLOSUM80,
 };
 
+
 let defaultState = {
     s1: '',
     s2: '',
@@ -47,7 +48,7 @@ let defaultState = {
     },
 };
 
-Object.assign(defaultState, smallExample);
+Object.assign(defaultState, orthologExample);
 
 
 export default defaultState;
