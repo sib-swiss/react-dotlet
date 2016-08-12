@@ -2,6 +2,11 @@
 .root {
 }
 
+.textareaContainer {
+    position: relative;
+    top: 0;
+    left: 0;
+}
 
 .textarea {
     width: 100%;
@@ -11,5 +16,17 @@
     border-color: #e8e8e8;
     border-top: none;
     padding: 8px;
+}
+
+.translateButtonContainer {
+    border: 1px solid #ccc;
+    position: absolute;
+    top: 12px;
+    right: -49px;
+    background-color: white;
+    float: right;
+}
+.translateButtonContainer:hover {
+    background-color: #FB4049;  /* Same as sequence input secondaryColor */
 }
 

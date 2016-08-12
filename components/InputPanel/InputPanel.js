@@ -40,6 +40,13 @@ class InputPanel extends React.Component {
         };
     }
 
+    componentDidMount() {
+        // Trigger any event to initialize the canvas with default parameters already in store.
+        store.dispatch(changeWindowSize(this.state.windowSize));
+    }
+
+    /* Callbacks */
+
     openTextarea(seqn) {
         this.setState({
             open: ! (this.state.open && (seqn === this.state.activeSequence)),
@@ -72,11 +79,10 @@ class InputPanel extends React.Component {
     onPrint() {
         printCanvas(CANVAS_ID);
     }
+    onTranslate() {
 
-    componentDidMount() {
-        // Trigger any event to initialize the canvas with default parameters already in store.
-        store.dispatch(changeWindowSize(this.state.windowSize));
     }
+
 
     render() {
         let seq1type = store.getState().s1Type;
@@ -85,11 +91,11 @@ class InputPanel extends React.Component {
 
         return (
         <div className={s.root}>
-        <Toolbar style={{paddingBottom: '56px'}}>
+        <Toolbar style={{paddingBottom: '52px', height: '52px'}}>
 
             {/* Sequences input */}
 
-            <ToolbarGroup style={{marginTop: '0px'}}>
+            <ToolbarGroup style={{marginTop: '-3px'}}>
                 <RaisedButton onClick={this.openTextarea.bind(this, 1)}
                     secondary={this.state.open && this.state.activeSequence === 1} label="Sequence&nbsp;1" />
                 <RaisedButton onClick={this.openTextarea.bind(this, 2)}
@@ -98,61 +104,61 @@ class InputPanel extends React.Component {
 
             {/* Window size selection */}
 
-            <ToolbarGroup>
-            <TextField floatingLabelText="Window size" id="windowSize_input"
-                       type="number"
-                       style={{width: '110px', marginTop: 0}}
-                       inputStyle={{marginTop: '2px'}}
-                       underlineStyle={{margin: '0.75em 0'}}
-                       underlineFocusStyle={{margin: '0.75em 0'}}
-                       floatingLabelStyle={{marginTop: '-6px'}}
-                       floatingLabelFixed={true}
-                       onChange={this.onChangeWindowSize}
-                       defaultValue={this.state.windowSize}
-            />
+            <ToolbarGroup style={{marginTop: '-3px'}}>
+                <TextField floatingLabelText="Window size" id="windowSize_input"
+                           type="number"
+                           style={{width: '110px', marginTop: 0}}
+                           inputStyle={{marginTop: '2px'}}
+                           underlineStyle={{margin: '0.75em 0'}}
+                           underlineFocusStyle={{margin: '0.75em 0'}}
+                           floatingLabelStyle={{marginTop: '-6px'}}
+                           floatingLabelFixed={true}
+                           onChange={this.onChangeWindowSize}
+                           defaultValue={this.state.windowSize}
+                />
             </ToolbarGroup>
 
             {/* Scoring matrix selection */}
 
-            <ToolbarGroup>
-            <SelectField floatingLabelText="Scoring matrix"
-                         floatingLabelFixed={true}
-                         style={{width: '150px', marginTop: 0}}
-                         inputStyle={{marginTop: '5px'}}
-                         underlineShow={false}
-                         floatingLabelStyle={{marginTop: '-6px'}}
-                         onChange={this.onChangeScoringMatrix}
-                         value={this.state.scoringMatrix}
-                         >
-                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.IDENTITY}
-                          value={SCORING_MATRIX_NAMES.IDENTITY}
-                          primaryText="Identity" />
-                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.BLOSUM45}
-                          value={SCORING_MATRIX_NAMES.BLOSUM45}
-                          disabled={commonType === DNA}
-                          primaryText="BLOSUM 45" />
-                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.BLOSUM62}
-                          value={SCORING_MATRIX_NAMES.BLOSUM62}
-                          disabled={commonType === DNA}
-                          primaryText="BLOSUM 62" />
-                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.BLOSUM80}
-                          value={SCORING_MATRIX_NAMES.BLOSUM80}
-                          disabled={commonType === DNA}
-                          primaryText="BLOSUM 80" />
-                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.PAM30}
-                          value={SCORING_MATRIX_NAMES.PAM30}
-                          disabled={commonType === DNA}
-                          primaryText="PAM 30" />
-                <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.PAM70}
-                          value={SCORING_MATRIX_NAMES.PAM70}
-                          disabled={commonType === DNA}
-                          primaryText="PAM 70" />
-            </SelectField>
+            <ToolbarGroup  style={{marginTop: '-3px'}}>
+                <SelectField floatingLabelText="Scoring matrix"
+                             floatingLabelFixed={true}
+                             style={{width: '150px', marginTop: 0}}
+                             inputStyle={{marginTop: '5px'}}
+                             underlineShow={false}
+                             floatingLabelStyle={{marginTop: '-6px'}}
+                             onChange={this.onChangeScoringMatrix}
+                             value={this.state.scoringMatrix}
+                             >
+                    <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.IDENTITY}
+                              value={SCORING_MATRIX_NAMES.IDENTITY}
+                              primaryText="Identity" />
+                    <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.BLOSUM45}
+                              value={SCORING_MATRIX_NAMES.BLOSUM45}
+                              disabled={commonType === DNA}
+                              primaryText="BLOSUM 45" />
+                    <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.BLOSUM62}
+                              value={SCORING_MATRIX_NAMES.BLOSUM62}
+                              disabled={commonType === DNA}
+                              primaryText="BLOSUM 62" />
+                    <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.BLOSUM80}
+                              value={SCORING_MATRIX_NAMES.BLOSUM80}
+                              disabled={commonType === DNA}
+                              primaryText="BLOSUM 80" />
+                    <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.PAM30}
+                              value={SCORING_MATRIX_NAMES.PAM30}
+                              disabled={commonType === DNA}
+                              primaryText="PAM 30" />
+                    <MenuItem checked={this.state.scoringMatrix === SCORING_MATRIX_NAMES.PAM70}
+                              value={SCORING_MATRIX_NAMES.PAM70}
+                              disabled={commonType === DNA}
+                              primaryText="PAM 70" />
+                </SelectField>
             </ToolbarGroup>
 
             {/* Print button */}
 
-            <ToolbarGroup style={{marginTop: '5px'}} >
+            <ToolbarGroup style={{marginTop: '1px'}} >
                 <IconButton onClick={this.onPrint} >
                     <FontIcon className="material-icons">print</FontIcon>
                 </IconButton>
@@ -162,12 +168,18 @@ class InputPanel extends React.Component {
 
             {/* Where we enter the sequence */}
 
-            <textarea className={s.textarea} rows={3}
-                value={this.state.activeSequence === 1 ? this.state.s1 : this.state.s2}
-                placeholder={this.state.activeSequence === 1 ? 'Sequence 1:' : 'Sequence 2:'}
-                style={{display: this.state.open ? 'block' : 'none'}}
-                onChange={this.state.activeSequence === 1 ? this.onChangeSeq1 : this.onChangeSeq2}
-            />
+            <div className={s.textareaContainer} style={{display: this.state.open ? 'block' : 'none'}}>
+                <div className={s.translateButtonContainer}>
+                    <IconButton onClick={this.onTranslate}>
+                        <FontIcon className="material-icons ">translate</FontIcon>
+                    </IconButton>
+                </div>
+                <textarea className={s.textarea} rows={3}
+                    value={this.state.activeSequence === 1 ? this.state.s1 : this.state.s2}
+                    placeholder={this.state.activeSequence === 1 ? 'Sequence 1:' : 'Sequence 2:'}
+                    onChange={this.state.activeSequence === 1 ? this.onChangeSeq1 : this.onChangeSeq2}
+                />
+            </div>
         </div>);
     }
 }
