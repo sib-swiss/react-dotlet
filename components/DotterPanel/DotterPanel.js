@@ -101,44 +101,45 @@ class DotterPanel extends React.Component {
         let canvasSize = this.props.canvasSize;
         return (
             <div className={s.root}>
-            <div className={s.legendX}>{"Sequence 1"}</div>
-            <div style={{position: 'relative', minHeight: canvasSize, minWidth: canvasSize}}>
+                <div className={s.legendX}>{"Sequence 1"}</div>
+                <div>
+                    <div className={s.legendY}>{"Sequence 2"}</div>
+                    <div style={{position: 'relative', minHeight: canvasSize, minWidth: canvasSize}}>
 
-                {/* Bottom layer: the dot plot */}
+                        {/* Bottom layer: the dot plot */}
 
-                <canvas id={CANVAS_ID}
-                        className={s.canvas}
-                        width={canvasSize}
-                        height={canvasSize}
-                        style={{
-                            position: 'absolute',
-                            left: 0,
-                            top: 0,
-                            zIndex: 0,
-                        }}
-                ></canvas>
+                        <canvas id={CANVAS_ID}
+                                className={s.canvas}
+                                width={canvasSize}
+                                height={canvasSize}
+                                style={{
+                                    position: 'absolute',
+                                    left: 0,
+                                    top: 0,
+                                    zIndex: 0,
+                                }}
+                        ></canvas>
 
-                {/* Top layer: the lines indicating the current position */}
+                        {/* Top layer: the lines indicating the current position */}
 
-                <canvas id={CANVAS_ID +'-topLayer'}
-                        className={this.state.mouseDown ? s.mouseDown : ''}
-                        width={canvasSize}
-                        height={canvasSize}
-                        style={{
-                            position: 'absolute',
-                            left: 0,
-                            top: 0,
-                            zIndex: 1,
-                        }}
-                        onMouseDown={this._onMouseDown}
-                        onMouseUp={this._onMouseUp}
-                        onMouseMove={this._onMouseMove}
-                        onClick={this._onClick}
-                >
-                </canvas>
-
-
-            </div>
+                        <canvas id={CANVAS_ID +'-topLayer'}
+                                className={this.state.mouseDown ? s.mouseDown : ''}
+                                width={canvasSize}
+                                height={canvasSize}
+                                style={{
+                                    position: 'absolute',
+                                    left: 0,
+                                    top: 0,
+                                    zIndex: 1,
+                                }}
+                                onMouseDown={this._onMouseDown}
+                                onMouseUp={this._onMouseUp}
+                                onMouseMove={this._onMouseMove}
+                                onClick={this._onClick}
+                        >
+                        </canvas>
+                    </div>
+                </div>
             </div>
         );
     }

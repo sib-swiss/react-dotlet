@@ -1,6 +1,7 @@
 
 .root {
     margin: 15px;
+    padding-left: 25px;  /* To leave space for the legend */
 }
 
 .canvas {
@@ -13,9 +14,14 @@
 
 .legendX {
     width: 100%;
+    height: 25px;
     text-align: center;
 }
 .legendY {
     transform: rotate(90deg);
     transform-origin: left top 0;
+    text-align: center;
+    float: left;
+    width: 100%;
+    padding-top: 7px;
 }
