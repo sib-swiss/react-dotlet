@@ -120,7 +120,7 @@ function fillCanvas(alphas) {
 
 
 /**
- * Draw the vertical and horizontal lines showing the current position on the canvas.
+ * Draw the vertical and horizontal lines showing the current position (i,j) on the canvas.
  */
 function drawPositionLines(i, j, ls1, ls2, canvasSize=CANVAS_SIZE) {
     let canvas = initBlankCanvas(CANVAS_ID +'-topLayer');
@@ -145,7 +145,9 @@ function drawPositionLines(i, j, ls1, ls2, canvasSize=CANVAS_SIZE) {
 
 /**
  * Return the min and max alpha values among the `alphas` that are
- * in the rectangle defined by height=`lastRowIndex` and width=`lastColIndex`.
+ * in the rectangle `(0, 0, lastColIndex, lastRowIndex)`.
+ * This is because we don't want to take the uncomputed scores (0)
+ * outside of this area into account.
  */
 function getMinMaxAlpha(alphas, lastRowIndex, lastColIndex, canvasSize=CANVAS_SIZE) {
     let minAlpha = 255;
@@ -206,9 +208,9 @@ function rescaleAlphas(initialAlphas, minBound, maxBound) {
  * At the beginning, alpha values are scaled according to the minimal and
  * maximal *possible* scores. Here we scale them according to the actual min and max values,
  * to improve contrast. i.e. min alpha -> 0, max alpha -> 255.
- * @param alphas: a canvasSize x canvasSize uint8 array.
- * @param lastx: last horizontal pixel index to consider.
- * @param lasty: last vertical pixel index to consider.
+ * @param alphas: a canvasSize x canvasSize Uint8ClampedArray.
+ * @param lastColIndex: last horizontal pixel index to consider.
+ * @param lastRowIndex: last vertical pixel index to consider.
  * @param minBound: (uint8, default 0) min alpha value in the result.
  * @param maxBnd: (uint8, default 255) max alpha value in the result.
  */
@@ -230,7 +232,7 @@ function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, minBound=0, maxBo
  * Redraw the canvas after clamping the alpha values and rescaling the remaining scores interval.
  *  We need to keep the initialAlphas in store because clamping loses data,
  *  but we need to be able to go back to the initial state.
- * @param initialAlphas: a canvasSize x canvasSize uint8 array.
+ * @param initialAlphas: a canvasSize x canvasSize Uint8ClampedArray.
  * @param minBound: (uint8) all alphas lower than `minBound` become equal to `minBound`.
  * @param maxBound: (uint8) all alphas bigger than `maxBound` become equal to `maxBound`.
  */
@@ -250,8 +252,13 @@ function greyScale(initialAlphas, minBound, maxBound, ls1, ls2) {
 export {
     coordinateFromSeqIndex,
     seqIndexFromCoordinate,
+
     calculateScores,
     fillCanvas,
     drawPositionLines,
+
+    getMinMaxAlpha,
+    rescaleAlphas,
+    rescaleInitAlphas,
     greyScale,
 };
