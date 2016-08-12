@@ -21,7 +21,7 @@ let reducer = (state = defaultState, action) => {
         let defaultMaxBound = defaultState.greyScale.maxBound;
         /* Record intial greys while the grey scale is still at initial state */
         if (greyScale.minBound === defaultMinBound && greyScale.maxBound === defaultMaxBound) {
-            addToState.greyScale.initialAlphas = scores.alpha;
+            addToState.greyScale = {initialAlphas: scores.alphas};
         }
         return addToState;
     };
@@ -51,13 +51,11 @@ let reducer = (state = defaultState, action) => {
             newState.s2Type = action.seqtype;
         }
         seq = undefined;  // free space
+        newState.i = 0; newState.j = 0;
         let ls1 = newState.s1.length;
         let ls2 = newState.s2.length;
-        scores = dotter.calculateScores(newState.s1, newState.s2, state.windowSize, state.scoringMatrix, state.greyScale);
-        dotter.fillCanvas(scores.alphas);
-        dotter.drawPositionLines(0, 0, ls1, ls2);
-        newState.density = scores.density;
-        newState.i = 0; newState.j = 0;
+        var addToState = updateScores(newState.s1, newState.s2, state.windowSize,state.scoringMatrix, state.greyScale);
+        Object.assign(newState, addToState);
         return newState;
 
     /*
@@ -66,18 +64,16 @@ let reducer = (state = defaultState, action) => {
      */
     case CHANGE_WINDOW_SIZE:
         let winsize = action.windowSize || 1;
-        scores = dotter.calculateScores(state.s1, state.s2, winsize, state.scoringMatrix, state.greyScale);
-        dotter.fillCanvas(scores.alphas);
-        return Object.assign({}, state, {density: scores.density, windowSize: parseInt(winsize)});
+        var addToState = updateScores(state.s1, state.s2, winsize, state.scoringMatrix, state.greyScale);
+        return Object.assign({}, state, addToState, {windowSize: parseInt(winsize)});
 
     /*
      * When the user changes the scoring matrix.
      * Expects `action.scoringMatrix`.
      */
     case CHANGE_SCORING_MATRIX:
-        scores = dotter.calculateScores(state.s1, state.s2, state.windowSize, action.scoringMatrix, state.greyScale);
-        dotter.fillCanvas(scores.alphas);
-        return Object.assign({}, state, {density: scores.density, scoringMatrix: action.scoringMatrix});
+        var addToState = updateScores(state.s1, state.s2, state.windowSize, action.scoringMatrix, state.greyScale);
+        return Object.assign({}, state, addToState, {scoringMatrix: action.scoringMatrix});
 
     /*
      * On click on the canvas.
@@ -127,29 +123,11 @@ let reducer = (state = defaultState, action) => {
      * Expects `action.minBound`, `action.maxBound`.
      */
     case CHANGE_GREY_SCALE:
-        let defaultMinBound = defaultState.greyScale.minBound;
-        let defaultMaxBound = defaultState.greyScale.maxBound;
-        let scale = {
-            minBound: action.minBound,
-            maxBound: action.maxBound,
-            initialAlphas: state.greyScale.initialAlphas,
-        };
-        // Back to default state: can forget about initialAlphas: they are stored in the canvas anyway. Just redraw.
-        if (action.minBound === defaultMinBound && action.maxBound === defaultMaxBound) {
-            scale.initialAlphas = new Uint8ClampedArray([0]);
-            scores = dotter.calculateScores(state.s1, state.s2, state.windowSize, state.scoringMatrix, scale);
-            dotter.fillCanvas(scores.alphas);
-        // Otherwise, scale according to the new grey scale.
-        } else {
-            // Record intial state while slider is still at initial position.
-            if (state.greyScale.minBound === defaultMinBound && state.greyScale.maxBound === defaultMaxBound) {
-                scale.initialAlphas = dotter.getAlphaValues(state.s1.length, state.s2.length);
-            }
-            // Update the canvas
-            dotter.greyScale(scale.initialAlphas, scale.minBound, scale.maxBound,
-                      state.s1.length, state.s2.length);
-        }
-        return Object.assign({}, state, {greyScale: scale});
+        newState = Object.assign({}, state);
+        dotter.greyScale(state.greyScale.initialAlphas, action.minBound, action.maxBound, state.s1.length, state.s2.length);
+        newState.greyScale.minBound = action.minBound;
+        newState.greyScale.maxBound = action.maxBound;
+        return newState;
 
     default:
         return state;

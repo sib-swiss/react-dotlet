@@ -10,8 +10,8 @@ const smallExample = {
 };
 
 const smallestExample = {
-    s1: "ATGC",
-    s2: "KCTGCT",
+    s1: "APEERLLAPLLL",
+    s2: "AGGCGAGG",
     s1Type: DNA,
     s2Type: DNA,
     scoringMatrix: SCORING_MATRIX_NAMES.BLOSUM80,

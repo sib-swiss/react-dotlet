@@ -197,51 +197,12 @@ function drawPositionLines(i, j, ls1, ls2, canvasSize=CANVAS_SIZE) {
 
 //---------------------- GREY SCALE ------------------------//
 
-/**
- * Return the ImageData corresponding to the non-empty region of the canvas
- * (when one sequence is shorter than the other, a region is blank; its
- *  zero alpha values mess up with scaling).
- * @param ls1: length of sequence 1.
- * @param ls2: length of sequence 2.
- * @param canvasSize
- */
-function getImageData(ls1, ls2, canvasSize=CANVAS_SIZE) {
-    let canvas = document.getElementById(CANVAS_ID);
-    let ctx = canvas.getContext('2d');
-    let L = Math.max(ls1, ls2);
-    let lastRowIndex = coordinateFromSeqIndex(ls1, L, canvasSize);
-    let lastColIndex = coordinateFromSeqIndex(ls2, L, canvasSize);
-    let imageData = ctx.getImageData(0,0, lastRowIndex, lastColIndex);
-    return imageData;
-}
 
 /**
- * Return an array of the grey intensities of all points in the canvas, in the same
- * order as in `ctx.getImageData().data`.
- * @param ls1: length of sequence 1.
- * @param ls2: length of sequence 2.
+ * Return the min and max alpha values among the `alphas` that are
+ * in the rectangle defined by height=`lastRowIndex` and width=`lastColIndex`.
  */
-function getAlphaValues(ls1, ls2) {
-    let imageData = getImageData(ls1, ls2);
-    let data = imageData.data;  // [red,green,blue,alpha, red,green,blue,alpha, ...] each 0-255
-    let alphas = new Uint8ClampedArray(data.length / 4);
-    for (let i = 0; i < data.length; i += 4) {
-        alphas[i/4] = data[i + 3];
-    }
-    return alphas;
-}
-
-/**
- * At the beginning, alpha values are scaled according to the minimal and
- * maximal *possible* scores. Here we scale them according to the actual min and max values,
- * to improve contrast. i.e. min alpha -> 0, max alpha -> 255.
- * @param lastx: last horizontal pixel index to consider.
- * @param lasty: last vertical pixel index to consider.
- * @param minBound: (int8, default 0) min alpha value in the result.
- * @param maxBnd: (int8, default 255) max alpha value in the result.
- */
-function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, minBound=0, maxBound=255, canvasSize=CANVAS_SIZE) {
-    /* Get the current min and max */
+function getMinMaxAlpha(alphas, lastRowIndex, lastColIndex, canvasSize=CANVAS_SIZE) {
     let minAlpha = 255;
     let maxAlpha = 0;
     for (let i=0; i < lastRowIndex; i++) {
@@ -254,26 +215,46 @@ function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, minBound=0, maxBo
             }
         }
     }
+    return {
+        minAlpha,
+        maxAlpha,
+    };
+}
+
+/**
+ * At the beginning, alpha values are scaled according to the minimal and
+ * maximal *possible* scores. Here we scale them according to the actual min and max values,
+ * to improve contrast. i.e. min alpha -> 0, max alpha -> 255.
+ * @param alphas: a canvasSize x canvasSize uint8 array.
+ * @param lastx: last horizontal pixel index to consider.
+ * @param lasty: last vertical pixel index to consider.
+ * @param minBound: (uint8, default 0) min alpha value in the result.
+ * @param maxBnd: (uint8, default 255) max alpha value in the result.
+ */
+function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, minBound=0, maxBound=255, canvasSize=CANVAS_SIZE) {
     /* Rescale to fill the interval 0-255 */
+    let minmax = getMinMaxAlpha(alphas, lastRowIndex, lastColIndex, canvasSize);
     let scale = d3scale.scaleLinear()
-        .domain([minAlpha, maxAlpha])
+        .domain([minmax.minAlpha, minmax.maxAlpha])
         .range([0, 255]);
     for (let i = 0; i < alphas.length; i++) {
-        alphas[i] = Math.round(scale(alphas[i]));
+        alphas[i] = ~~ (scale(alphas[i]) + 0.5);
     }
     /* Rescale to clamp to minBound-maxBound */
-    console.debug(minBound, maxBound)
+    console.debug("rescaleInitAlphas:", minBound, maxBound)
 }
 
 /**
  * Redraw the canvas after clamping the alpha values and rescaling the remaining scores interval.
- * @param initialAlphas: initial alpha values
+ * @param initialAlphas: a canvasSize x canvasSize uint8 array.
  *  (saved in store in order to come back to the initial state.
  *   Otherwise we could read them directly from the canvas with `ctx.getImageData()`).
- * @param minBound: (int8) all alphas lower than `minBound` become equal to `minBound`.
- * @param maxBound: (int8) all alphas bigger than `maxBound` become equal to `maxBound`.
+ * @param minBound: (uint8) all alphas lower than `minBound` become equal to `minBound`.
+ * @param maxBound: (uint8) all alphas bigger than `maxBound` become equal to `maxBound`.
  */
 function greyScale(initialAlphas, minBound, maxBound, ls1, ls2) {
+    let canvas = document.getElementById(CANVAS_ID);
+    let ctx = canvas.getContext('2d');
     let scale = d3scale.scaleLinear()
         .domain([minBound, maxBound])
         .range([0, 255]);
@@ -287,7 +268,7 @@ function greyScale(initialAlphas, minBound, maxBound, ls1, ls2) {
         black = (a) => a <= maxBound;
         white = (a) => a >= minBound;
     }
-    let imageData = getImageData(ls1, ls2);
+    let imageData = ctx.getImageData(0,0, canvas.width, canvas.height);
     let data = imageData.data;
     for (let i = 0; i < data.length; i += 4) {
         let alpha = initialAlphas[i/4];
@@ -299,8 +280,6 @@ function greyScale(initialAlphas, minBound, maxBound, ls1, ls2) {
             data[i+3] = scale(alpha);
         }
     }
-    let canvas = document.getElementById(CANVAS_ID);
-    let ctx = canvas.getContext('2d');
     ctx.putImageData(imageData, 0, 0);
 }
 
@@ -314,6 +293,5 @@ export {
     calculateScores,
     fillCanvas,
     drawPositionLines,
-    getAlphaValues,
     greyScale,
 };
