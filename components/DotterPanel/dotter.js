@@ -94,9 +94,8 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
             alphas[i * canvasSize + j] = alpha;
         }
     }
-    console.debug(greyScale.minBound, greyScale.maxBound)
     /* Rescale greys so that the min score is at 0 and the max at 255 */
-    rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, greyScale.minBound, greyScale.maxBound);
+    alphas = rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, greyScale.minBound, greyScale.maxBound);
 
     return {
         density,
@@ -167,6 +166,42 @@ function getMinMaxAlpha(alphas, lastRowIndex, lastColIndex, canvasSize=CANVAS_SI
     };
 }
 
+
+/**
+ * Rescale and clamp alpha values between `minBound` and `maxBound`:
+ * All shades below `minBound` become white, and all shades above `maxBound` become black.
+ * All shades in-between are rescaled to use the whole 0-255 range.
+ * If `minBound` becomes bigger than `maxBound`, colors are inverted.
+ **/
+function rescaleAlphas(initialAlphas, minBound, maxBound) {
+    let N = initialAlphas.length;
+    let scale = d3scale.scaleLinear()
+        .domain([minBound, maxBound])
+        .range([0, 255]);
+    let black, white;
+    // Usual case, min < max.
+    if (minBound <= maxBound) {
+        black = (a) => a >= maxBound;
+        white = (a) => a <= minBound;
+        // Reversed case, when the sliders cross: reverse colors.
+    } else {
+        black = (a) => a <= maxBound;
+        white = (a) => a >= minBound;
+    }
+    let newAlphas = new Uint8ClampedArray(N);
+    for (let i=0; i < N; i++) {
+        let alpha = initialAlphas[i];
+        if (white(alpha)) {
+            newAlphas[i] = 0;
+        } else if (black(alpha)) {
+            newAlphas[i] = 255;
+        } else {
+            newAlphas[i] = scale(alpha);
+        }
+    }
+    return newAlphas;
+}
+
 /**
  * At the beginning, alpha values are scaled according to the minimal and
  * maximal *possible* scores. Here we scale them according to the actual min and max values,
@@ -187,44 +222,26 @@ function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, minBound=0, maxBo
         alphas[i] = ~~ (scale(alphas[i]) + 0.5);
     }
     /* Rescale to clamp to minBound-maxBound */
-    console.debug("rescaleInitAlphas:", minBound, maxBound)
+    let newAlphas = rescaleAlphas(alphas, minBound, maxBound);
+    return newAlphas;
 }
 
 /**
  * Redraw the canvas after clamping the alpha values and rescaling the remaining scores interval.
+ *  We need to keep the initialAlphas in store because clamping loses data,
+ *  but we need to be able to go back to the initial state.
  * @param initialAlphas: a canvasSize x canvasSize uint8 array.
- *  (saved in store in order to come back to the initial state.
- *   Otherwise we could read them directly from the canvas with `ctx.getImageData()`).
  * @param minBound: (uint8) all alphas lower than `minBound` become equal to `minBound`.
  * @param maxBound: (uint8) all alphas bigger than `maxBound` become equal to `maxBound`.
  */
 function greyScale(initialAlphas, minBound, maxBound, ls1, ls2) {
     let canvas = document.getElementById(CANVAS_ID);
     let ctx = canvas.getContext('2d');
-    let scale = d3scale.scaleLinear()
-        .domain([minBound, maxBound])
-        .range([0, 255]);
-    let black, white;
-    // Usual case, min < max.
-    if (minBound <= maxBound) {
-        black = (a) => a >= maxBound;
-        white = (a) => a <= minBound;
-    // Reversed case, when the sliders cross: reverse colors.
-    } else {
-        black = (a) => a <= maxBound;
-        white = (a) => a >= minBound;
-    }
     let imageData = ctx.getImageData(0,0, canvas.width, canvas.height);
     let data = imageData.data;
-    for (let i = 0; i < data.length; i += 4) {
-        let alpha = initialAlphas[i/4];
-        if (white(alpha)) {
-            data[i+3] = 0;
-        } else if (black(alpha)) {
-            data[i+3] = 255;
-        } else {
-            data[i+3] = scale(alpha);
-        }
+    let newAlphas = rescaleAlphas(initialAlphas, minBound, maxBound);
+    for (let i = 0; i < newAlphas.length; i++) {
+        data[4*i+3] = newAlphas[i];
     }
     ctx.putImageData(imageData, 0, 0);
 }
