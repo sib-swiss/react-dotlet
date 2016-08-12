@@ -10,45 +10,6 @@ import * as d3scale from 'd3-scale';
  * Plotting functions in the main canvas.
  */
 
-/**
- * Caclulate the size in px of a "point" on the canvas
- * (bigger if the sequence is shorter than the canvas' dimensions in px,
- * to fill it completely).
- * It does not need to be rounded because we round the final pixel value anyway;
- * moreover, it will be used to divide other arbitrary integer values.
- */
-function getCanvasPtSize(canvasSize, L) {
-    var canvasPt;
-    if (L < canvasSize) {
-        canvasPt = canvasSize / L;
-    } else {
-        canvasPt = 1;
-    }
-    return canvasPt;
-}
-
-/**
- * Calculate the number of points in the canvas given its size in px and the desired point size.
- * @param canvasSize: (int) canvas size, in pixels.
- * @param canvasPt: (float) size of a 'point', in pixels.
- */
-function getNpoints(canvasSize, canvasPt) {
-    return ~~ (canvasSize / canvasPt);
-}
-
-/**
- * Calculate the number of sequence characters represented by one point in the canvas.
- * @param round: whether to allow float sizes (with performance overhead).
- */
-function getStep(npoints, lenSeq, round=true) {
-    if (npoints > lenSeq + lenSeq % npoints) {
-        throw new RangeError("There cannot be more canvas points than sequence elements. " +
-                             "Increase points size instead.");
-    }
-    let step = lenSeq / npoints;
-    if (round) { step = Math.ceil(step); }
-    return step;
-}
 
 /**
  * Get the position (in px) on the canvas representing the given index in the sequence.
@@ -285,9 +246,6 @@ function greyScale(initialAlphas, minBound, maxBound, ls1, ls2) {
 
 
 export {
-    getCanvasPtSize,
-    getStep,
-    getNpoints,
     coordinateFromSeqIndex,
     seqIndexFromCoordinate,
     calculateScores,

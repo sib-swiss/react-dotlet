@@ -1,8 +1,7 @@
 import { expect } from 'chai';
 
 
-import { getStep, seqIndexFromCoordinate, coordinateFromSeqIndex,
-         greyScale, getCanvasPtSize, getNpoints } from '../dotter';
+import { seqIndexFromCoordinate, coordinateFromSeqIndex, greyScale } from '../dotter';
 import { sumMatches, calculateMatches, calculateScore } from '../../common/scoring';
 import { SCORING_MATRIX_NAMES, MATCH, MISMATCH } from '../../constants/constants';
 import { SCORING_MATRICES } from '../../constants/scoring_matrices/scoring_matrices';
@@ -37,21 +36,6 @@ describe('DotterPanel test suite', () => {
         let s1 = "ARN", s2 = "NRA";
         let score = calculateScore(s1, s2, matrix);
         expect(score).to.be.equal(-1 + 7 + -1);
-    });
-
-    it('dotter.getStep integer', () => {
-        expect(getStep(5, 5)).to.be.equal(1);
-        expect(getStep(5, 10)).to.be.equal(2);
-        expect(() => getStep(600, 10)).to.throw(RangeError);
-    });
-    it('dotter.getStep non-integer', () => {
-        // 5 points for 6 chars: cannot put 1 per point, otherwise one is lost.
-        expect(getStep(5, 6)).to.be.equal(2);
-        expect(getStep(5, 11)).to.be.equal(3);
-        // 12 points for 11 chars: put 1 per point, one remains empty.
-        expect(getStep(12, 11)).to.be.equal(1);
-        // Not well-defined: point size should increase instead.
-        expect(() => getStep(600, 10)).to.throw(RangeError);
     });
 
     it('dotter.seqIndexFromCoordinate', () => {

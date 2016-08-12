@@ -7,25 +7,25 @@ import { guessSequenceType, commonSeqType } from '../InputPanel/input';
 import defaultState from './defaultState';
 
 
+let updateScores = function(s1, s2, windowSize, scoringMatrix, greyScale) {
+    let addToState = {};
+    let scores = dotter.calculateScores(s1, s2, windowSize, scoringMatrix, greyScale);
+    dotter.fillCanvas(scores.alphas);
+    addToState.density = scores.density;
+    let defaultMinBound = defaultState.greyScale.minBound;
+    let defaultMaxBound = defaultState.greyScale.maxBound;
+    /* Record intial greys while the grey scale is still at initial state */
+    if (greyScale.minBound === defaultMinBound && greyScale.maxBound === defaultMaxBound) {
+        addToState.greyScale = {initialAlphas: scores.alphas};
+    }
+    return addToState;
+};
+
+
 let reducer = (state = defaultState, action) => {
-    let newState;
+    let newState, addToState;  // because reused un many switch cases
     let density;
     let scores;
-
-    let updateScores = function(s1, s2, windowSize, scoringMatrix, greyScale) {
-        let addToState = {};
-        scores = dotter.calculateScores(s1, s2, windowSize, scoringMatrix, greyScale);
-        dotter.fillCanvas(scores.alphas);
-        addToState.density = scores.density;
-        let defaultMinBound = defaultState.greyScale.minBound;
-        let defaultMaxBound = defaultState.greyScale.maxBound;
-        /* Record intial greys while the grey scale is still at initial state */
-        if (greyScale.minBound === defaultMinBound && greyScale.maxBound === defaultMaxBound) {
-            addToState.greyScale = {initialAlphas: scores.alphas};
-        }
-        return addToState;
-    };
-
 
     switch (action.type) {
 
@@ -54,7 +54,7 @@ let reducer = (state = defaultState, action) => {
         newState.i = 0; newState.j = 0;
         let ls1 = newState.s1.length;
         let ls2 = newState.s2.length;
-        var addToState = updateScores(newState.s1, newState.s2, state.windowSize,state.scoringMatrix, state.greyScale);
+        addToState = updateScores(newState.s1, newState.s2, state.windowSize,state.scoringMatrix, state.greyScale);
         Object.assign(newState, addToState);
         return newState;
 
@@ -64,7 +64,7 @@ let reducer = (state = defaultState, action) => {
      */
     case CHANGE_WINDOW_SIZE:
         let winsize = action.windowSize || 1;
-        var addToState = updateScores(state.s1, state.s2, winsize, state.scoringMatrix, state.greyScale);
+        addToState = updateScores(state.s1, state.s2, winsize, state.scoringMatrix, state.greyScale);
         return Object.assign({}, state, addToState, {windowSize: parseInt(winsize)});
 
     /*
@@ -72,7 +72,7 @@ let reducer = (state = defaultState, action) => {
      * Expects `action.scoringMatrix`.
      */
     case CHANGE_SCORING_MATRIX:
-        var addToState = updateScores(state.s1, state.s2, state.windowSize, action.scoringMatrix, state.greyScale);
+        addToState = updateScores(state.s1, state.s2, state.windowSize, action.scoringMatrix, state.greyScale);
         return Object.assign({}, state, addToState, {scoringMatrix: action.scoringMatrix});
 
     /*
