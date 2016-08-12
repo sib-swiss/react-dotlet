@@ -24,15 +24,6 @@ import { CANVAS_SIZE } from '../../components/constants/constants';
  */
 
 class HomePage extends React.Component {
-    componentDidMount() {
-        //window.componentHandler.upgradeDom();
-        window.componentHandler.upgradeElement(this.refs.root);
-    }
-    componentWillUnmount() {
-        //window.componentHandler.downgradeDom();
-        window.componentHandler.downgradeElements(this.refs.root);
-    }
-
     render() {
         return (
             <Layout>

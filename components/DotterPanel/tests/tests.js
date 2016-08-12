@@ -67,6 +67,9 @@ describe('DotterPanel test suite', () => {
     it('dotter.coordinateFromSeqIndex', () => {
         expect(coordinateFromSeqIndex(1, 5, 400)).to.be.equal(80);
         expect(coordinateFromSeqIndex(3, 5, 400)).to.be.equal(240);
+        expect(coordinateFromSeqIndex(12, 700, 400)).to.be.equal(6);
+        expect(coordinateFromSeqIndex(12, 800, 400)).to.be.equal(6);
+        expect(coordinateFromSeqIndex(12, 801, 400)).to.be.equal(5);
     });
 
 

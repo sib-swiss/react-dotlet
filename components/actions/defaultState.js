@@ -38,6 +38,8 @@ let defaultState = {
     scoringMatrix: SCORING_MATRIX_NAMES.IDENTITY,
     i: 0,
     j: 0,
+    dotter: {
+    },
     greyScale: {
         minBound: 0,
         maxBound: 255,

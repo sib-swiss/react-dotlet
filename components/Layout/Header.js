@@ -20,15 +20,6 @@ import FontIcon from 'material-ui/FontIcon';
  */
 
 class Header extends React.Component {
-
-  componentDidMount() {
-    window.componentHandler.upgradeElement(this.refs.root);
-  }
-
-  componentWillUnmount() {
-    window.componentHandler.downgradeElements(this.refs.root);
-  }
-
   render() {
     return (
       <header className="mdl-layout__header" ref="root">

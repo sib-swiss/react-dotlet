@@ -19,14 +19,6 @@ import * as colors from 'material-ui/styles/colors';
  */
 
 class Layout extends React.Component {
-
-    componentDidMount() {
-        window.componentHandler.upgradeElement(this.refs.root);
-    }
-    componentWillUnmount() {
-        window.componentHandler.downgradeElements(this.refs.root);
-    }
-
     render() {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>

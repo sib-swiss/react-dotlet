@@ -1,6 +1,6 @@
 import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
          INSPECT_COORDINATE, KEYBOARD_DIRECTION, SLIDE_TWO_SEQS, CHANGE_GREY_SCALE } from './actionTypes';
-import { calculateScores, fillCanvas, drawPositionLines, greyScale, getAlphaValues } from '../DotterPanel/dotter';
+import * as dotter from '../DotterPanel/dotter';
 import { guessSequenceType, commonSeqType } from '../InputPanel/input';
 //import { PROTEIN, DNA } from '../constants/constants';
 //import { translateProtein } from '../common/genetics';
@@ -11,6 +11,21 @@ let reducer = (state = defaultState, action) => {
     let newState;
     let density;
     let scores;
+
+    let updateScores = function(s1, s2, windowSize, scoringMatrix, greyScale) {
+        let addToState = {};
+        scores = dotter.calculateScores(s1, s2, windowSize, scoringMatrix, greyScale);
+        dotter.fillCanvas(scores.alphas);
+        addToState.density = scores.density;
+        let defaultMinBound = defaultState.greyScale.minBound;
+        let defaultMaxBound = defaultState.greyScale.maxBound;
+        /* Record intial greys while the grey scale is still at initial state */
+        if (greyScale.minBound === defaultMinBound && greyScale.maxBound === defaultMaxBound) {
+            addToState.greyScale.initialAlphas = scores.alpha;
+        }
+        return addToState;
+    };
+
 
     switch (action.type) {
 
@@ -38,9 +53,9 @@ let reducer = (state = defaultState, action) => {
         seq = undefined;  // free space
         let ls1 = newState.s1.length;
         let ls2 = newState.s2.length;
-        scores = calculateScores(newState.s1, newState.s2, state.windowSize, state.scoringMatrix, state.greyScale);
-        fillCanvas(scores.alphas);
-        drawPositionLines(0, 0, ls1, ls2);
+        scores = dotter.calculateScores(newState.s1, newState.s2, state.windowSize, state.scoringMatrix, state.greyScale);
+        dotter.fillCanvas(scores.alphas);
+        dotter.drawPositionLines(0, 0, ls1, ls2);
         newState.density = scores.density;
         newState.i = 0; newState.j = 0;
         return newState;
@@ -51,8 +66,8 @@ let reducer = (state = defaultState, action) => {
      */
     case CHANGE_WINDOW_SIZE:
         let winsize = action.windowSize || 1;
-        scores = calculateScores(state.s1, state.s2, winsize, state.scoringMatrix, state.greyScale);
-        fillCanvas(scores.alphas);
+        scores = dotter.calculateScores(state.s1, state.s2, winsize, state.scoringMatrix, state.greyScale);
+        dotter.fillCanvas(scores.alphas);
         return Object.assign({}, state, {density: scores.density, windowSize: parseInt(winsize)});
 
     /*
@@ -60,8 +75,8 @@ let reducer = (state = defaultState, action) => {
      * Expects `action.scoringMatrix`.
      */
     case CHANGE_SCORING_MATRIX:
-        scores = calculateScores(state.s1, state.s2, state.windowSize, action.scoringMatrix, state.greyScale);
-        fillCanvas(scores.alphas);
+        scores = dotter.calculateScores(state.s1, state.s2, state.windowSize, action.scoringMatrix, state.greyScale);
+        dotter.fillCanvas(scores.alphas);
         return Object.assign({}, state, {density: scores.density, scoringMatrix: action.scoringMatrix});
 
     /*
@@ -69,7 +84,7 @@ let reducer = (state = defaultState, action) => {
      * Expects `action.i`, `action.j`.
      */
     case INSPECT_COORDINATE:
-        drawPositionLines(action.i, action.j, state.s1.length, state.s2.length);
+        dotter.drawPositionLines(action.i, action.j, state.s1.length, state.s2.length);
         return Object.assign({}, state, {i: action.i, j: action.j});
 
     /*
@@ -88,7 +103,7 @@ let reducer = (state = defaultState, action) => {
             keybDirection = {i: state.i - 1};
         }
         newState = Object.assign({}, state, keybDirection);
-        drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length);
+        dotter.drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length);
         return newState;
 
     /*
@@ -104,7 +119,7 @@ let reducer = (state = defaultState, action) => {
             slideDirection = {j: state.j + action.shift};
         }
         newState = Object.assign({}, state, slideDirection);
-        drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length);
+        dotter.drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length);
         return newState;
 
     /*
@@ -122,16 +137,16 @@ let reducer = (state = defaultState, action) => {
         // Back to default state: can forget about initialAlphas: they are stored in the canvas anyway. Just redraw.
         if (action.minBound === defaultMinBound && action.maxBound === defaultMaxBound) {
             scale.initialAlphas = new Uint8ClampedArray([0]);
-            scores = calculateScores(state.s1, state.s2, state.windowSize, state.scoringMatrix, scale);
-            fillCanvas(scores.alphas);
+            scores = dotter.calculateScores(state.s1, state.s2, state.windowSize, state.scoringMatrix, scale);
+            dotter.fillCanvas(scores.alphas);
         // Otherwise, scale according to the new grey scale.
         } else {
             // Record intial state while slider is still at initial position.
             if (state.greyScale.minBound === defaultMinBound && state.greyScale.maxBound === defaultMaxBound) {
-                scale.initialAlphas = getAlphaValues(state.s1.length, state.s2.length);
+                scale.initialAlphas = dotter.getAlphaValues(state.s1.length, state.s2.length);
             }
             // Update the canvas
-            greyScale(scale.initialAlphas, scale.minBound, scale.maxBound,
+            dotter.greyScale(scale.initialAlphas, scale.minBound, scale.maxBound,
                       state.s1.length, state.s2.length);
         }
         return Object.assign({}, state, {greyScale: scale});

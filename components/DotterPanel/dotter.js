@@ -33,7 +33,7 @@ function getCanvasPtSize(canvasSize, L) {
  * @param canvasPt: (float) size of a 'point', in pixels.
  */
 function getNpoints(canvasSize, canvasPt) {
-    return Math.floor(canvasSize / canvasPt)
+    return ~~ (canvasSize / canvasPt);
 }
 
 /**
@@ -56,11 +56,11 @@ function getStep(npoints, lenSeq, round=true) {
  * @param L: (int) matrix size (max sequence length).
  */
 function coordinateFromSeqIndex(index, L, canvasSize=CANVAS_SIZE) {
-    return Math.floor((canvasSize / L) * index);
+    return ~~ ((canvasSize / L) * index);
 }
 
 /**
- * Return *approximately* the index on the sequence `seq` corresponding to pixel coordinate `px`.
+ * Return the index on the sequence `seq` corresponding to pixel coordinate `px`.
  * The problem is that if the sequence length is not a multiple of the canvas size,
  * there is an empty margin that must not count. So round it up to a multiple,
  * then cut down if necessary.
@@ -68,7 +68,7 @@ function coordinateFromSeqIndex(index, L, canvasSize=CANVAS_SIZE) {
  * @param L (int): matrix size (max sequence length).
  */
 function seqIndexFromCoordinate(px, L, canvasSize=CANVAS_SIZE) {
-    return Math.floor((L / canvasSize) * px);
+    return ~~ ((L / canvasSize) * px);
 }
 
 function initBlankCanvas(canvasId) {
@@ -98,7 +98,7 @@ function addAlpha(alphas, i, j, a, canvasSize=CANVAS_SIZE) {
  * Calculate the local alignment scores.
  */
 function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canvasSize=CANVAS_SIZE) {
-    let ws = Math.floor(windowSize / 2);   // # of nucleotides on each side
+    let ws = ~~ (windowSize / 2);   // # of nucleotides on each side
     let density = {};
     let alphas = new Uint8ClampedArray(canvasSize * canvasSize);
 
@@ -120,6 +120,8 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
 
     let lastRowIndex = coordinateFromSeqIndex(ls2, L, canvasSize);
     let lastColIndex = coordinateFromSeqIndex(ls1, L, canvasSize);
+    let minAlpha = 255;
+    let maxAlpha = 0;
 
     /* Iterate over pixels. At worst it is several times the same char,
      * but as soon as the sequence is as big as the canvas, there will be that
@@ -138,17 +140,21 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
                 density[score] += 1;
             }
             let alpha = Math.round(255 * (score - minScore) / scoresRange);
+            if (alpha > maxAlpha) {
+                maxAlpha = alpha;
+            } else if (alpha < minAlpha) {
+                minAlpha = alpha;
+            }
             addAlpha(alphas, i, j, alpha);
         }
     }
+    console.debug(greyScale.minBound, greyScale.maxBound)
     /* Rescale greys so that the min score is at 0 and the max at 255 */
-    rescaleInitAlphas(alphas, lastRowIndex, lastColIndex);
+    rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, greyScale.minBound, greyScale.maxBound);
 
     return {
         density,
         alphas,
-        lastRowIndex,
-        lastColIndex,
     };
 }
 
@@ -203,9 +209,9 @@ function getImageData(ls1, ls2, canvasSize=CANVAS_SIZE) {
     let canvas = document.getElementById(CANVAS_ID);
     let ctx = canvas.getContext('2d');
     let L = Math.max(ls1, ls2);
-    let d1 = coordinateFromSeqIndex(ls1, L, canvasSize);
-    let d2 = coordinateFromSeqIndex(ls2, L, canvasSize);
-    let imageData = ctx.getImageData(0,0, d1, d2);
+    let lastRowIndex = coordinateFromSeqIndex(ls1, L, canvasSize);
+    let lastColIndex = coordinateFromSeqIndex(ls2, L, canvasSize);
+    let imageData = ctx.getImageData(0,0, lastRowIndex, lastColIndex);
     return imageData;
 }
 
@@ -231,9 +237,11 @@ function getAlphaValues(ls1, ls2) {
  * to improve contrast. i.e. min alpha -> 0, max alpha -> 255.
  * @param lastx: last horizontal pixel index to consider.
  * @param lasty: last vertical pixel index to consider.
+ * @param minBound: (int8, default 0) min alpha value in the result.
+ * @param maxBnd: (int8, default 255) max alpha value in the result.
  */
-function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, canvasSize=CANVAS_SIZE) {
-    // Get the current min and max
+function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, minBound=0, maxBound=255, canvasSize=CANVAS_SIZE) {
+    /* Get the current min and max */
     let minAlpha = 255;
     let maxAlpha = 0;
     for (let i=0; i < lastRowIndex; i++) {
@@ -246,13 +254,15 @@ function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, canvasSize=CANVAS
             }
         }
     }
-    // Rescale to fill the interval 0-255
+    /* Rescale to fill the interval 0-255 */
     let scale = d3scale.scaleLinear()
         .domain([minAlpha, maxAlpha])
         .range([0, 255]);
     for (let i = 0; i < alphas.length; i++) {
         alphas[i] = Math.round(scale(alphas[i]));
     }
+    /* Rescale to clamp to minBound-maxBound */
+    console.debug(minBound, maxBound)
 }
 
 /**
