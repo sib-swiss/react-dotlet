@@ -101,6 +101,7 @@ class DotterPanel extends React.Component {
         let canvasSize = this.props.canvasSize;
         return (
             <div className={s.root}>
+            <div className={s.legendX}>{"Sequence 1"}</div>
             <div style={{position: 'relative', minHeight: canvasSize, minWidth: canvasSize}}>
 
                 {/* Bottom layer: the dot plot */}

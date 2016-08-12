@@ -29,16 +29,18 @@ class HomePage extends React.Component {
             <Layout>
             <div ref="root" className='test'>
                 <InputPanel />
-                <div className={"content-grid mdl-grid "+ s.midPanel}>
-                    <div className={"mdl-cell mdl-cell--6-col "+ s.dotterPanelContainer}>
+                <div className={s.midPanel}>
+                    <div className={s.dotterPanelContainer}>
                         <DotterPanel canvasSize={CANVAS_SIZE} />
                     </div>
-                    <div className={"mdl-cell mdl-cell--6-col "+ s.densityPanelContainer}>
+                    <div className={s.densityPanelContainer}>
                         <DensityPanel />
                         <InfoPanel />
                     </div>
                 </div>
-                <TwoSeqsPanel />
+                <div className={s.twoSeqsPanelContainer}>
+                    <TwoSeqsPanel />
+                </div>
             </div>
             </Layout>
         );

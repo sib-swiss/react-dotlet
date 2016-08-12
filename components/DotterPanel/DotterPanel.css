@@ -10,3 +10,12 @@
 .mouseDown {
     cursor: grabbing;
 }
+
+.legendX {
+    width: 100%;
+    text-align: center;
+}
+.legendY {
+    transform: rotate(90deg);
+    transform-origin: left top 0;
+}
