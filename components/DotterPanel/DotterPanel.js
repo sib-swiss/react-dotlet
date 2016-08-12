@@ -1,5 +1,5 @@
 import React from 'react';
-//import PureRenderMixin from 'react-addons-pure-render-mixin';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import s from './DotterPanel.css';
 import * as dotter from './dotter';
 import store from '../../core/store';
@@ -10,7 +10,7 @@ import { inspectCoordinate, keyboardArrowShiftCoordinate } from '../actions/acti
 class DotterPanel extends React.Component {
     constructor(props) {
         super(props);
-        //this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+        this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
         this.state = {
             mouseDown: false,
         };
@@ -27,18 +27,6 @@ class DotterPanel extends React.Component {
     }
     componentWillUnmount() {
         document.removeEventListener('keydown', this._onKeyDown, true);
-    }
-
-    // If ever necessary.
-    // shouldComponentUpdate could also be customized. For the moment it is set by PureRenderMixin.
-    //componentDidUpdate() {
-    //    let state = store.getState();
-    //    dotter.fillCanvas(state.s1, state.s2, state.windowSize, state.scoringMatrix);
-    //}
-
-    // Even better that PureRenderMixin: do not update at all.
-    shouldComponentUpdate() {
-        return false;
     }
 
     /* Events */
@@ -99,6 +87,7 @@ class DotterPanel extends React.Component {
 
     render() {
         let canvasSize = this.props.canvasSize;
+        console.debug(this.state)
         return (
             <div className={s.root}>
                 <div className={s.legendX}>{"Sequence 1"}</div>
@@ -123,7 +112,7 @@ class DotterPanel extends React.Component {
                         {/* Top layer: the lines indicating the current position */}
 
                         <canvas id={CANVAS_ID +'-topLayer'}
-                                className={this.state.mouseDown ? s.mouseDown : ''}
+                                className={this.state.mouseDown ? s.mouseDown : 'notMouseDown'}
                                 width={canvasSize}
                                 height={canvasSize}
                                 style={{

@@ -73,6 +73,8 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
      * but as soon as the sequence is as big as the canvas, there will be that
      * many computations anyway, so it must be fast in all cases.
      */
+    //let lastq1 = 0;
+    //let lastq2 = 0;
     for (let i=0; i < lastRowIndex; i++) {
         let q2 = seqIndexFromCoordinate(i, L, canvasSize);
         let subseq2 = helpers.getSequenceAround(s2, q2, ws);      // nucleotides window on seq2
@@ -92,7 +94,9 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
                 minAlpha = alpha;
             }
             alphas[i * canvasSize + j] = alpha;
+            //lastq1 = q1;
         }
+        //lastq2 = q2;
     }
     /* Rescale greys so that the min score is at 0 and the max at 255 */
     alphas = rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, greyScale.minBound, greyScale.maxBound);

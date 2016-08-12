@@ -38,17 +38,29 @@ describe('DotterPanel test suite', () => {
         expect(score).to.be.equal(-1 + 7 + -1);
     });
 
-    it('dotter.seqIndexFromCoordinate', () => {
-        // make sure it's ok when 5 points 6 chars and need to put 2 per point (empty clickable margin)
+    it('dotter.seqIndexFromCoordinate(px, L, canvasSize)', () => {
         expect(seqIndexFromCoordinate(300, 100, 600)).to.be.equal(50);
         expect(seqIndexFromCoordinate(150, 100, 600)).to.be.equal(25);
         expect(seqIndexFromCoordinate(100, 100, 600)).to.be.equal(16);
         expect(seqIndexFromCoordinate(60, 100, 600)).to.be.equal(10);
         expect(seqIndexFromCoordinate(13, 100, 600)).to.be.equal(2);
         expect(seqIndexFromCoordinate(300, 12000, 600)).to.be.equal(6000);
+
+        expect(seqIndexFromCoordinate(599, 300, 600)).to.be.equal(299);
+        expect(seqIndexFromCoordinate(600, 300, 600)).to.be.equal(300); // but 600 is out of scale! 0-599
+
+        expect(seqIndexFromCoordinate(0, 3000, 600)).to.be.equal(0);
+        expect(seqIndexFromCoordinate(1, 3000, 600)).to.be.equal(5);
+        expect(seqIndexFromCoordinate(2, 3000, 600)).to.be.equal(10);
+        expect(seqIndexFromCoordinate(598, 3000, 600)).to.be.equal(2990);
+        expect(seqIndexFromCoordinate(599, 3000, 600)).to.be.equal(2995);
+        expect(seqIndexFromCoordinate(600, 3000, 600)).to.be.equal(3000); // but 600 is out of scale! 0-599
+
+        expect(seqIndexFromCoordinate(599, 3000, 700)).to.be.equal(~~(599*(3000/700)));
+        expect(seqIndexFromCoordinate(600, 3000, 700)).to.be.equal(2571);
     });
 
-    it('dotter.coordinateFromSeqIndex', () => {
+    it('dotter.coordinateFromSeqIndex(index, L, canvasSize)', () => {
         expect(coordinateFromSeqIndex(1, 5, 400)).to.be.equal(80);
         expect(coordinateFromSeqIndex(3, 5, 400)).to.be.equal(240);
         expect(coordinateFromSeqIndex(12, 700, 400)).to.be.equal(6);
