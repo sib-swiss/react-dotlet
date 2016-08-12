@@ -41,21 +41,6 @@ function initBlankCanvas(canvasId) {
 }
 
 /**
- * Add a grey value for position (i, j) to the initial array `alphas`,
- * i.e. at position `i * width + j`.
- * @param alphas: initial Uint8ClampedArray of grey values (0-255).
- * @param i: pixel vertical coordinate (row index).
- * @param j: pixel horizontal coordinate (col index).
- * @param a: int8 alpha value (0-255).
- * @param _: to imitate the signature of `fillAlphas`.
- * @param canvasSize
- */
-function addAlpha(alphas, i, j, a, canvasSize=CANVAS_SIZE) {
-    alphas[i * canvasSize + j] = a;
-}
-
-
-/**
  * Calculate the local alignment scores.
  */
 function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canvasSize=CANVAS_SIZE) {
@@ -106,7 +91,7 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
             } else if (alpha < minAlpha) {
                 minAlpha = alpha;
             }
-            addAlpha(alphas, i, j, alpha);
+            alphas[i * canvasSize + j] = alpha;
         }
     }
     console.debug(greyScale.minBound, greyScale.maxBound)
