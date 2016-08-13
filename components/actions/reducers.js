@@ -2,14 +2,14 @@ import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
          INSPECT_COORDINATE, KEYBOARD_DIRECTION, SLIDE_TWO_SEQS, CHANGE_GREY_SCALE } from './actionTypes';
 import * as dotter from '../DotterPanel/dotter';
 import { guessSequenceType, commonSeqType } from '../InputPanel/input';
-//import { PROTEIN, DNA } from '../constants/constants';
+import { PROTEIN, DNA, CANVAS_SIZE } from '../constants/constants';
 //import { translateProtein } from '../common/genetics';
 import defaultState from './defaultState';
 
 
 let updateScores = function(s1, s2, windowSize, scoringMatrix, greyScale) {
     let addToState = {};
-    let scores = dotter.calculateScores(s1, s2, windowSize, scoringMatrix);
+    let scores = dotter.calculateScores(s1, s2, windowSize, scoringMatrix, CANVAS_SIZE);
     addToState.density = scores.density;
     addToState.greyScale = {initialAlphas: scores.alphas, minBound: greyScale.minBound, maxBound: greyScale.maxBound};
     let scaledAlphas = dotter.rescaleAlphas(scores.alphas, greyScale.minBound, greyScale.maxBound);
@@ -76,7 +76,7 @@ let reducer = (state = defaultState, action) => {
      * Expects `action.i`, `action.j`.
      */
     case INSPECT_COORDINATE:
-        dotter.drawPositionLines(action.i, action.j, state.s1.length, state.s2.length);
+        dotter.drawPositionLines(action.i, action.j, state.s1.length, state.s2.length, CANVAS_SIZE);
         return Object.assign({}, state, {i: action.i, j: action.j});
 
     /*
@@ -95,7 +95,7 @@ let reducer = (state = defaultState, action) => {
             keybDirection = {i: state.i - 1};
         }
         newState = Object.assign({}, state, keybDirection);
-        dotter.drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length);
+        dotter.drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length, CANVAS_SIZE);
         return newState;
 
     /*
@@ -111,7 +111,7 @@ let reducer = (state = defaultState, action) => {
             slideDirection = {j: state.j + action.shift};
         }
         newState = Object.assign({}, state, slideDirection);
-        dotter.drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length);
+        dotter.drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length, CANVAS_SIZE);
         return newState;
 
     /*

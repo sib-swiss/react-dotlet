@@ -79,9 +79,6 @@ class InputPanel extends React.Component {
     onPrint() {
         printCanvas(CANVAS_ID);
     }
-    onTranslate() {
-
-    }
 
 
     render() {
@@ -169,11 +166,6 @@ class InputPanel extends React.Component {
             {/* Where we enter the sequence */}
 
             <div className={s.textareaContainer} style={{display: this.state.open ? 'block' : 'none'}}>
-                <div className={s.translateButtonContainer}>
-                    <IconButton onClick={this.onTranslate}>
-                        <FontIcon className="material-icons ">translate</FontIcon>
-                    </IconButton>
-                </div>
                 <textarea className={s.textarea} rows={3}
                     value={this.state.activeSequence === 1 ? this.state.s1 : this.state.s2}
                     placeholder={this.state.activeSequence === 1 ? 'Sequence 1:' : 'Sequence 2:'}

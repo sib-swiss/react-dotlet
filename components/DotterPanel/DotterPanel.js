@@ -3,7 +3,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import s from './DotterPanel.css';
 import * as dotter from './dotter';
 import store from '../../core/store';
-import { CANVAS_ID } from '../constants/constants';
+import { CANVAS_ID, CANVAS_SIZE } from '../constants/constants';
 import { inspectCoordinate, keyboardArrowShiftCoordinate } from '../actions/actionCreators';
 
 
@@ -13,7 +13,9 @@ class DotterPanel extends React.Component {
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
         this.state = {
             mouseDown: false,
+            canvasSize: CANVAS_SIZE,
         };
+        this._onResize = this._onResize.bind(this);
         this._onMouseDown = this._onMouseDown.bind(this);
         this._onMouseMove = this._onMouseMove.bind(this);
         this._onMouseUp = this._onMouseUp.bind(this);
@@ -24,9 +26,11 @@ class DotterPanel extends React.Component {
 
     componentDidMount() {
         document.addEventListener('keydown', this._onKeyDown, true);
+        //window.addEventListener('resize', this._onResize);
     }
     componentWillUnmount() {
         document.removeEventListener('keydown', this._onKeyDown, true);
+        //window.addEventListener('resize', this._onResize);
     }
 
     /* Events */
@@ -45,6 +49,17 @@ class DotterPanel extends React.Component {
             default: return;
         }
         store.dispatch(keyboardArrowShiftCoordinate(direction));
+    }
+
+    _onResize() {
+        let _this = this;
+        clearTimeout(window.resizedFinished);
+        window.resizedFinished = setTimeout(function() {
+            _this.setState({
+                canvasSize: 0.33 * window.innerWidth,
+            });
+            dotter.fillCanvas(store.getState().greyScale.initialAlphas);
+        }, 250);
     }
 
     _onClick(e) {
@@ -76,8 +91,8 @@ class DotterPanel extends React.Component {
             ls2 = state.s2.length;
         let L = Math.max(ls1, ls2);
         // Return corresponding char indices
-        let i = dotter.seqIndexFromCoordinate(x, L);
-        let j = dotter.seqIndexFromCoordinate(y, L);
+        let i = dotter.seqIndexFromCoordinate(x, L, this.state.canvasSize);
+        let j = dotter.seqIndexFromCoordinate(y, L, this.state.canvasSize);
         // Make sure we don't get out of bounds while dragging
         i = Math.min(Math.max(0, i), ls1-1);
         j = Math.min(Math.max(0, j), ls2-1);
@@ -86,7 +101,7 @@ class DotterPanel extends React.Component {
     }
 
     render() {
-        let canvasSize = this.props.canvasSize;
+        let canvasSize = this.state.canvasSize;
         return (
             <div className={s.root}>
                 <div className={s.legendX}>{"Sequence 1"}</div>
@@ -112,9 +127,11 @@ class DotterPanel extends React.Component {
 
                         <canvas id={CANVAS_ID +'-topLayer'}
                                 className={this.state.mouseDown ? s.mouseDown : 'notMouseDown'}
-                                width={canvasSize}
-                                height={canvasSize}
+                                width={CANVAS_SIZE}
+                                height={CANVAS_SIZE}
                                 style={{
+                                    width: canvasSize,
+                                    height: canvasSize,
                                     position: 'absolute',
                                     left: 0,
                                     top: 0,

@@ -1,5 +1,5 @@
 
-import { CANVAS_SIZE, CANVAS_ID } from '../constants/constants';
+import { CANVAS_ID } from '../constants/constants';
 import * as helpers from '../common/helpers';
 import { SCORING_MATRIX_NAMES } from '../constants/constants';
 import { SCORING_MATRICES, MIN_MAX } from '../constants/scoring_matrices/scoring_matrices';
@@ -16,7 +16,7 @@ import * as d3scale from 'd3-scale';
  * @param index: (int) the index of a char in the sequence.
  * @param L: (int) matrix size (max sequence length).
  */
-function coordinateFromSeqIndex(index, L, canvasSize=CANVAS_SIZE) {
+function coordinateFromSeqIndex(index, L, canvasSize) {
     return ~~ ((canvasSize / L) * index);
 }
 
@@ -28,7 +28,7 @@ function coordinateFromSeqIndex(index, L, canvasSize=CANVAS_SIZE) {
  * @param px (float): position clicked on the canvas (in pixels, != `npoints`!).
  * @param L (int): matrix size (max sequence length).
  */
-function seqIndexFromCoordinate(px, L, canvasSize=CANVAS_SIZE) {
+function seqIndexFromCoordinate(px, L, canvasSize) {
     return ~~ ((L / canvasSize) * px);
 }
 
@@ -43,7 +43,7 @@ function initBlankCanvas(canvasId) {
 /**
  * Calculate the local alignment scores.
  */
-function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize=CANVAS_SIZE) {
+function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
     let ws = ~~ (windowSize / 2);   // # of nucleotides on each side
     let density = {};
     let alphas = new Uint8ClampedArray(canvasSize * canvasSize);
@@ -115,7 +115,7 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize=CANVA
         //if (i === 10) break
     }
     /* Rescale greys so that the min score is at 0 and the max at 255 */
-    rescaleInitAlphas(alphas, lastRowIndex, lastColIndex);
+    rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, canvasSize);
 
     return {
         density,
@@ -131,6 +131,7 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize=CANVA
 function fillCanvas(alphas) {
     let canvas = initBlankCanvas(CANVAS_ID);
     let ctx = canvas.getContext('2d');
+    console.debug("fillCanvas:", canvas.width, canvas.height)
     let imageData = ctx.getImageData(0,0, canvas.width, canvas.height);
     for (let k=0; k < 4 * alphas.length; k += 4) {
         imageData.data[k+3] = alphas[k/4];
@@ -142,14 +143,14 @@ function fillCanvas(alphas) {
 /**
  * Draw the vertical and horizontal lines showing the current position (i,j) on the canvas.
  */
-function drawPositionLines(i, j, ls1, ls2, canvasSize=CANVAS_SIZE) {
+function drawPositionLines(i, j, ls1, ls2, canvasSize) {
     let canvas = initBlankCanvas(CANVAS_ID +'-topLayer');
     let ctx = canvas.getContext('2d');
     let L = Math.max(ls1, ls2);
     let x = coordinateFromSeqIndex(i, L, canvasSize);
     let y = coordinateFromSeqIndex(j, L, canvasSize);
     // If the point size is > 1, make the lines pass in the middle.
-    if (L < CANVAS_SIZE) {
+    if (L < canvasSize) {
         let canvasPt = canvasSize / L;
         x += canvasPt/2;
         y += canvasPt/2;
@@ -169,7 +170,7 @@ function drawPositionLines(i, j, ls1, ls2, canvasSize=CANVAS_SIZE) {
  * This is because we don't want to take the uncomputed scores (0)
  * outside of this area into account.
  */
-function getMinMaxAlpha(alphas, lastRowIndex, lastColIndex, canvasSize=CANVAS_SIZE) {
+function getMinMaxAlpha(alphas, lastRowIndex, lastColIndex, canvasSize) {
     let minAlpha = 255;
     let maxAlpha = 0;
     for (let i=0; i < lastRowIndex; i++) {
@@ -234,7 +235,7 @@ function rescaleAlphas(initialAlphas, minBound, maxBound) {
  * @param minBound: (uint8, default 0) min alpha value in the result.
  * @param maxBnd: (uint8, default 255) max alpha value in the result.
  */
-function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, canvasSize=CANVAS_SIZE) {
+function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, canvasSize) {
     /* Rescale to fill the interval 0-255 */
     let minmax = getMinMaxAlpha(alphas, lastRowIndex, lastColIndex, canvasSize);
     let scale = d3scale.scaleLinear()
