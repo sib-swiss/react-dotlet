@@ -73,15 +73,48 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
      * but as soon as the sequence is as big as the canvas, there will be that
      * many computations anyway, so it must be fast in all cases.
      */
-    //let lastq1 = 0;
-    //let lastq2 = 0;
-    for (let i=0; i < lastRowIndex; i++) {
-        let q2 = seqIndexFromCoordinate(i, L, canvasSize);
-        let subseq2 = helpers.getSequenceAround(s2, q2, ws);      // nucleotides window on seq2
-        for (let j=0; j < lastColIndex; j++) {
-            let q1 = seqIndexFromCoordinate(j, L, canvasSize);
-            let subseq1 = helpers.getSequenceAround(s1, q1, ws);  // nucleotides window on seq2
-            let score = scoringFunction(subseq1, subseq2, matrix);  // always an int
+
+    //let lasti = 0;
+    //let lastj = 0;
+    //let maxScore = 0;
+    //for (let q2=0; q2<ls2; q2++) {
+    //    let i = coordinateFromSeqIndex(q2, L, canvasSize);
+    //    let subseq2 = helpers.getSequenceAround(s2, q2, ws);
+    //    for (let q1=0; q1<ls1; q1++) {
+    //        let j = coordinateFromSeqIndex(q1, L, canvasSize);
+    //        let subseq1 = helpers.getSequenceAround(s1, q1, ws);
+    //
+    //        let score = scoringFunction(subseq1, subseq2, matrix);
+    //        lastj = j;
+    //    }
+    //    lasti = i;
+    //}
+
+    function maxScoreInSquare(i, j, scoringFunction) {
+        let q2min = seqIndexFromCoordinate(i, L, canvasSize);
+        let q2max = seqIndexFromCoordinate(i+1, L, canvasSize);
+        let q1min = seqIndexFromCoordinate(j, L, canvasSize);
+        let q1max = seqIndexFromCoordinate(j+1, L, canvasSize);
+        let maxScore = -100000;
+        if (q2max === q2min) { q2max = q2min+1; }
+        if (q1max === q1min) { q1max = q1min+1; }
+        //console.debug(i,j, q2min, q2max, q1min, q1max)
+        for (let q2=q2min; q2<q2max; q2++) {
+            let subseq2 = helpers.getSequenceAround(s2, q2, ws);
+            for (let q1=q1min; q1<q1max; q1++) {
+                let subseq1 = helpers.getSequenceAround(s1, q1, ws);
+                let score = scoringFunction(subseq1, subseq2, matrix);
+                if (score > maxScore) {
+                    maxScore = score;
+                }
+            }
+        }
+        return maxScore;
+    }
+
+    for (let i=0; i < lastRowIndex; i++) {   // i [px]
+        for (let j=0; j < lastColIndex; j++) {   // j [px]
+            let score = maxScoreInSquare(i, j, scoringFunction);
             if (! (score in density)) {
                 density[score] = 0;
             } else {
@@ -94,9 +127,9 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
                 minAlpha = alpha;
             }
             alphas[i * canvasSize + j] = alpha;
-            //lastq1 = q1;
+            //if (j === 10) break
         }
-        //lastq2 = q2;
+        //if (i === 10) break
     }
     /* Rescale greys so that the min score is at 0 and the max at 255 */
     alphas = rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, greyScale.minBound, greyScale.maxBound);

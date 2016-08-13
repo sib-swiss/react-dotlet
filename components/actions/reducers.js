@@ -10,6 +10,7 @@ import defaultState from './defaultState';
 let updateScores = function(s1, s2, windowSize, scoringMatrix, greyScale) {
     let addToState = {};
     let scores = dotter.calculateScores(s1, s2, windowSize, scoringMatrix, greyScale);
+    scaledAlphas = dotter.rescaleInitAlphas(scores.alphas, lastRowIndex, lastColIndex, greyScale.minBound, greyScale.maxBound);
     dotter.fillCanvas(scores.alphas);
     addToState.density = scores.density;
     let defaultMinBound = defaultState.greyScale.minBound;

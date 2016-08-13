@@ -42,7 +42,7 @@ class GreyScaleSlider extends React.Component {
 
     //onRelaxMinBound(e, x) {
     //    let value = this.refs['greyscale-slider-min'].state.value;
-    //    console.log(777, value, e, x)
+    //    console.log(777, value, e, e.target.value, x)
     //    this.setState({
     //        widthMax: (255 - value) * 100/255,
     //        min: value,
@@ -102,7 +102,7 @@ class GreyScaleSlider extends React.Component {
 // <Slider style={{width: w1+'%', float: 'left'}}, marginRight: '-'+w1+'%'}}
 //min={0} max={max}
 //min={0} max={255-min}
-//onDragStop={this.onRelaxMinBound}
+//onDragStop={(e, value) => this.onRelaxMinBound(e, value)}
 //onDragStop={this.onRelaxMaxBound}
 
 export default GreyScaleSlider;

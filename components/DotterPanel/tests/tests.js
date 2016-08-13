@@ -47,17 +47,21 @@ describe('DotterPanel test suite', () => {
         expect(seqIndexFromCoordinate(300, 12000, 600)).to.be.equal(6000);
 
         expect(seqIndexFromCoordinate(599, 300, 600)).to.be.equal(299);
-        expect(seqIndexFromCoordinate(600, 300, 600)).to.be.equal(300); // but 600 is out of scale! 0-599
+        //expect(seqIndexFromCoordinate(600, 300, 600)).to.be.equal(300); // but 600 is out of scale! 0-599
 
         expect(seqIndexFromCoordinate(0, 3000, 600)).to.be.equal(0);
         expect(seqIndexFromCoordinate(1, 3000, 600)).to.be.equal(5);
         expect(seqIndexFromCoordinate(2, 3000, 600)).to.be.equal(10);
         expect(seqIndexFromCoordinate(598, 3000, 600)).to.be.equal(2990);
         expect(seqIndexFromCoordinate(599, 3000, 600)).to.be.equal(2995);
-        expect(seqIndexFromCoordinate(600, 3000, 600)).to.be.equal(3000); // but 600 is out of scale! 0-599
+        //expect(seqIndexFromCoordinate(600, 3000, 600)).to.be.equal(3000); // but 600 is out of scale! 0-599
 
         expect(seqIndexFromCoordinate(599, 3000, 700)).to.be.equal(~~(599*(3000/700)));
-        expect(seqIndexFromCoordinate(600, 3000, 700)).to.be.equal(2571);
+        expect(seqIndexFromCoordinate(600, 3000, 700)).to.be.equal(~~(600*(3000/700)));
+
+        expect(seqIndexFromCoordinate(0, 245, 400)).to.be.equal(0);
+        expect(seqIndexFromCoordinate(1, 245, 400)).to.be.equal(0);
+        expect(seqIndexFromCoordinate(2, 245, 400)).to.be.equal(1);
     });
 
     it('dotter.coordinateFromSeqIndex(index, L, canvasSize)', () => {

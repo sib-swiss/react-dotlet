@@ -87,7 +87,6 @@ class DotterPanel extends React.Component {
 
     render() {
         let canvasSize = this.props.canvasSize;
-        console.debug(this.state)
         return (
             <div className={s.root}>
                 <div className={s.legendX}>{"Sequence 1"}</div>
