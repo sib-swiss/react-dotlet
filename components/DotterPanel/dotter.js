@@ -43,7 +43,7 @@ function initBlankCanvas(canvasId) {
 /**
  * Calculate the local alignment scores.
  */
-function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canvasSize=CANVAS_SIZE) {
+function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize=CANVAS_SIZE) {
     let ws = ~~ (windowSize / 2);   // # of nucleotides on each side
     let density = {};
     let alphas = new Uint8ClampedArray(canvasSize * canvasSize);
@@ -69,27 +69,6 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
     let minAlpha = 255;
     let maxAlpha = 0;
 
-    /* Iterate over pixels. At worst it is several times the same char,
-     * but as soon as the sequence is as big as the canvas, there will be that
-     * many computations anyway, so it must be fast in all cases.
-     */
-
-    //let lasti = 0;
-    //let lastj = 0;
-    //let maxScore = 0;
-    //for (let q2=0; q2<ls2; q2++) {
-    //    let i = coordinateFromSeqIndex(q2, L, canvasSize);
-    //    let subseq2 = helpers.getSequenceAround(s2, q2, ws);
-    //    for (let q1=0; q1<ls1; q1++) {
-    //        let j = coordinateFromSeqIndex(q1, L, canvasSize);
-    //        let subseq1 = helpers.getSequenceAround(s1, q1, ws);
-    //
-    //        let score = scoringFunction(subseq1, subseq2, matrix);
-    //        lastj = j;
-    //    }
-    //    lasti = i;
-    //}
-
     function maxScoreInSquare(i, j, scoringFunction) {
         let q2min = seqIndexFromCoordinate(i, L, canvasSize);
         let q2max = seqIndexFromCoordinate(i+1, L, canvasSize);
@@ -112,6 +91,10 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
         return maxScore;
     }
 
+    /* Iterate over pixels. At worst it is several times the same char,
+     * but as soon as the sequence is as big as the canvas, there will be that
+     * many computations anyway, so it must be fast in all cases.
+     */
     for (let i=0; i < lastRowIndex; i++) {   // i [px]
         for (let j=0; j < lastColIndex; j++) {   // j [px]
             let score = maxScoreInSquare(i, j, scoringFunction);
@@ -132,7 +115,7 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, greyScale, canva
         //if (i === 10) break
     }
     /* Rescale greys so that the min score is at 0 and the max at 255 */
-    alphas = rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, greyScale.minBound, greyScale.maxBound);
+    rescaleInitAlphas(alphas, lastRowIndex, lastColIndex);
 
     return {
         density,
@@ -251,7 +234,7 @@ function rescaleAlphas(initialAlphas, minBound, maxBound) {
  * @param minBound: (uint8, default 0) min alpha value in the result.
  * @param maxBnd: (uint8, default 255) max alpha value in the result.
  */
-function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, minBound=0, maxBound=255, canvasSize=CANVAS_SIZE) {
+function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, canvasSize=CANVAS_SIZE) {
     /* Rescale to fill the interval 0-255 */
     let minmax = getMinMaxAlpha(alphas, lastRowIndex, lastColIndex, canvasSize);
     let scale = d3scale.scaleLinear()
@@ -260,9 +243,6 @@ function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, minBound=0, maxBo
     for (let i = 0; i < alphas.length; i++) {
         alphas[i] = ~~ (scale(alphas[i]) + 0.5);
     }
-    /* Rescale to clamp to minBound-maxBound */
-    let newAlphas = rescaleAlphas(alphas, minBound, maxBound);
-    return newAlphas;
 }
 
 /**

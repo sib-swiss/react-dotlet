@@ -9,16 +9,11 @@ import defaultState from './defaultState';
 
 let updateScores = function(s1, s2, windowSize, scoringMatrix, greyScale) {
     let addToState = {};
-    let scores = dotter.calculateScores(s1, s2, windowSize, scoringMatrix, greyScale);
-    scaledAlphas = dotter.rescaleInitAlphas(scores.alphas, lastRowIndex, lastColIndex, greyScale.minBound, greyScale.maxBound);
-    dotter.fillCanvas(scores.alphas);
+    let scores = dotter.calculateScores(s1, s2, windowSize, scoringMatrix);
     addToState.density = scores.density;
-    let defaultMinBound = defaultState.greyScale.minBound;
-    let defaultMaxBound = defaultState.greyScale.maxBound;
-    /* Record intial greys while the grey scale is still at initial state */
-    if (greyScale.minBound === defaultMinBound && greyScale.maxBound === defaultMaxBound) {
-        addToState.greyScale = {initialAlphas: scores.alphas};
-    }
+    addToState.greyScale = {initialAlphas: scores.alphas, minBound: greyScale.minBound, maxBound: greyScale.maxBound};
+    let scaledAlphas = dotter.rescaleAlphas(scores.alphas, greyScale.minBound, greyScale.maxBound);
+    dotter.fillCanvas(scaledAlphas);
     return addToState;
 };
 
@@ -55,7 +50,7 @@ let reducer = (state = defaultState, action) => {
         newState.i = 0; newState.j = 0;
         let ls1 = newState.s1.length;
         let ls2 = newState.s2.length;
-        addToState = updateScores(newState.s1, newState.s2, state.windowSize,state.scoringMatrix, state.greyScale);
+        addToState = updateScores(newState.s1, newState.s2, state.windowSize, state.scoringMatrix, state.greyScale);
         Object.assign(newState, addToState);
         return newState;
 
