@@ -47,7 +47,9 @@ function clearCanvas(canvasId) {
  */
 function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
     let ws = ~~ (windowSize / 2);   // # of nucleotides on each side
-    let scores = new Array(canvasSize * canvasSize);
+    let buffer = new ArrayBuffer(canvasSize * canvasSize * 2);
+    let scores = new Int16Array(buffer);
+    //let scores = new Array(canvasSize * canvasSize);
     let scoringFunction = (scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY) ?
         calculateMatches : calculateScore;
     let matrix = SCORING_MATRICES[scoringMatrixName];
@@ -93,7 +95,17 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
             else if (score < minScore) minScore = score;
         }
     }
-    return {scores, lastRowIndex, lastColIndex, maxScore, minScore};
+    /* Fill the bottom margin with minScore */
+    for (let k = lastRowIndex * canvasSize; k < canvasSize * canvasSize; k++) {
+        scores[k] = minScore;
+    }
+    /* Fill the right margin with minScore */
+    for (let i=0; i < canvasSize; i++) {
+        for (let j=lastColIndex; j < canvasSize; j++) {
+            scores[i * canvasSize + j] = minScore;
+        }
+    }
+    return {scores, lastRowIndex, lastColIndex, maxScore, minScore, canvasSize};
 }
 
 
@@ -108,8 +120,13 @@ function alphasFromScores(scoresObject) {
     let minScore = scoresObject.minScore;
     let maxScore = scoresObject.maxScore;
     let scoresRange = maxScore - minScore;   // now any (score / scoresRange) is between 0 and 1
-    for (let i=0; i<scores.length; i++) {
-        alphas[i] = Math.round(255 * (scores[i] - minScore) / scoresRange);
+    let CS = scoresObject.canvasSize;
+    let maxk = scoresObject.lastRowIndex * CS;  // start of the bottom margin - special easier treatment from there on
+    for (let k=0; k < maxk; k++) {
+        alphas[k] = Math.round(255 * (scores[k] - minScore) / scoresRange);
+    }
+    for (let k=maxk; k < scores.length; k++) {
+        alphas[k] = 0;
     }
     return alphas;
 }
@@ -117,17 +134,22 @@ function alphasFromScores(scoresObject) {
 /**
  * Return the distribution of alignment scores in the form of a JSON-like array
  * `[{x: <score>, y: <count>}, ...]`
- * @param scores: Array of scores.
+ * @param scoresObject: as returned by `calculateScores()`.
  */
-function densityFromScores(scores) {
+function densityFromScores(scoresObject) {
+    let scores = scoresObject.scores;
     let counts = {};
-    for (let i=0; i<scores.length; i++) {
-        let score = scores[i];
-        if (isNaN(score)) continue;
-        if (! (score in counts)) {
-            counts[score] = 0;
-        } else {
-            counts[score] += 1;
+    let maxi = scoresObject.lastRowIndex;
+    let maxj = scoresObject.lastColIndex;
+    let CS = scoresObject.canvasSize;
+    for (let i=0; i < maxi; i++) {
+        for (let j=0; j < maxj; j++) {
+            let score = scores[i * CS + j];
+            if (! (score in counts)) {
+                counts[score] = 0;
+            } else {
+                counts[score] += 1;
+            }
         }
     }
     var data = [];

@@ -9,7 +9,7 @@ import defaultState from './defaultState';
 
 let updateScores = function(s1, s2, windowSize, scoringMatrix, greyScale, canvasSize) {
     let scoresObject = dotter.calculateScores(s1, s2, windowSize, scoringMatrix, canvasSize);
-    let density = dotter.densityFromScores(scoresObject.scores);
+    let density = dotter.densityFromScores(scoresObject);
     let alphas = dotter.alphasFromScores(scoresObject);
     let addToState = {
         density: density,
