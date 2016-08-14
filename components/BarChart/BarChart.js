@@ -42,7 +42,6 @@ class BarChart extends React.Component {
     render() {
         let _this = this;
         let data = this.props.data;
-        console.debug(data)
         data = data.sort((a,b) => a.x - b.x);
         let N = data.length;
         let maxY = d3array.max(data, d => d.y);

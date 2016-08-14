@@ -121,21 +121,26 @@ function alphasFromScores(scoresObject) {
 }
 
 /**
- * Return the distribution of alignment scores in the form of an object
- * `{score -> number of accurrences}`.
+ * Return the distribution of alignment scores in the form of a JSON-like array
+ * `[{x: <score>, y: <count>}, ...]`
  * @param scores: Array of scores.
  */
 function densityFromScores(scores) {
-    let density = {};
+    let counts = {};
     for (let i=0; i<scores.length; i++) {
         let score = scores[i];
-        if (! (score in density)) {
-            density[score] = 0;
+        if (isNaN(score)) continue;
+        if (! (score in counts)) {
+            counts[score] = 0;
         } else {
-            density[score] += 1;
+            counts[score] += 1;
         }
     }
-    return density;
+    var data = [];
+    for (var key of Object.keys(counts)) {
+        data.push({x: parseInt(key), y: counts[key]});
+    }
+    return data;
 }
 
 
