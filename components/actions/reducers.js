@@ -8,12 +8,11 @@ import defaultState from './defaultState';
 
 
 let updateScores = function(s1, s2, windowSize, scoringMatrix, greyScale) {
-    let addToState = {};
     let scores = dotter.calculateScores(s1, s2, windowSize, scoringMatrix, CANVAS_SIZE);
-    addToState.density = scores.density;
-    addToState.greyScale = {initialAlphas: scores.alphas, minBound: greyScale.minBound, maxBound: greyScale.maxBound};
-    let scaledAlphas = dotter.rescaleAlphas(scores.alphas, greyScale.minBound, greyScale.maxBound);
-    dotter.fillCanvas(scaledAlphas);
+    let addToState = {
+        density: scores.density,
+        greyScale : {initialAlphas: scores.alphas, minBound: greyScale.minBound, maxBound: greyScale.maxBound},
+    };
     return addToState;
 };
 
@@ -76,7 +75,6 @@ let reducer = (state = defaultState, action) => {
      * Expects `action.i`, `action.j`.
      */
     case INSPECT_COORDINATE:
-        dotter.drawPositionLines(action.i, action.j, state.s1.length, state.s2.length, CANVAS_SIZE);
         return Object.assign({}, state, {i: action.i, j: action.j});
 
     /*

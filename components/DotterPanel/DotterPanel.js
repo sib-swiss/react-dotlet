@@ -11,10 +11,11 @@ class DotterPanel extends React.Component {
     constructor(props) {
         super(props);
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-        this.state = {
-            mouseDown: false,
+        this.state = Object.assign(
+            this.stateFromStore(), {
             canvasSize: CANVAS_SIZE,
-        };
+        });
+        this.mouseDown = false;
         this._onResize = this._onResize.bind(this);
         this._onMouseDown = this._onMouseDown.bind(this);
         this._onMouseMove = this._onMouseMove.bind(this);
@@ -22,15 +23,34 @@ class DotterPanel extends React.Component {
         this._onClick = this._onClick.bind(this);
     }
 
+    stateFromStore() {
+        let storeState = store.getState();
+        return {
+            alphas: storeState.greyScale.initialAlphas,
+            windowSize: storeState.windowSize,
+            scoringMatrix: storeState.scoringMatrix,
+        }
+    }
+
     /* Lifecycle */
 
+    componentWillMount() {
+        store.subscribe(() => {
+            this.setState( this.stateFromStore() );
+        });
+    }
     componentDidMount() {
         document.addEventListener('keydown', this._onKeyDown, true);
-        //window.addEventListener('resize', this._onResize);
+        window.addEventListener('resize', this._onResize);
     }
     componentWillUnmount() {
         document.removeEventListener('keydown', this._onKeyDown, true);
-        //window.addEventListener('resize', this._onResize);
+        window.addEventListener('resize', this._onResize);
+    }
+    componentDidUpdate() {
+        let greyScale = store.getState().greyScale;
+        let scaledAlphas = dotter.rescaleAlphas(greyScale.initialAlphas, greyScale.minBound, greyScale.maxBound);
+        dotter.fillCanvas(scaledAlphas);
     }
 
     /* Events */
@@ -66,10 +86,17 @@ class DotterPanel extends React.Component {
         this.inspect(e);
     }
 
-    _onMouseDown() { this.setState({mouseDown: true}); }
-    _onMouseUp() { this.setState({mouseDown: false}); }
+    _onMouseDown() {
+        this.mouseDown = true;
+        document.body.style.cursor = "crosshair";
+    }
+    _onMouseUp() {
+        this.mouseDown = false;
+        document.body.style.cursor = "default";
+    }
     _onMouseMove(e) {
-        if (this.state.mouseDown) {
+        //if (this.state.mouseDown) {
+        if (this.mouseDown) {
             this.inspect(e);
         }
     }
@@ -96,6 +123,8 @@ class DotterPanel extends React.Component {
         // Make sure we don't get out of bounds while dragging
         i = Math.min(Math.max(0, i), ls1-1);
         j = Math.min(Math.max(0, j), ls2-1);
+        // Draw
+        dotter.drawPositionLines(i, j, ls1, ls2, this.state.canvasSize);
         // Dispatch
         store.dispatch(inspectCoordinate(Math.min(i,ls1), Math.min(j,ls2)));
     }
@@ -126,7 +155,6 @@ class DotterPanel extends React.Component {
                         {/* Top layer: the lines indicating the current position */}
 
                         <canvas id={CANVAS_ID +'-topLayer'}
-                                className={this.state.mouseDown ? s.mouseDown : 'notMouseDown'}
                                 width={CANVAS_SIZE}
                                 height={CANVAS_SIZE}
                                 style={{

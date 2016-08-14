@@ -32,7 +32,7 @@ function seqIndexFromCoordinate(px, L, canvasSize) {
     return ~~ ((L / canvasSize) * px);
 }
 
-function initBlankCanvas(canvasId) {
+function clearCanvas(canvasId) {
     let canvas = document.getElementById(canvasId);
     if (canvas === null) { throw new ReferenceError("Canvas not found"); }
     let ctx = canvas.getContext('2d');
@@ -77,7 +77,6 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
         let maxScore = -100000;
         if (q2max === q2min) { q2max = q2min+1; }
         if (q1max === q1min) { q1max = q1min+1; }
-        //console.debug(i,j, q2min, q2max, q1min, q1max)
         for (let q2=q2min; q2<q2max; q2++) {
             let subseq2 = helpers.getSequenceAround(s2, q2, ws);
             for (let q1=q1min; q1<q1max; q1++) {
@@ -110,9 +109,7 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
                 minAlpha = alpha;
             }
             alphas[i * canvasSize + j] = alpha;
-            //if (j === 10) break
         }
-        //if (i === 10) break
     }
     /* Rescale greys so that the min score is at 0 and the max at 255 */
     rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, canvasSize);
@@ -129,7 +126,7 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
  * It never stores the matrix in memory: it draws a point and forgets about it.
  */
 function fillCanvas(alphas) {
-    let canvas = initBlankCanvas(CANVAS_ID);
+    let canvas = clearCanvas(CANVAS_ID);
     let ctx = canvas.getContext('2d');
     console.debug("fillCanvas:", canvas.width, canvas.height)
     let imageData = ctx.getImageData(0,0, canvas.width, canvas.height);
@@ -144,7 +141,7 @@ function fillCanvas(alphas) {
  * Draw the vertical and horizontal lines showing the current position (i,j) on the canvas.
  */
 function drawPositionLines(i, j, ls1, ls2, canvasSize) {
-    let canvas = initBlankCanvas(CANVAS_ID +'-topLayer');
+    let canvas = clearCanvas(CANVAS_ID +'-topLayer');
     let ctx = canvas.getContext('2d');
     let L = Math.max(ls1, ls2);
     let x = coordinateFromSeqIndex(i, L, canvasSize);
