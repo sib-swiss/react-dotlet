@@ -2,7 +2,7 @@
 import { CANVAS_ID } from '../constants/constants';
 import * as helpers from '../common/helpers';
 import { SCORING_MATRIX_NAMES } from '../constants/constants';
-import { SCORING_MATRICES, MIN_MAX } from '../constants/scoring_matrices/scoring_matrices';
+import { SCORING_MATRICES } from '../constants/scoring_matrices/scoring_matrices';
 import { calculateMatches, calculateScore } from '../common/scoring';
 import * as d3scale from 'd3-scale';
 
@@ -48,23 +48,17 @@ function clearCanvas(canvasId) {
 function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
     let ws = ~~ (windowSize / 2);   // # of nucleotides on each side
     let scores = new Array(canvasSize * canvasSize);
+    let scoringFunction = (scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY) ?
+        calculateMatches : calculateScore;
+    let matrix = SCORING_MATRICES[scoringMatrixName];
 
     let ls1 = s1.length;
     let ls2 = s2.length;
     let L = Math.max(ls1, ls2);
-
-    let scoringFunction;
-    if (scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY) {
-        scoringFunction = calculateMatches;
-    } else {
-        scoringFunction = calculateScore;
-    }
-    let matrix = SCORING_MATRICES[scoringMatrixName];
-
     let lastRowIndex = coordinateFromSeqIndex(ls2, L, canvasSize);
     let lastColIndex = coordinateFromSeqIndex(ls1, L, canvasSize);
 
-    function maxScoreInSquare(i, j, scoringFunction) {
+    function maxScoreInSquare(i, j) {
         let q2min = seqIndexFromCoordinate(i, L, canvasSize);
         let q2max = seqIndexFromCoordinate(i+1, L, canvasSize);
         let q1min = seqIndexFromCoordinate(j, L, canvasSize);
@@ -93,7 +87,7 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
         maxScore = -Infinity;
     for (let i=0; i < lastRowIndex; i++) {   // i [px]
         for (let j=0; j < lastColIndex; j++) {   // j [px]
-            let score = maxScoreInSquare(i, j, scoringFunction);
+            let score = maxScoreInSquare(i, j);
             scores[i * canvasSize + j] = score;
             if (score > maxScore) maxScore = score;
             else if (score < minScore) minScore = score;
