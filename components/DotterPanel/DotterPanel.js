@@ -125,6 +125,12 @@ class PositionLinesLayer extends React.Component {
     componentWillUnmount() {
         document.removeEventListener('keydown', this._onKeyDown, true);
     }
+    componentDidUpdate() {
+        let state = store.getState();
+        let ls1 = state.s1.length,
+            ls2 = state.s2.length;
+        dotter.drawPositionLines(this.state.i, this.state.j, ls1, ls2, this.props.canvasSize);
+    }
 
     _onClick(e) {
         this.inspect(e);
@@ -155,9 +161,9 @@ class PositionLinesLayer extends React.Component {
             case 40: direction = 'down'; break;
             default: return;
         }
+        let j = this.state.j,
+            i = this.state.i;
         let state = store.getState();
-        let j = state.j,
-            i = state.i;
         let ls1 = state.s1.length,
             ls2 = state.s2.length;
         switch (direction) {
@@ -166,7 +172,6 @@ class PositionLinesLayer extends React.Component {
             case 'right': if (i < ls1-1) i++; break;
             case 'left':  if (i > 0)     i--; break;
         }
-        dotter.drawPositionLines(i, j, ls1, ls2, this.props.canvasSize);
         store.dispatch(inspectCoordinate(i, j));
     }
 
@@ -194,7 +199,6 @@ class PositionLinesLayer extends React.Component {
         i = Math.min(Math.max(0, i), ls1-1);
         j = Math.min(Math.max(0, j), ls2-1);
         // Draw and dispatch
-        dotter.drawPositionLines(i, j, ls1, ls2, canvasSize);
         store.dispatch(inspectCoordinate(i, j));
     }
 
