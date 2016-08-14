@@ -8,17 +8,19 @@ import defaultState from './defaultState';
 
 
 let updateScores = function(s1, s2, windowSize, scoringMatrix, greyScale) {
-    let scores = dotter.calculateScores(s1, s2, windowSize, scoringMatrix, CANVAS_SIZE);
+    let scoresObject = dotter.calculateScores(s1, s2, windowSize, scoringMatrix, CANVAS_SIZE);
+    let density = dotter.densityFromScores(scoresObject.scores);
+    let alphas = dotter.alphasFromScores(scoresObject);
     let addToState = {
-        density: scores.density,
-        greyScale : {initialAlphas: scores.alphas, minBound: greyScale.minBound, maxBound: greyScale.maxBound},
+        density: density,
+        greyScale : {initialAlphas: alphas, minBound: greyScale.minBound, maxBound: greyScale.maxBound},
     };
     return addToState;
 };
 
 
 let reducer = (state = defaultState, action) => {
-    let newState, addToState;  // because reused un many switch cases
+    let newState, addToState;  // because reused in many switch cases
     let density;
     let scores;
 

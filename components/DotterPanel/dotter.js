@@ -45,8 +45,7 @@ function clearCanvas(canvasId) {
  */
 function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
     let ws = ~~ (windowSize / 2);   // # of nucleotides on each side
-    let density = {};
-    let alphas = new Uint8ClampedArray(canvasSize * canvasSize);
+    let scores = new Array(canvasSize * canvasSize);
 
     let ls1 = s1.length;
     let ls2 = s2.length;
@@ -59,15 +58,9 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
         scoringFunction = calculateScore;
     }
     let matrix = SCORING_MATRICES[scoringMatrixName];
-    let minMax = MIN_MAX[scoringMatrixName];
-    let minScore = minMax[0] * windowSize;
-    let maxScore = minMax[1] * windowSize;
-    let scoresRange = maxScore - minScore;   // now any (score / scoresRange) is between 0 and 1
 
     let lastRowIndex = coordinateFromSeqIndex(ls2, L, canvasSize);
     let lastColIndex = coordinateFromSeqIndex(ls1, L, canvasSize);
-    let minAlpha = 255;
-    let maxAlpha = 0;
 
     function maxScoreInSquare(i, j, scoringFunction) {
         let q2min = seqIndexFromCoordinate(i, L, canvasSize);
@@ -94,30 +87,43 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
      * but as soon as the sequence is as big as the canvas, there will be that
      * many computations anyway, so it must be fast in all cases.
      */
+    let minScore = Infinity,
+        maxScore = -Infinity;
     for (let i=0; i < lastRowIndex; i++) {   // i [px]
         for (let j=0; j < lastColIndex; j++) {   // j [px]
             let score = maxScoreInSquare(i, j, scoringFunction);
-            if (! (score in density)) {
-                density[score] = 0;
-            } else {
-                density[score] += 1;
-            }
-            let alpha = Math.round(255 * (score - minScore) / scoresRange);
-            if (alpha > maxAlpha) {
-                maxAlpha = alpha;
-            } else if (alpha < minAlpha) {
-                minAlpha = alpha;
-            }
-            alphas[i * canvasSize + j] = alpha;
+            scores[i * canvasSize + j] = score;
+            if (score > maxScore) maxScore = score;
+            else if (score < minScore) minScore = score;
         }
     }
-    /* Rescale greys so that the min score is at 0 and the max at 255 */
-    rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, canvasSize);
+    return {scores, lastRowIndex, lastColIndex, maxScore, minScore};
+}
 
-    return {
-        density,
-        alphas,
-    };
+
+function alphasFromScores(scoresObject) {
+    let scores = scoresObject.scores;
+    let alphas = new Uint8ClampedArray(scores.length);
+    let minScore = scoresObject.minScore;
+    let maxScore = scoresObject.maxScore;
+    let scoresRange = maxScore - minScore;   // now any (score / scoresRange) is between 0 and 1
+    for (let i=0; i<scores.length; i++) {
+        alphas[i] = Math.round(255 * (scores[i] - minScore) / scoresRange);
+    }
+    return alphas;
+}
+
+function densityFromScores(scores) {
+    let density = {};
+    for (let i=0; i<scores.length; i++) {
+        let score = scores[i];
+        if (! (score in density)) {
+            density[score] = 0;
+        } else {
+            density[score] += 1;
+        }
+    }
+    return density;
 }
 
 
@@ -172,11 +178,11 @@ function getMinMaxAlpha(alphas, lastRowIndex, lastColIndex, canvasSize) {
     let maxAlpha = 0;
     for (let i=0; i < lastRowIndex; i++) {
         for (let j=0; j < lastColIndex; j++) {
-            let k = i * canvasSize + j;
-            if (alphas[k] < minAlpha) {
-                minAlpha = alphas[k];
-            } else if (alphas[k] > maxAlpha) {
-                maxAlpha = alphas[k];
+            let alphak = alphas[i * canvasSize + j];
+            if (alphak < minAlpha) {
+                minAlpha = alphak;
+            } else if (alphak > maxAlpha) {
+                maxAlpha = alphak;
             }
         }
     }
@@ -223,27 +229,6 @@ function rescaleAlphas(initialAlphas, minBound, maxBound) {
 }
 
 /**
- * At the beginning, alpha values are scaled according to the minimal and
- * maximal *possible* scores. Here we scale them according to the actual min and max values,
- * to improve contrast. i.e. min alpha -> 0, max alpha -> 255.
- * @param alphas: a canvasSize x canvasSize Uint8ClampedArray.
- * @param lastColIndex: last horizontal pixel index to consider.
- * @param lastRowIndex: last vertical pixel index to consider.
- * @param minBound: (uint8, default 0) min alpha value in the result.
- * @param maxBnd: (uint8, default 255) max alpha value in the result.
- */
-function rescaleInitAlphas(alphas, lastRowIndex, lastColIndex, canvasSize) {
-    /* Rescale to fill the interval 0-255 */
-    let minmax = getMinMaxAlpha(alphas, lastRowIndex, lastColIndex, canvasSize);
-    let scale = d3scale.scaleLinear()
-        .domain([minmax.minAlpha, minmax.maxAlpha])
-        .range([0, 255]);
-    for (let i = 0; i < alphas.length; i++) {
-        alphas[i] = ~~ (scale(alphas[i]) + 0.5);
-    }
-}
-
-/**
  * Redraw the canvas after clamping the alpha values and rescaling the remaining scores interval.
  *  We need to keep the initialAlphas in store because clamping loses data,
  *  but we need to be able to go back to the initial state.
@@ -269,11 +254,13 @@ export {
     seqIndexFromCoordinate,
 
     calculateScores,
+    alphasFromScores,
+    densityFromScores,
+
     fillCanvas,
     drawPositionLines,
 
     getMinMaxAlpha,
     rescaleAlphas,
-    rescaleInitAlphas,
     greyScale,
 };
