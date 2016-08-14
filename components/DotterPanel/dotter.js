@@ -145,7 +145,6 @@ function densityFromScores(scores) {
 function fillCanvas(alphas) {
     let canvas = clearCanvas(CANVAS_ID);
     let ctx = canvas.getContext('2d');
-    console.debug("fillCanvas:", canvas.width, canvas.height)
     let imageData = ctx.getImageData(0,0, canvas.width, canvas.height);
     for (let k=0; k < 4 * alphas.length; k += 4) {
         imageData.data[k+3] = alphas[k/4];

@@ -7,8 +7,8 @@ import { PROTEIN, DNA, CANVAS_SIZE } from '../constants/constants';
 import defaultState from './defaultState';
 
 
-let updateScores = function(s1, s2, windowSize, scoringMatrix, greyScale) {
-    let scoresObject = dotter.calculateScores(s1, s2, windowSize, scoringMatrix, CANVAS_SIZE);
+let updateScores = function(s1, s2, windowSize, scoringMatrix, greyScale, canvasSize) {
+    let scoresObject = dotter.calculateScores(s1, s2, windowSize, scoringMatrix, canvasSize);
     let density = dotter.densityFromScores(scoresObject.scores);
     let alphas = dotter.alphasFromScores(scoresObject);
     let addToState = {
@@ -51,7 +51,7 @@ let reducer = (state = defaultState, action) => {
         newState.i = 0; newState.j = 0;
         let ls1 = newState.s1.length;
         let ls2 = newState.s2.length;
-        addToState = updateScores(newState.s1, newState.s2, state.windowSize, state.scoringMatrix, state.greyScale);
+        addToState = updateScores(newState.s1, newState.s2, state.windowSize, state.scoringMatrix, state.greyScale, state.canvasSize);
         Object.assign(newState, addToState);
         return newState;
 
@@ -61,7 +61,7 @@ let reducer = (state = defaultState, action) => {
      */
     case CHANGE_WINDOW_SIZE:
         let winsize = action.windowSize || 1;
-        addToState = updateScores(state.s1, state.s2, winsize, state.scoringMatrix, state.greyScale);
+        addToState = updateScores(state.s1, state.s2, winsize, state.scoringMatrix, state.greyScale, state.canvasSize);
         return Object.assign({}, state, addToState, {windowSize: parseInt(winsize)});
 
     /*
@@ -69,7 +69,7 @@ let reducer = (state = defaultState, action) => {
      * Expects `action.scoringMatrix`.
      */
     case CHANGE_SCORING_MATRIX:
-        addToState = updateScores(state.s1, state.s2, state.windowSize, action.scoringMatrix, state.greyScale);
+        addToState = updateScores(state.s1, state.s2, state.windowSize, action.scoringMatrix, state.greyScale, state.canvasSize);
         return Object.assign({}, state, addToState, {scoringMatrix: action.scoringMatrix});
 
     /*
@@ -91,7 +91,8 @@ let reducer = (state = defaultState, action) => {
         return newState;
 
     case RESIZE_CANVAS:
-        return Object.assign({}, state, {canvasSize: action.canvasSize});
+        addToState = updateScores(state.s1, state.s2, state.windowSize, state.scoringMatrix, state.greyScale, action.canvasSize);
+        return Object.assign({}, state, addToState, {canvasSize: action.canvasSize});
 
     default:
         return state;
