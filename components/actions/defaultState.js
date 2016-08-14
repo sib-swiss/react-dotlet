@@ -1,4 +1,4 @@
-import { SCORING_MATRIX_NAMES, DNA, PROTEIN } from '../constants/constants';
+import { SCORING_MATRIX_NAMES, DNA, PROTEIN, CANVAS_SIZE } from '../constants/constants';
 
 
 const smallExample = {
@@ -46,6 +46,7 @@ let defaultState = {
         maxBound: 255,
         initialAlphas: new Uint8ClampedArray([0]),
     },
+    canvasSize: CANVAS_SIZE,
 };
 
 Object.assign(defaultState, orthologExample);

@@ -1,5 +1,5 @@
 import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
-         INSPECT_COORDINATE, KEYBOARD_DIRECTION, SLIDE_TWO_SEQS, CHANGE_GREY_SCALE } from './actionTypes';
+         INSPECT_COORDINATE, CHANGE_GREY_SCALE, RESIZE_CANVAS } from './actionTypes';
 import * as dotter from '../DotterPanel/dotter';
 import { guessSequenceType, commonSeqType } from '../InputPanel/input';
 import { PROTEIN, DNA, CANVAS_SIZE } from '../constants/constants';
@@ -89,6 +89,9 @@ let reducer = (state = defaultState, action) => {
         newState.greyScale.minBound = action.minBound;
         newState.greyScale.maxBound = action.maxBound;
         return newState;
+
+    case RESIZE_CANVAS:
+        return Object.assign({}, state, {canvasSize: action.canvasSize});
 
     default:
         return state;

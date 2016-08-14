@@ -4,17 +4,14 @@ import s from './DotterPanel.css';
 import * as dotter from './dotter';
 import store from '../../core/store';
 import { CANVAS_ID, CANVAS_SIZE } from '../constants/constants';
-import { inspectCoordinate } from '../actions/actionCreators';
+import { inspectCoordinate, resizeCanvas } from '../actions/actionCreators';
 
 
 class DotterPanel extends React.Component {
     constructor(props) {
         super(props);
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-        this.state = Object.assign(
-            this.stateFromStore(), {
-            canvasSize: CANVAS_SIZE,
-        });
+        this.state = this.stateFromStore();
         this._onResize = this._onResize.bind(this);
     }
 
@@ -24,6 +21,7 @@ class DotterPanel extends React.Component {
             alphas: storeState.greyScale.initialAlphas,
             windowSize: storeState.windowSize,
             scoringMatrix: storeState.scoringMatrix,
+            canvasSize: storeState.canvasSize,
         }
     }
 
@@ -52,9 +50,7 @@ class DotterPanel extends React.Component {
         let _this = this;
         clearTimeout(window.resizedFinished);
         window.resizedFinished = setTimeout(function() {
-            _this.setState({
-                canvasSize: 0.33 * window.innerWidth,
-            });
+            store.dispatch(resizeCanvas(0.33 * window.innerWidth));
         }, 250);
     }
 

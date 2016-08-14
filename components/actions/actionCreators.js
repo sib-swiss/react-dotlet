@@ -2,8 +2,7 @@ import { CHANGE_SEQUENCE,
          CHANGE_WINDOW_SIZE,
          CHANGE_SCORING_MATRIX,
          INSPECT_COORDINATE,
-         KEYBOARD_DIRECTION,
-         SLIDE_TWO_SEQS,
+         RESIZE_CANVAS,
          CHANGE_GREY_SCALE
        } from './actionTypes';
 
@@ -48,7 +47,14 @@ function changeGreyScale(minBound, maxBound) {
         type: CHANGE_GREY_SCALE,
         minBound: minBound,
         maxBound: maxBound,
-    }
+    };
+}
+
+function resizeCanvas(canvasSize) {
+    return {
+        type: RESIZE_CANVAS,
+        canvasSize: canvasSize,
+    };
 }
 
 
@@ -59,4 +65,5 @@ export {
     changeScoringMatrix,
     inspectCoordinate,
     changeGreyScale,
+    resizeCanvas,
 };
