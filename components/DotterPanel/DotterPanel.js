@@ -15,12 +15,7 @@ class DotterPanel extends React.Component {
             this.stateFromStore(), {
             canvasSize: CANVAS_SIZE,
         });
-        this.mouseDown = false;
         this._onResize = this._onResize.bind(this);
-        this._onMouseDown = this._onMouseDown.bind(this);
-        this._onMouseMove = this._onMouseMove.bind(this);
-        this._onMouseUp = this._onMouseUp.bind(this);
-        this._onClick = this._onClick.bind(this);
     }
 
     stateFromStore() {
@@ -40,11 +35,9 @@ class DotterPanel extends React.Component {
         });
     }
     componentDidMount() {
-        document.addEventListener('keydown', this._onKeyDown, true);
         window.addEventListener('resize', this._onResize);
     }
     componentWillUnmount() {
-        document.removeEventListener('keydown', this._onKeyDown, true);
         window.addEventListener('resize', this._onResize);
     }
     componentDidUpdate() {
@@ -55,22 +48,6 @@ class DotterPanel extends React.Component {
 
     /* Events */
 
-    _onKeyDown(e) {
-        if ( document.activeElement.tagName.toLowerCase() === 'textarea') {
-            return;
-        }
-        var keyCode = e.keyCode;
-        var direction;
-        switch (e.keyCode) {
-            case 37: direction = 'left'; break;
-            case 38: direction = 'up'; break;
-            case 39: direction = 'right'; break;
-            case 40: direction = 'down'; break;
-            default: return;
-        }
-        store.dispatch(keyboardArrowShiftCoordinate(direction));
-    }
-
     _onResize() {
         let _this = this;
         clearTimeout(window.resizedFinished);
@@ -80,53 +57,6 @@ class DotterPanel extends React.Component {
             });
             dotter.fillCanvas(store.getState().greyScale.initialAlphas);
         }, 250);
-    }
-
-    _onClick(e) {
-        this.inspect(e);
-    }
-
-    _onMouseDown() {
-        this.mouseDown = true;
-        document.body.style.cursor = "crosshair";
-    }
-    _onMouseUp() {
-        this.mouseDown = false;
-        document.body.style.cursor = "default";
-    }
-    _onMouseMove(e) {
-        //if (this.state.mouseDown) {
-        if (this.mouseDown) {
-            this.inspect(e);
-        }
-    }
-
-    /*
-     * Get the mouse coordinates relative to the canvas position,
-     * deduce the approximate corresponding sequence characters indices `i` and `j`,
-     * and fire an action.
-     */
-    inspect(event) {
-        // Get canvas coordinates
-        let canvas = event.target;
-        let dims = canvas.getBoundingClientRect();
-        let x = event.pageX - dims.left,
-            y = event.pageY - dims.top;
-        // Fetch store state to get the seq lengths
-        let state = store.getState();
-        let ls1 = state.s1.length,
-            ls2 = state.s2.length;
-        let L = Math.max(ls1, ls2);
-        // Return corresponding char indices
-        let i = dotter.seqIndexFromCoordinate(x, L, this.state.canvasSize);
-        let j = dotter.seqIndexFromCoordinate(y, L, this.state.canvasSize);
-        // Make sure we don't get out of bounds while dragging
-        i = Math.min(Math.max(0, i), ls1-1);
-        j = Math.min(Math.max(0, j), ls2-1);
-        // Draw
-        dotter.drawPositionLines(i, j, ls1, ls2, this.state.canvasSize);
-        // Dispatch
-        store.dispatch(inspectCoordinate(Math.min(i,ls1), Math.min(j,ls2)));
     }
 
     render() {
@@ -154,26 +84,129 @@ class DotterPanel extends React.Component {
 
                         {/* Top layer: the lines indicating the current position */}
 
-                        <canvas id={CANVAS_ID +'-topLayer'}
-                                width={CANVAS_SIZE}
-                                height={CANVAS_SIZE}
-                                style={{
-                                    width: canvasSize,
-                                    height: canvasSize,
-                                    position: 'absolute',
-                                    left: 0,
-                                    top: 0,
-                                    zIndex: 1,
-                                }}
-                                onMouseDown={this._onMouseDown}
-                                onMouseUp={this._onMouseUp}
-                                onMouseMove={this._onMouseMove}
-                                onClick={this._onClick}
-                        >
-                        </canvas>
+                        <PositionLinesLayer canvasSize={canvasSize} />
+
                     </div>
                 </div>
             </div>
+        );
+    }
+}
+
+
+
+class PositionLinesLayer extends React.Component {
+    constructor(props) {
+        super(props);
+        this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+        this.mouseDown = false;
+        this._onMouseDown = this._onMouseDown.bind(this);
+        this._onMouseMove = this._onMouseMove.bind(this);
+        this._onMouseUp = this._onMouseUp.bind(this);
+        this._onClick = this._onClick.bind(this);
+        this._onKeyDown = this._onKeyDown.bind(this);
+    }
+
+    componentDidMount() {
+        document.addEventListener('keydown', this._onKeyDown, true);
+    }
+    componentWillUnmount() {
+        document.removeEventListener('keydown', this._onKeyDown, true);
+    }
+
+    _onClick(e) {
+        this.inspect(e);
+    }
+    _onMouseDown() {
+        this.mouseDown = true;
+        document.body.style.cursor = "crosshair";
+    }
+    _onMouseUp() {
+        this.mouseDown = false;
+        document.body.style.cursor = "default";
+    }
+    _onMouseMove(e) {
+        if (this.mouseDown) {
+            this.inspect(e);
+        }
+    }
+    _onKeyDown(e) {
+        if ( document.activeElement.tagName.toLowerCase() === 'textarea') {
+            return;
+        }
+        var keyCode = e.keyCode;
+        var direction;
+        switch (e.keyCode) {
+            case 37: direction = 'left'; break;
+            case 38: direction = 'up'; break;
+            case 39: direction = 'right'; break;
+            case 40: direction = 'down'; break;
+            default: return;
+        }
+        let state = store.getState();
+        let j = state.j,
+            i = state.i;
+        let ls1 = state.s1.length,
+            ls2 = state.s2.length;
+        switch (direction) {
+            case 'down':  if (j < ls2-1) j++; break;
+            case 'up':    if (j > 0)     j--; break;
+            case 'right': if (i < ls1-1) i++; break;
+            case 'left':  if (i > 0)     i--; break;
+        }
+        dotter.drawPositionLines(i, j, ls1, ls2, this.props.canvasSize);
+        store.dispatch(inspectCoordinate(i, j));
+    }
+
+    /*
+     * Get the mouse coordinates relative to the canvas position,
+     * deduce the approximate corresponding sequence characters indices `i` and `j`,
+     * and fire an action.
+     */
+    inspect(event) {
+        let canvasSize = this.props.canvasSize;
+        // Get canvas coordinates
+        let canvas = event.target;
+        let dims = canvas.getBoundingClientRect();
+        let x = event.pageX - dims.left,
+            y = event.pageY - dims.top;
+        // Fetch store state to get the seq lengths
+        let state = store.getState();
+        let ls1 = state.s1.length,
+            ls2 = state.s2.length;
+        let L = Math.max(ls1, ls2);
+        // Return corresponding char indices
+        let i = dotter.seqIndexFromCoordinate(x, L, canvasSize);
+        let j = dotter.seqIndexFromCoordinate(y, L, canvasSize);
+        // Make sure we don't get out of bounds while dragging
+        i = Math.min(Math.max(0, i), ls1-1);
+        j = Math.min(Math.max(0, j), ls2-1);
+        // Draw and dispatch
+        dotter.drawPositionLines(i, j, ls1, ls2, canvasSize);
+        store.dispatch(inspectCoordinate(i, j));
+    }
+
+
+    render() {
+        console.debug(this.props)
+        return (
+            <canvas id={CANVAS_ID +'-topLayer'}
+                    width={CANVAS_SIZE}
+                    height={CANVAS_SIZE}
+                    style={{
+                        width: this.props.canvasSize,
+                        height: this.props.canvasSize,
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        zIndex: 1,
+                    }}
+                    onMouseDown={this._onMouseDown}
+                    onMouseUp={this._onMouseUp}
+                    onMouseMove={this._onMouseMove}
+                    onClick={this._onClick}
+            >
+            </canvas>
         );
     }
 }

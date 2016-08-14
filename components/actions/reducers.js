@@ -71,33 +71,14 @@ let reducer = (state = defaultState, action) => {
         return Object.assign({}, state, addToState, {scoringMatrix: action.scoringMatrix});
 
     /*
-     * On click on the canvas.
+     * When we change the inspected position on the canvas (mouse or keyboard).
      * Expects `action.i`, `action.j`.
      */
     case INSPECT_COORDINATE:
         return Object.assign({}, state, {i: action.i, j: action.j});
 
     /*
-     * When keyboard direction arrows are pressed.
-     * Expects `action.[right|left|top|down]`
-     */
-    case KEYBOARD_DIRECTION:
-        let keybDirection;
-        if (action.direction === 'down' && state.j < state.s2.length-1) {
-            keybDirection = {j: state.j + 1};
-        } else if (action.direction === 'up' && state.j > 0) {
-            keybDirection = {j: state.j - 1};
-        } else if (action.direction === 'right' && state.i < state.s1.length-1) {
-            keybDirection = {i: state.i + 1};
-        } else if (action.direction === 'left' && state.i > 0) {
-            keybDirection = {i: state.i - 1};
-        }
-        newState = Object.assign({}, state, keybDirection);
-        dotter.drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length, CANVAS_SIZE);
-        return newState;
-
-    /*
-     * When keyboard direction arrows are pressed.
+     * When sliders are moved in TwoSeqsPanel.
      * Expects `action.seqn` in [1|2]: the sequence number,
      * and `action.shift`: the positive or negative shift.
      */
