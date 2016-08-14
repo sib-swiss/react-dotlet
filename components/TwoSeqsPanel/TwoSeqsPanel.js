@@ -52,7 +52,6 @@ class TwoSeqsPanel extends React.Component {
             j += value - this.state.j;
             store.dispatch(inspectCoordinate(i, j));
         }
-        //dotter.drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length, CANVAS_SIZE);
     };
 
     /*

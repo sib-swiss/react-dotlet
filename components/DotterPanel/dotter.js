@@ -42,6 +42,8 @@ function clearCanvas(canvasId) {
 
 /**
  * Calculate the local alignment scores.
+ * Return only the array of scores that we will use to draw (i.e. one score per pixel of the canvas).
+ * The latter are the local max of all alignments scaling to the same pixel.
  */
 function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
     let ws = ~~ (windowSize / 2);   // # of nucleotides on each side
@@ -101,6 +103,11 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
 }
 
 
+/**
+ * Return alpha values corresponding to the alignemnt scores.
+ * @param scoresObject: as returned by `calculateScores()`.
+ * @returns {Uint8ClampedArray}
+ */
 function alphasFromScores(scoresObject) {
     let scores = scoresObject.scores;
     let alphas = new Uint8ClampedArray(scores.length);
@@ -113,6 +120,11 @@ function alphasFromScores(scoresObject) {
     return alphas;
 }
 
+/**
+ * Return the distribution of alignment scores in the form of an object
+ * `{score -> number of accurrences}`.
+ * @param scores: Array of scores.
+ */
 function densityFromScores(scores) {
     let density = {};
     for (let i=0; i<scores.length; i++) {

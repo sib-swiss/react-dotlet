@@ -11,24 +11,6 @@ function toDensity(d) {
     return density;
 }
 
-function minMaxObject(d) {
-    if (d.length === 0) {
-        return { maxX: 1, minX: 0, maxY: 1, minY: 0 };
-    }
-    let maxX = -Number.MAX_SAFE_INTEGER,
-        minX = Number.MAX_SAFE_INTEGER,
-        maxY = -Number.MAX_SAFE_INTEGER,
-        minY = Number.MAX_SAFE_INTEGER;
-    for (let key of Object.keys(d)) {
-        let val = d[key];
-        maxX = Math.max(key, maxX);
-        minX = Math.min(key, minX);
-        maxY = Math.max(val, maxY);
-        minY = Math.min(val, minY);
-    }
-    return { maxX, minX, maxY, minY };
-}
-
 /*
  * Format an object {key: val} to what d3 likes: {'key': key, 'val': val} .
  */
@@ -42,6 +24,5 @@ function object2array(d) {
 
 export {
     toDensity,
-    minMaxObject,
     object2array,
 };

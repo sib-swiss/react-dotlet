@@ -2,7 +2,7 @@ import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import s from './DensityPanel.css';
 import store from '../../core/store';
-import { toDensity, minMaxObject, object2array } from './helpers';
+import { toDensity, object2array } from './helpers';
 
 import BarChart from '../BarChart/BarChart';
 import GreyScaleSlider from '../GreyScale/GreyScale';
@@ -28,7 +28,6 @@ class DensityPanel extends React.Component {
     }
 
     render() {
-        let minmax = minMaxObject(this.state.density);
         let data = toDensity(this.state.density);
         data = object2array(data);
 
