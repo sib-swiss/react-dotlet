@@ -4,7 +4,7 @@ import s from './TwoSeqsPanel.css';
 import store from '../../core/store';
 import * as helpers from '../common/helpers';
 import { formatSeq } from './helpers';
-import { moveTwoSeqsSlider } from '../actions/actionCreators';
+import { inspectCoordinate } from '../actions/actionCreators';
 import Slider from 'material-ui/Slider';
 
 
@@ -42,14 +42,17 @@ class TwoSeqsPanel extends React.Component {
     }
 
     onSliderChange = (seqn, e, value) => {
-        let shift;
+        let storeState = store.getState();
+        let i = storeState.i,
+            j = storeState.j;
         if (seqn === 1) {
-            shift = value - this.state.i;
-            store.dispatch(moveTwoSeqsSlider(1, shift));
+            i += value - this.state.i;
+            store.dispatch(inspectCoordinate(i, j));
         } else {
-            shift = value - this.state.j;
-            store.dispatch(moveTwoSeqsSlider(2, shift));
+            j += value - this.state.j;
+            store.dispatch(inspectCoordinate(i, j));
         }
+        //dotter.drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length, CANVAS_SIZE);
     };
 
     /*

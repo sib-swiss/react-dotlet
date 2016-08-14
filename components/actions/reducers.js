@@ -78,22 +78,6 @@ let reducer = (state = defaultState, action) => {
         return Object.assign({}, state, {i: action.i, j: action.j});
 
     /*
-     * When sliders are moved in TwoSeqsPanel.
-     * Expects `action.seqn` in [1|2]: the sequence number,
-     * and `action.shift`: the positive or negative shift.
-     */
-    case SLIDE_TWO_SEQS:
-        let slideDirection;
-        if (action.seqn === 1) {
-            slideDirection = {i: state.i + action.shift};
-        } else {
-            slideDirection = {j: state.j + action.shift};
-        }
-        newState = Object.assign({}, state, slideDirection);
-        dotter.drawPositionLines(newState.i, newState.j, state.s1.length, state.s2.length, CANVAS_SIZE);
-        return newState;
-
-    /*
      * When the grey scale slider is moved.
      * Expects `action.minBound`, `action.maxBound`.
      */

@@ -35,27 +35,12 @@ function changeScoringMatrix(scoringMatrix) {
     };
 }
 
-/**
- * When the canvas is clicked.
- */
 function inspectCoordinate(i, j) {
     return {
         type: INSPECT_COORDINATE,
         i: i,
         j: j,
     };
-}
-
-/**
- * When the sliders above/below the TwoSeqsPanel are moved, to change the alignment.
- * @param seqn: sequence nr, 1 or 2
- */
-function moveTwoSeqsSlider(seqn, shift) {
-    return {
-        type: SLIDE_TWO_SEQS,
-        seqn: seqn,
-        shift: shift,
-    }
 }
 
 function changeGreyScale(minBound, maxBound) {
@@ -73,6 +58,5 @@ export {
     changeWindowSize,
     changeScoringMatrix,
     inspectCoordinate,
-    moveTwoSeqsSlider,
     changeGreyScale,
 };

@@ -99,6 +99,7 @@ class PositionLinesLayer extends React.Component {
         super(props);
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
         this.mouseDown = false;
+        this.state = this.stateFromStore();
         this._onMouseDown = this._onMouseDown.bind(this);
         this._onMouseMove = this._onMouseMove.bind(this);
         this._onMouseUp = this._onMouseUp.bind(this);
@@ -106,6 +107,18 @@ class PositionLinesLayer extends React.Component {
         this._onKeyDown = this._onKeyDown.bind(this);
     }
 
+    stateFromStore() {
+        return {
+            i: store.getState().i,
+            j: store.getState().j,
+        }
+    }
+
+    componentWillMount() {
+        store.subscribe(() => {
+            this.setState( this.stateFromStore() );
+        });
+    }
     componentDidMount() {
         document.addEventListener('keydown', this._onKeyDown, true);
     }
