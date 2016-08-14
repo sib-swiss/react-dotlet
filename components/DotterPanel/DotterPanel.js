@@ -200,13 +200,12 @@ class PositionLinesLayer extends React.Component {
 
 
     render() {
+        let canvasSize = this.props.canvasSize;
         return (
             <canvas id={CANVAS_ID +'-topLayer'}
-                    width={CANVAS_SIZE}
-                    height={CANVAS_SIZE}
+                    width={canvasSize}
+                    height={canvasSize}
                     style={{
-                        width: this.props.canvasSize,
-                        height: this.props.canvasSize,
                         position: 'absolute',
                         left: 0,
                         top: 0,
