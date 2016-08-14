@@ -4,7 +4,7 @@ import s from './DotterPanel.css';
 import * as dotter from './dotter';
 import store from '../../core/store';
 import { CANVAS_ID, CANVAS_SIZE } from '../constants/constants';
-import { inspectCoordinate, keyboardArrowShiftCoordinate } from '../actions/actionCreators';
+import { inspectCoordinate } from '../actions/actionCreators';
 
 
 class DotterPanel extends React.Component {
@@ -55,7 +55,6 @@ class DotterPanel extends React.Component {
             _this.setState({
                 canvasSize: 0.33 * window.innerWidth,
             });
-            dotter.fillCanvas(store.getState().greyScale.initialAlphas);
         }, 250);
     }
 
@@ -188,7 +187,6 @@ class PositionLinesLayer extends React.Component {
 
 
     render() {
-        console.debug(this.props)
         return (
             <canvas id={CANVAS_ID +'-topLayer'}
                     width={CANVAS_SIZE}
