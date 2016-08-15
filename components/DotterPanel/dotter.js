@@ -242,8 +242,8 @@ function rescaleAlphas(initialAlphas, minBound, maxBound) {
         black = (a) => a <= maxBound;
         white = (a) => a >= minBound;
     }
-    let newAlphas = new Uint8ClampedArray(N);
     let N = initialAlphas.length;
+    let newAlphas = new Uint8ClampedArray(N);
     for (let i=0; i < N; i++) {
         let alpha = initialAlphas[i];
         if (white(alpha)) {
