@@ -46,7 +46,7 @@ let defaultState = {
         maxBound: 255,
         initialAlphas: new Uint8ClampedArray([0]),
     },
-    canvasSize: CANVAS_SIZE,
+    canvasSize: ~~ (0.33 * window.innerWidth),
 };
 
 Object.assign(defaultState, orthologExample);
