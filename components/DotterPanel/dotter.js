@@ -164,7 +164,8 @@ function fillCanvas(alphas) {
     let canvas = clearCanvas(CANVAS_ID);
     let ctx = canvas.getContext('2d');
     let imageData = ctx.getImageData(0,0, canvas.width, canvas.height);
-    for (let k=0; k < 4 * alphas.length; k += 4) {
+    let N = 4 * alphas.length;
+    for (let k=0; k < N; k += 4) {
         imageData.data[k+3] = alphas[k/4];
     }
     ctx.putImageData(imageData, 0, 0);
@@ -228,7 +229,6 @@ function getMinMaxAlpha(alphas, lastRowIndex, lastColIndex, canvasSize) {
  * If `minBound` becomes bigger than `maxBound`, colors are inverted.
  **/
 function rescaleAlphas(initialAlphas, minBound, maxBound) {
-    let N = initialAlphas.length;
     let scale = d3scale.scaleLinear()
         .domain([minBound, maxBound])
         .range([0, 255]);
@@ -243,6 +243,7 @@ function rescaleAlphas(initialAlphas, minBound, maxBound) {
         white = (a) => a >= minBound;
     }
     let newAlphas = new Uint8ClampedArray(N);
+    let N = initialAlphas.length;
     for (let i=0; i < N; i++) {
         let alpha = initialAlphas[i];
         if (white(alpha)) {
@@ -270,7 +271,8 @@ function greyScale(initialAlphas, minBound, maxBound, ls1, ls2) {
     let imageData = ctx.getImageData(0,0, canvas.width, canvas.height);
     let data = imageData.data;
     let newAlphas = rescaleAlphas(initialAlphas, minBound, maxBound);
-    for (let i = 0; i < newAlphas.length; i++) {
+    let N = newAlphas.length;
+    for (let i = 0; i < N; i++) {
         data[4*i+3] = newAlphas[i];
     }
     ctx.putImageData(imageData, 0, 0);
