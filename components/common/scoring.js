@@ -19,6 +19,8 @@ function sumMatches(s1, s2) {
 
 /**
  * In DNA-DNA comparison, return the similarity score.
+ * @param s1: first sub-sequence.
+ * @param s2: second sub-sequence.
  */
 function calculateMatches(s1, s2, scoringMatrix) {
     let sums = sumMatches(s1, s2);
@@ -28,6 +30,8 @@ function calculateMatches(s1, s2, scoringMatrix) {
 
 /**
  * In proteins comparison, return the similarity score.
+ * @param s1: first sub-sequence.
+ * @param s2: second sub-sequence.
  */
 function calculateScore(s1, s2, scoringMatrix) {
     let score = 0;
@@ -39,7 +43,7 @@ function calculateScore(s1, s2, scoringMatrix) {
         let j = AA_MAP[c2];
         score += scoringMatrix[i][j];
         if (isNaN(score)) {
-            console.log("NaN score: [c1,c2,i,j,[i,:]]", c1, c2, i, j, scoringMatrix[i])
+            console.debug("NaN score: [c1,c2,i,j,[i,:]]", c1, c2, i, j, scoringMatrix[i])
         }
     }
     return score;

@@ -1,4 +1,4 @@
-import { SCORING_MATRIX_NAMES, DNA, PROTEIN, CANVAS_SIZE } from '../constants/constants';
+import { SCORING_MATRIX_NAMES, DNA, PROTEIN } from '../constants/constants';
 
 
 const smallExample = {

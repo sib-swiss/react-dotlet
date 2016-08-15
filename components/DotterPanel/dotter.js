@@ -49,7 +49,6 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
     let ws = ~~ (windowSize / 2);   // # of nucleotides on each side
     let buffer = new ArrayBuffer(canvasSize * canvasSize * 2);
     let scores = new Int16Array(buffer);
-    //let scores = new Array(canvasSize * canvasSize);
     let scoringFunction = (scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY) ?
         calculateMatches : calculateScore;
     let matrix = SCORING_MATRICES[scoringMatrixName];
@@ -60,12 +59,12 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
     let lastRowIndex = coordinateFromSeqIndex(ls2, L, canvasSize);
     let lastColIndex = coordinateFromSeqIndex(ls1, L, canvasSize);
 
-    function maxScoreInSquare(i, j) {
-        let q2min = seqIndexFromCoordinate(i, L, canvasSize);
-        let q2max = seqIndexFromCoordinate(i+1, L, canvasSize);
-        let q1min = seqIndexFromCoordinate(j, L, canvasSize);
-        let q1max = seqIndexFromCoordinate(j+1, L, canvasSize);
-        let maxScore = -100000;
+    function maxScoreInSquare(i, j, ratio) {
+        let q2min = ~~ (ratio * i);   // Basically seqIndexFromCoordinate(), but inlined for a huge speedup
+        let q2max = ~~ (ratio * i+1);
+        let q1min = ~~ (ratio * j);
+        let q1max = ~~ (ratio * j+1);
+        let maxScore = -32767;  // min Int16 is -32,768
         if (q2max === q2min) { q2max = q2min+1; }
         if (q1max === q1min) { q1max = q1min+1; }
         for (let q2=q2min; q2<q2max; q2++) {
@@ -87,9 +86,10 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
      */
     let minScore = Infinity,
         maxScore = -Infinity;
+    let ratio = L / canvasSize;
     for (let i=0; i < lastRowIndex; i++) {   // i [px]
         for (let j=0; j < lastColIndex; j++) {   // j [px]
-            let score = maxScoreInSquare(i, j);
+            let score = maxScoreInSquare(i, j, ratio);
             scores[i * canvasSize + j] = score;
             if (score > maxScore) maxScore = score;
             else if (score < minScore) minScore = score;
@@ -145,11 +145,7 @@ function densityFromScores(scoresObject) {
     for (let i=0; i < maxi; i++) {
         for (let j=0; j < maxj; j++) {
             let score = scores[i * CS + j];
-            if (! (score in counts)) {
-                counts[score] = 0;
-            } else {
-                counts[score] += 1;
-            }
+            counts[score] = (counts[score] || 0) + 1
         }
     }
     var data = [];
