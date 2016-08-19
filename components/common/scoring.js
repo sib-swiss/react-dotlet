@@ -42,9 +42,9 @@ function calculateScore(s1, s2, scoringMatrix) {
         let i = AA_MAP[c1];
         let j = AA_MAP[c2];
         score += scoringMatrix[i][j];
-        if (isNaN(score)) {
-            console.debug("NaN score: [c1,c2,i,j,[i,:]]", c1, c2, i, j, scoringMatrix[i])
-        }
+        //if (isNaN(score)) {
+        //    console.debug("NaN score: [c1,c2,i,j,[i,:]]", c1, c2, i, j, scoringMatrix[i])
+        //}
     }
     return score;
 }

@@ -61,9 +61,9 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
 
     function maxScoreInSquare(i, j, ratio) {
         let q2min = ~~ (ratio * i);   // Basically seqIndexFromCoordinate(), but inlined for a huge speedup
-        let q2max = ~~ (ratio * i+1);
+        let q2max = ~~ (ratio * (i+1));
         let q1min = ~~ (ratio * j);
-        let q1max = ~~ (ratio * j+1);
+        let q1max = ~~ (ratio * (j+1));
         let maxScore = -32767;  // min Int16 is -32,768
         if (q2max === q2min) { q2max = q2min+1; }
         if (q1max === q1min) { q1max = q1min+1; }
@@ -93,7 +93,9 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
             scores[i * canvasSize + j] = score;
             if (score > maxScore) maxScore = score;
             else if (score < minScore) minScore = score;
+            //if (j > 100) break;
         }
+        //if (i > 100) break;
     }
     /* Fill the bottom margin with minScore */
     for (let k = lastRowIndex * canvasSize; k < canvasSize * canvasSize; k++) {

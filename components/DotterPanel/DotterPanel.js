@@ -50,7 +50,8 @@ class DotterPanel extends React.Component {
         let _this = this;
         clearTimeout(window.resizedFinished);
         window.resizedFinished = setTimeout(function() {
-            store.dispatch(resizeCanvas(~~ (0.33 * window.innerWidth)));
+            let width = ~~ (0.33 * window.innerWidth);
+            store.dispatch(resizeCanvas(width));
         }, 250);
     }
 
