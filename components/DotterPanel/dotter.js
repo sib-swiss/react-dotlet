@@ -40,6 +40,29 @@ function clearCanvas(canvasId) {
     return canvas;
 }
 
+function maxScoreInSquare(i, j, ratio, s1, s2, ws, scoringFunction, matrix) {
+    let q2min = ~~ (ratio * i);   // Basically seqIndexFromCoordinate(), but inlined for a huge speedup
+    let q2max = ~~ (ratio * (i+1));
+    let q1min = ~~ (ratio * j);
+    let q1max = ~~ (ratio * (j+1));
+    let maxScore = -32767;  // min Int16 is -32,768
+    if (q2max === q2min) { q2max = q2min+1; }
+    if (q1max === q1min) { q1max = q1min+1; }
+    for (let q2=q2min; q2<q2max; q2++) {
+        let subseq2 = helpers.getSequenceAround(s2, q2, ws);
+        //let subseq2 = s2.slice(Math.max(q2 - ws, 0), q2 + ws + 1);
+        for (let q1=q1min; q1<q1max; q1++) {
+            let subseq1 = helpers.getSequenceAround(s1, q1, ws);
+            //let subseq1 = s1.slice(Math.max(q1 - ws, 0), q1 + ws + 1);
+            let score = scoringFunction(subseq1, subseq2, matrix);
+            if (score > maxScore) {
+                maxScore = score;
+            }
+        }
+    }
+    return maxScore;
+}
+
 /**
  * Calculate the local alignment scores.
  * Return only the array of scores that we will use to draw (i.e. one score per pixel of the canvas).
@@ -59,27 +82,6 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
     let lastRowIndex = coordinateFromSeqIndex(ls2, L, canvasSize);
     let lastColIndex = coordinateFromSeqIndex(ls1, L, canvasSize);
 
-    function maxScoreInSquare(i, j, ratio) {
-        let q2min = ~~ (ratio * i);   // Basically seqIndexFromCoordinate(), but inlined for a huge speedup
-        let q2max = ~~ (ratio * (i+1));
-        let q1min = ~~ (ratio * j);
-        let q1max = ~~ (ratio * (j+1));
-        let maxScore = -32767;  // min Int16 is -32,768
-        if (q2max === q2min) { q2max = q2min+1; }
-        if (q1max === q1min) { q1max = q1min+1; }
-        for (let q2=q2min; q2<q2max; q2++) {
-            let subseq2 = helpers.getSequenceAround(s2, q2, ws);
-            for (let q1=q1min; q1<q1max; q1++) {
-                let subseq1 = helpers.getSequenceAround(s1, q1, ws);
-                let score = scoringFunction(subseq1, subseq2, matrix);
-                if (score > maxScore) {
-                    maxScore = score;
-                }
-            }
-        }
-        return maxScore;
-    }
-
     /* Iterate over pixels. At worst it is several times the same char,
      * but as soon as the sequence is as big as the canvas, there will be that
      * many computations anyway, so it must be fast in all cases.
@@ -89,7 +91,7 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
     let ratio = L / canvasSize;
     for (let i=0; i < lastRowIndex; i++) {   // i [px]
         for (let j=0; j < lastColIndex; j++) {   // j [px]
-            let score = maxScoreInSquare(i, j, ratio);
+            let score = maxScoreInSquare(i, j, ratio, s1, s2, ws, scoringFunction, matrix);
             scores[i * canvasSize + j] = score;
             if (score > maxScore) maxScore = score;
             else if (score < minScore) minScore = score;
