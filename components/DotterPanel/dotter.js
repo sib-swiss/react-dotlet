@@ -41,19 +41,19 @@ function clearCanvas(canvasId) {
 }
 
 function maxScoreInSquare(i, j, ratio, s1, s2, ws, scoringFunction, matrix) {
-    let q2min = ~~ (ratio * i);   // Basically seqIndexFromCoordinate(), but inlined for a huge speedup
-    let q2max = ~~ (ratio * (i+1));
-    let q1min = ~~ (ratio * j);
-    let q1max = ~~ (ratio * (j+1));
+    let q2min = ratio * i;   // Basically seqIndexFromCoordinate(), but inlined for a huge speedup
+    let q2max = ~~ (q2min + ratio);
+    let q1min = ratio * j;
+    let q1max = ~~ (q1min + ratio);
+    q2min = ~~ q2min;
+    q1min = ~~ q1min;
     let maxScore = -32767;  // min Int16 is -32,768
     if (q2max === q2min) { q2max = q2min+1; }
     if (q1max === q1min) { q1max = q1min+1; }
     for (let q2=q2min; q2<q2max; q2++) {
         let subseq2 = helpers.getSequenceAround(s2, q2, ws);
-        //let subseq2 = s2.slice(Math.max(q2 - ws, 0), q2 + ws + 1);
         for (let q1=q1min; q1<q1max; q1++) {
             let subseq1 = helpers.getSequenceAround(s1, q1, ws);
-            //let subseq1 = s1.slice(Math.max(q1 - ws, 0), q1 + ws + 1);
             let score = scoringFunction(subseq1, subseq2, matrix);
             if (score > maxScore) {
                 maxScore = score;
@@ -172,6 +172,7 @@ function fillCanvas(alphas) {
     for (let k=0; k < N; k += 4) {
         imageData.data[k+3] = alphas[k/4];
     }
+    ctx.imageSmoothingEnabled = false;
     ctx.putImageData(imageData, 0, 0);
 }
 
