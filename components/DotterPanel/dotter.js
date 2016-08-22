@@ -47,8 +47,11 @@ function clearCanvas(canvasId) {
  */
 function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
     let ws = ~~ (windowSize / 2);   // # of nucleotides on each side
-    let buffer = new ArrayBuffer(canvasSize * canvasSize * 2);
-    let scores = new Int16Array(buffer);
+    let CS2 = canvasSize * canvasSize;
+    let scores = new Int16Array(CS2);
+    for (let k=0; k<CS2; k++) {
+        scores[k] = -32767;
+    }
     let scoringFunction = (scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY) ?
         calculateMatches : calculateScore;
     let matrix = SCORING_MATRICES[scoringMatrixName];
@@ -56,29 +59,9 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
     let ls1 = s1.length;
     let ls2 = s2.length;
     let L = Math.max(ls1, ls2);
+    let l = Math.min(ls1, ls2);
     let lastRowIndex = coordinateFromSeqIndex(ls2, L, canvasSize);
     let lastColIndex = coordinateFromSeqIndex(ls1, L, canvasSize);
-
-    function maxScoreInSquare(i, j, ratio) {
-        let q2min = ~~ (ratio * i);   // Basically seqIndexFromCoordinate(), but inlined for a huge speedup
-        let q2max = ~~ (ratio * i+1);
-        let q1min = ~~ (ratio * j);
-        let q1max = ~~ (ratio * j+1);
-        let maxScore = -32767;  // min Int16 is -32,768
-        if (q2max === q2min) { q2max = q2min+1; }
-        if (q1max === q1min) { q1max = q1min+1; }
-        for (let q2=q2min; q2<q2max; q2++) {
-            let subseq2 = helpers.getSequenceAround(s2, q2, ws);
-            for (let q1=q1min; q1<q1max; q1++) {
-                let subseq1 = helpers.getSequenceAround(s1, q1, ws);
-                let score = scoringFunction(subseq1, subseq2, matrix);
-                if (score > maxScore) {
-                    maxScore = score;
-                }
-            }
-        }
-        return maxScore;
-    }
 
     /* Iterate over pixels. At worst it is several times the same char,
      * but as soon as the sequence is as big as the canvas, there will be that
@@ -86,15 +69,65 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
      */
     let minScore = Infinity,
         maxScore = -Infinity;
-    let ratio = L / canvasSize;
-    for (let i=0; i < lastRowIndex; i++) {   // i [px]
-        for (let j=0; j < lastColIndex; j++) {   // j [px]
-            let score = maxScoreInSquare(i, j, ratio);
-            scores[i * canvasSize + j] = score;
-            if (score > maxScore) maxScore = score;
-            else if (score < minScore) minScore = score;
-        }
+
+    function scoreAt(i,j) {
+        return scoringFunction(s1[j], s2[i], matrix);
     }
+
+    function scoreAround(i,j) {
+        let ss1 = helpers.getSequenceAround(s1, j, ws);
+        let ss2 = helpers.getSequenceAround(s2, i, ws);
+        let score = scoringFunction(ss1, ss2, matrix);
+        return score;
+    }
+
+    let ratio = canvasSize / (L - windowSize);
+    console.debug(ratio)
+    function pushPixel(i,j, score, scores) {
+        let v = ~~ (ratio * i);
+        let h = ~~ (ratio * j);
+        //console.debug([i,j], [v,h])
+        let idx = v * canvasSize + h;
+        scores[idx] = Math.max(score, scores[idx]);
+    }
+
+    /* Diagonals from top row */
+    let vlimit = ls2 - ws;
+    let vsize = ls2 - windowSize;
+    let hlimit = ls1 - ws;
+    let hsize = ls1 - windowSize;
+    for (let j=ws; j<hlimit; j++) {
+        let prevScore = scoreAround(ws,j); // di,dj = 0
+        pushPixel(0, 0, score, scores);
+        for (let dj = j-ws+1, di = 1;  // di,dj: leftmost index of the sliding window
+             dj < hsize && di < vsize;
+             dj++, di++) {
+            /* Add score for next pair, remove score of the first pair */
+            var score = prevScore + scoreAt(di + windowSize, dj + windowSize) - scoreAt(di-1, dj-1);
+            pushPixel(di, dj, score, scores);
+            prevScore = score;
+        }
+        //if (j > ws + 2) break;
+    }
+
+
+    /* Diagonals from leftmost column */
+    for (let i=ws; i<vlimit; i++) {
+        let prevScore = scoreAround(i, ws); // di,dj = 0
+        pushPixel(0, 0, score, scores);
+        for (let di = i-ws+1, dj = 1;  // di,dj: leftmost index of the sliding window
+             dj < hsize && di < vsize;
+             dj++, di++) {
+            /* Add score for next pair, remove score of the first pair */
+            var score = prevScore + scoreAt(di + windowSize, dj + windowSize) - scoreAt(di-1, dj-1);
+            pushPixel(di, dj, score, scores);
+            prevScore = score;
+        }
+        //if (i > ws + 2) break;
+    }
+
+    console.debug(scores)
+
     /* Fill the bottom margin with minScore */
     for (let k = lastRowIndex * canvasSize; k < canvasSize * canvasSize; k++) {
         scores[k] = minScore;
