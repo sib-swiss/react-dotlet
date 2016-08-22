@@ -40,6 +40,21 @@ function clearCanvas(canvasId) {
     return canvas;
 }
 
+function scoreAround(s1,s2, i,j, ws, scoringFunction, matrix) {
+    let ss1 = helpers.getSequenceAround(s1, j, ws);
+    let ss2 = helpers.getSequenceAround(s2, i, ws);
+    let score = scoringFunction(ss1, ss2, matrix);
+    return score;
+}
+
+function pushPixel(i,j, scale, score, scores, canvasSize) {
+    let v = ~~ (scale * i);
+    let h = ~~ (scale * j);
+    //console.debug([i,j], [v,h])
+    let idx = v * canvasSize + h;
+    scores[idx] = Math.max(score, scores[idx]);
+}
+
 /**
  * Calculate the local alignment scores.
  * Return only the array of scores that we will use to draw (i.e. one score per pixel of the canvas).
@@ -52,6 +67,7 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
     for (let k=0; k<CS2; k++) {
         scores[k] = -32767;
     }
+
     let scoringFunction = (scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY) ?
         calculateMatches : calculateScore;
     let matrix = SCORING_MATRICES[scoringMatrixName];
@@ -59,7 +75,6 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
     let ls1 = s1.length;
     let ls2 = s2.length;
     let L = Math.max(ls1, ls2);
-    let l = Math.min(ls1, ls2);
     let lastRowIndex = coordinateFromSeqIndex(ls2, L, canvasSize);
     let lastColIndex = coordinateFromSeqIndex(ls1, L, canvasSize);
 
@@ -69,27 +84,7 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
      */
     let minScore = Infinity,
         maxScore = -Infinity;
-
-    function scoreAt(i,j) {
-        return scoringFunction(s1[j], s2[i], matrix);
-    }
-
-    function scoreAround(i,j) {
-        let ss1 = helpers.getSequenceAround(s1, j, ws);
-        let ss2 = helpers.getSequenceAround(s2, i, ws);
-        let score = scoringFunction(ss1, ss2, matrix);
-        return score;
-    }
-
     let ratio = canvasSize / (L - windowSize);
-    console.debug(ratio)
-    function pushPixel(i,j, score, scores) {
-        let v = ~~ (ratio * i);
-        let h = ~~ (ratio * j);
-        //console.debug([i,j], [v,h])
-        let idx = v * canvasSize + h;
-        scores[idx] = Math.max(score, scores[idx]);
-    }
 
     /* Diagonals from top row */
     let vlimit = ls2 - ws;
@@ -97,39 +92,42 @@ function calculateScores(s1, s2, windowSize, scoringMatrixName, canvasSize) {
     let hlimit = ls1 - ws;
     let hsize = ls1 - windowSize;
     for (let j=ws; j<hlimit; j++) {
-        let prevScore = scoreAround(ws,j); // di,dj = 0
-        pushPixel(0, 0, score, scores);
+        let prevScore = scoreAround(s1,s2, ws,j, ws, scoringFunction, matrix); // di,dj = 0
+        pushPixel(0, 0, ratio, score, scores, canvasSize);
         for (let dj = j-ws+1, di = 1;  // di,dj: leftmost index of the sliding window
              dj < hsize && di < vsize;
              dj++, di++) {
             /* Add score for next pair, remove score of the first pair */
-            var score = prevScore + scoreAt(di + windowSize, dj + windowSize) - scoreAt(di-1, dj-1);
-            pushPixel(di, dj, score, scores);
+            var score = prevScore + scoringFunction(s1[dj+windowSize], s2[di+windowSize], matrix)
+                                  - scoringFunction(s1[dj-1], s2[di-1], matrix);
+            if (score > maxScore) maxScore = score;
+            else if (score < minScore) minScore = score;
+            pushPixel(di, dj, ratio, score, scores, canvasSize);
             prevScore = score;
         }
         //if (j > ws + 2) break;
     }
 
-
     /* Diagonals from leftmost column */
     for (let i=ws; i<vlimit; i++) {
-        let prevScore = scoreAround(i, ws); // di,dj = 0
-        pushPixel(0, 0, score, scores);
+        let prevScore = scoreAround(s1,s2, i,ws, ws, scoringFunction, matrix); // di,dj = 0
+        pushPixel(0, 0, ratio, score, scores, canvasSize);
         for (let di = i-ws+1, dj = 1;  // di,dj: leftmost index of the sliding window
              dj < hsize && di < vsize;
              dj++, di++) {
             /* Add score for next pair, remove score of the first pair */
-            var score = prevScore + scoreAt(di + windowSize, dj + windowSize) - scoreAt(di-1, dj-1);
-            pushPixel(di, dj, score, scores);
+            var score = prevScore + scoringFunction(s1[dj+windowSize], s2[di+windowSize], matrix)
+                                  - scoringFunction(s1[dj-1], s2[di-1], matrix);
+            if (score > maxScore) maxScore = score;
+            else if (score < minScore) minScore = score;
+            pushPixel(di, dj, ratio, score, scores, canvasSize);
             prevScore = score;
         }
         //if (i > ws + 2) break;
     }
 
-    console.debug(scores)
-
     /* Fill the bottom margin with minScore */
-    for (let k = lastRowIndex * canvasSize; k < canvasSize * canvasSize; k++) {
+    for (let k = lastRowIndex * canvasSize; k < CS2; k++) {
         scores[k] = minScore;
     }
     /* Fill the right margin with minScore */
@@ -197,9 +195,11 @@ function fillCanvas(alphas) {
     let canvas = clearCanvas(CANVAS_ID);
     let ctx = canvas.getContext('2d');
     let imageData = ctx.getImageData(0,0, canvas.width, canvas.height);
-    for (let k=0; k < 4 * alphas.length; k += 4) {
+    let N = 4 * alphas.length;
+    for (let k=0; k < N; k += 4) {
         imageData.data[k+3] = alphas[k/4];
     }
+    ctx.imageSmoothingEnabled = false;
     ctx.putImageData(imageData, 0, 0);
 }
 
@@ -261,7 +261,6 @@ function getMinMaxAlpha(alphas, lastRowIndex, lastColIndex, canvasSize) {
  * If `minBound` becomes bigger than `maxBound`, colors are inverted.
  **/
 function rescaleAlphas(initialAlphas, minBound, maxBound) {
-    let N = initialAlphas.length;
     let scale = d3scale.scaleLinear()
         .domain([minBound, maxBound])
         .range([0, 255]);
@@ -275,6 +274,7 @@ function rescaleAlphas(initialAlphas, minBound, maxBound) {
         black = (a) => a <= maxBound;
         white = (a) => a >= minBound;
     }
+    let N = initialAlphas.length;
     let newAlphas = new Uint8ClampedArray(N);
     for (let i=0; i < N; i++) {
         let alpha = initialAlphas[i];
@@ -303,7 +303,8 @@ function greyScale(initialAlphas, minBound, maxBound, ls1, ls2) {
     let imageData = ctx.getImageData(0,0, canvas.width, canvas.height);
     let data = imageData.data;
     let newAlphas = rescaleAlphas(initialAlphas, minBound, maxBound);
-    for (let i = 0; i < newAlphas.length; i++) {
+    let N = newAlphas.length;
+    for (let i = 0; i < N; i++) {
         data[4*i+3] = newAlphas[i];
     }
     ctx.putImageData(imageData, 0, 0);
