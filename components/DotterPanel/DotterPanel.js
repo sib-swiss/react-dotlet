@@ -188,14 +188,12 @@ class PositionLinesLayer extends React.Component {
         // Fetch store state to get the seq lengths
         let state = store.getState();
         let d = new Dotter(state.canvasSize, state.windowSize, state.s1, state.s2, state.scoringMatrix);
-        let ls1 = state.s1.length,
-            ls2 = state.s2.length;
         // Return corresponding char indices
         let i = d.seqIndexFromCoordinate(x);
         let j = d.seqIndexFromCoordinate(y);
         // Make sure we don't get out of bounds while dragging
-        i = Math.min(Math.max(0, i), ls1-1);
-        j = Math.min(Math.max(0, j), ls2-1);
+        i = Math.min(Math.max(0, i), d.ls1-1);
+        j = Math.min(Math.max(0, j), d.ls2-1);
         // Draw and dispatch
         store.dispatch(inspectCoordinate(i, j));
     }

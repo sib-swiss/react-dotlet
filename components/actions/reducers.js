@@ -2,7 +2,7 @@ import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
          INSPECT_COORDINATE, CHANGE_GREY_SCALE, RESIZE_CANVAS } from './actionTypes';
 import Dotter from '../DotterPanel/dotter';
 import { guessSequenceType, commonSeqType } from '../InputPanel/input';
-import { PROTEIN, DNA, CANVAS_SIZE } from '../constants/constants';
+//import { PROTEIN, DNA, CANVAS_SIZE } from '../constants/constants';
 //import { translateProtein } from '../common/genetics';
 import defaultState from './defaultState';
 

@@ -3,7 +3,6 @@ import { CANVAS_ID } from '../constants/constants';
 import { SCORING_MATRIX_NAMES } from '../constants/constants';
 import { SCORING_MATRICES } from '../constants/scoring_matrices/scoring_matrices';
 import { MATCH, MISMATCH, AA_MAP } from '../constants/constants';
-import { calculateMatches, calculateScore } from '../common/scoring';
 import * as d3scale from 'd3-scale';
 
 /**
@@ -25,21 +24,21 @@ class Dotter {
         this.ws = ~~ (windowSize / 2);   // # of nucleotides on each side
         this.CS2 = canvasSize * canvasSize;
         this.scores = new Int16Array(this.CS2);
+        this.MIN_INT16 = -32767;
         for (let k=0; k < this.CS2; k++) {
-            this.scores[k] = -32767;
+            this.scores[k] = this.MIN_INT16;
         }
         this.minScore = Infinity;
         this.maxScore = -Infinity;
         this.scaleToPx = canvasSize / (this.L - windowSize);
         this.scaleToSeq = 1.0 / this.scaleToPx;
-        console.debug(this.scaleToPx, this.scaleToSeq)
         this.lastRowIndex = this.coordinateFromSeqIndex(this.ls2);
         this.lastColIndex = this.coordinateFromSeqIndex(this.ls1);
 
         this.scoringMatrixName = scoringMatrixName;
         this.scoringMatrix = SCORING_MATRICES[scoringMatrixName];
         this.scoringFunction = (scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY) ?
-            calculateMatches : calculateScore;
+            this.calculateMatches.bind(this) : this.calculateScore.bind(this);
     }
 
     coordinateFromSeqIndex(index) {
@@ -102,7 +101,7 @@ class Dotter {
     scoreAround(i,j) {
         let ss1 = this.getSequenceAround(this.s1, j, this.ws);
         let ss2 = this.getSequenceAround(this.s2, i, this.ws);
-        let score = this.scoringFunction(ss1, ss2, this.scoringMatrix);
+        let score = this.scoringFunction(ss1, ss2);
         return score;
     }
 
@@ -110,14 +109,15 @@ class Dotter {
         let v = this.coordinateFromSeqIndex(i);
         let h = this.coordinateFromSeqIndex(j);
         let idx = v * this.canvasSize + h;
-        if (v===0 && h<5) console.debug(this.scaleToPx, '---', i,j,h,v)
+                    if (v===0 && h<5)
+                            console.debug(this.scaleToPx, '>>>', i,j,h,v)
         this.scores[idx] = Math.max(score, this.scores[idx]);
     }
 
     topDiagonals() {
         let ws = this.ws, windowSize = this.windowSize;
         let s1 = this.s1, s2 = this.s2, ls1 = this.ls1, ls2 = this.ls2;
-        let scoringFunction = this.scoringFunction, scoringMatrix = this.scoringMatrix;
+        let scoringFunction = this.scoringFunction;
 
         let hlimit = ls1 - ws;
         let vsize = ls2 - windowSize;
@@ -130,8 +130,8 @@ class Dotter {
                  dj++, di++) {
                 /* Add score for next pair, remove score of the first pair */
                 var score = prevScore
-                    + scoringFunction(s1[dj + windowSize], s2[di + windowSize], scoringMatrix)
-                    - scoringFunction(s1[dj-1], s2[di-1], scoringMatrix);
+                    + scoringFunction(s1[dj + windowSize], s2[di + windowSize])
+                    - scoringFunction(s1[dj-1], s2[di-1]);
                 if (score > this.maxScore) this.maxScore = score;
                 else if (score < this.minScore) this.minScore = score;
                 this.pushPixel(di, dj, score);
@@ -143,7 +143,7 @@ class Dotter {
     leftDiagonals() {
         let ws = this.ws, windowSize = this.windowSize;
         let s1 = this.s1, s2 = this.s2, ls1 = this.ls1, ls2 = this.ls2;
-        let scoringFunction = this.scoringFunction, scoringMatrix = this.scoringMatrix;
+        let scoringFunction = this.scoringFunction;
 
         let vlimit = ls2 - ws;
         let vsize = ls2 - windowSize;
@@ -156,8 +156,8 @@ class Dotter {
                  dj++, di++) {
                 /* Add score for next pair, remove score of the first pair */
                 var score = prevScore
-                    + scoringFunction(s1[dj + windowSize], s2[di + windowSize], scoringMatrix)
-                    - scoringFunction(s1[dj-1], s2[di-1], scoringMatrix);
+                    + scoringFunction(s1[dj + windowSize], s2[di + windowSize])
+                    - scoringFunction(s1[dj-1], s2[di-1]);
                 if (score > this.maxScore) this.maxScore = score;
                 else if (score < this.minScore) this.minScore = score;
                 this.pushPixel(di, dj, score);
@@ -176,16 +176,12 @@ class Dotter {
         this.topDiagonals();
         this.leftDiagonals();
         let CS = this.canvasSize;
-
-        console.debug(this.minScore, this.maxScore)
-        console.debug(this.lastRowIndex, this.lastColIndex)
-        for (let i=0; i<this.scores.length; i++) {
-            if (this.scores[i] === -32767) {
+        for (let i=0; i < this.CS2; i++) {
+            if (this.scores[i] === this.MIN_INT16) {
                 console.debug(' > ', i, i%CS)
                 break;
             }
         }
-
         /* Fill the bottom margin with minScore */
         for (let k = this.lastRowIndex * CS; k < this.CS2; k++) {
             this.scores[k] = this.minScore;
