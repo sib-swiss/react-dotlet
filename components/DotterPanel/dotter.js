@@ -118,7 +118,6 @@ class Dotter {
         let ws = this.ws, windowSize = this.windowSize;
         let s1 = this.s1, s2 = this.s2, ls1 = this.ls1, ls2 = this.ls2;
         let scoringFunction = this.scoringFunction;
-
         let hlimit = ls1 - ws;
         let vsize = ls2 - windowSize;
         let hsize = ls1 - windowSize;

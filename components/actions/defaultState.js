@@ -9,6 +9,19 @@ const smallExample = {
     scoringMatrix: SCORING_MATRIX_NAMES.BLOSUM80,
 };
 
+const dummyExample = {
+    s1: "AAAAA",
+    s2: "ABABC",
+    scoringMatrix: SCORING_MATRIX_NAMES.BLOSUM80,
+};
+
+const exactExample = {
+    s1: "A".repeat(400),
+    s2: "AA".repeat(200),
+    scoringMatrix: SCORING_MATRIX_NAMES.BLOSUM80,
+    windowSize: 25,
+};
+
 const smallestExample = {
     s1: "APEERLLAPLLL",
     s2: "AGGCGAGG",
@@ -54,7 +67,7 @@ let defaultState = {
     canvasSize: ~~ (0.33 * window.innerWidth),
 };
 
-Object.assign(defaultState, biggerExample);
+Object.assign(defaultState, exactExample);
 
 
 export default defaultState;
