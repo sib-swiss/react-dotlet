@@ -1,7 +1,7 @@
 import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import s from './DotterPanel.css';
-import * as dotter from './dotter';
+import Dotter from './dotter';
 import store from '../../core/store';
 import { CANVAS_ID, CANVAS_SIZE } from '../constants/constants';
 import { inspectCoordinate, resizeCanvas } from '../actions/actionCreators';
@@ -39,9 +39,11 @@ class DotterPanel extends React.Component {
         window.addEventListener('resize', this._onResize);
     }
     componentDidUpdate() {
-        let greyScale = store.getState().greyScale;
-        let scaledAlphas = dotter.rescaleAlphas(greyScale.initialAlphas, greyScale.minBound, greyScale.maxBound);
-        dotter.fillCanvas(scaledAlphas);
+        let state = store.getState();
+        let d = new Dotter(state.canvasSize, state.windowSize, state.s1, state.s2, state.scoringMatrix);
+        let greyScale = state.greyScale;
+        let scaledAlphas = d.rescaleAlphas(greyScale.initialAlphas, greyScale.minBound, greyScale.maxBound);
+        d.fillCanvas(scaledAlphas);
     }
 
     /* Events */
@@ -124,9 +126,8 @@ class PositionLinesLayer extends React.Component {
     }
     componentDidUpdate() {
         let state = store.getState();
-        let ls1 = state.s1.length,
-            ls2 = state.s2.length;
-        dotter.drawPositionLines(this.state.i, this.state.j, ls1, ls2, this.props.canvasSize);
+        let d = new Dotter(state.canvasSize, state.windowSize, state.s1, state.s2, state.scoringMatrix);
+        d.drawPositionLines(this.state.i, this.state.j);
     }
 
     _onClick(e) {
@@ -186,12 +187,12 @@ class PositionLinesLayer extends React.Component {
             y = event.pageY - dims.top;
         // Fetch store state to get the seq lengths
         let state = store.getState();
+        let d = new Dotter(state.canvasSize, state.windowSize, state.s1, state.s2, state.scoringMatrix);
         let ls1 = state.s1.length,
             ls2 = state.s2.length;
-        let L = Math.max(ls1, ls2);
         // Return corresponding char indices
-        let i = dotter.seqIndexFromCoordinate(x, L, canvasSize);
-        let j = dotter.seqIndexFromCoordinate(y, L, canvasSize);
+        let i = d.seqIndexFromCoordinate(x);
+        let j = d.seqIndexFromCoordinate(y);
         // Make sure we don't get out of bounds while dragging
         i = Math.min(Math.max(0, i), ls1-1);
         j = Math.min(Math.max(0, j), ls2-1);

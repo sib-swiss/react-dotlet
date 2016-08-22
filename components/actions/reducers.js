@@ -1,16 +1,17 @@
 import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
          INSPECT_COORDINATE, CHANGE_GREY_SCALE, RESIZE_CANVAS } from './actionTypes';
-import * as dotter from '../DotterPanel/dotter';
+import Dotter from '../DotterPanel/dotter';
 import { guessSequenceType, commonSeqType } from '../InputPanel/input';
 import { PROTEIN, DNA, CANVAS_SIZE } from '../constants/constants';
 //import { translateProtein } from '../common/genetics';
 import defaultState from './defaultState';
 
 
-let updateScores = function(s1, s2, windowSize, scoringMatrix, greyScale, canvasSize) {
-    let scoresObject = dotter.calculateScores(s1, s2, windowSize, scoringMatrix, canvasSize);
-    let density = dotter.densityFromScores(scoresObject);
-    let alphas = dotter.alphasFromScores(scoresObject);
+let updateScores = function(s1, s2, windowSize, scoringMatrixName, greyScale, canvasSize) {
+    let d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
+    d.calculateScores();
+    let density = d.densityFromScores();
+    let alphas = d.alphasFromScores();
     let addToState = {
         density: density,
         greyScale : {initialAlphas: alphas, minBound: greyScale.minBound, maxBound: greyScale.maxBound},
@@ -85,7 +86,8 @@ let reducer = (state = defaultState, action) => {
      */
     case CHANGE_GREY_SCALE:
         newState = Object.assign({}, state);
-        dotter.greyScale(state.greyScale.initialAlphas, action.minBound, action.maxBound, state.s1.length, state.s2.length);
+        let d = new Dotter(state.canvasSize, state.windowSize, state.s1, state.s2, state.scoringMatrix);
+        d.greyScale(state.greyScale.initialAlphas, action.minBound, action.maxBound);
         newState.greyScale.minBound = action.minBound;
         newState.greyScale.maxBound = action.maxBound;
         return newState;
