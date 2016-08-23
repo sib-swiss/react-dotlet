@@ -46,16 +46,14 @@ class Dotter {
     }
 
     /**
-     * Returns the (approximate) pixel coordinate corresponding to that sequence `index`.
-     * @returns {Int}
+     * Returns the (approximate, integer) pixel coordinate corresponding to that sequence `index`.
      */
     coordinateFromSeqIndex(index) {
         return ~~ (this.scaleToPx * index);
     }
 
     /**
-     * Returns the (approximate) sequence index corresponding to that pixel coordinate `px`.
-     * @returns {Int}
+     * Returns the (approximate, integer) sequence index corresponding to that pixel coordinate `px`.
      */
     seqIndexFromCoordinate(px) {
         return ~~ (this.scaleToSeq * px);
@@ -145,10 +143,7 @@ class Dotter {
     pushPixel(i,j, score) {
         let v = this.coordinateFromSeqIndex(i);
         let h = this.coordinateFromSeqIndex(j);
-        //console.debug([i,j], '->' ,[v,h], score)
         let idx = v * this.canvasSize + h;
-        //            if (v===0 && h<5)
-        //                    console.debug(this.scaleToPx, '>>>', i,j,h,v)
         let maxScore = Math.max(score, this.scores[idx]);
         this.scores[idx] = maxScore;
         if (this.smallSequence) {
@@ -162,13 +157,16 @@ class Dotter {
 
     /**
      * Common code to the two diagonal functions below.
+     * Since we go along one diagonal, the two full sequences are always aligned with the same shift.
+     * To get the next score, remove the score component of the leftmost pair,
+     * and add the score component of the new pair.
+     * Update minScore, maxScore, and the scores array.
+     * Returns the score at this diagonal position.
      */
     _oneDiagonalScore(prevScore, di, dj) {
-        /* Add score for next pair, remove score of the first pair */
         var score = prevScore
             + this.scoringFunction(this.s1[dj + this.ws2], this.s2[di + this.ws2])
             - this.scoringFunction(this.s1[dj-1], this.s2[di-1]);
-        //console.debug('>', score, [di,dj])
         if (score > this.maxScore) this.maxScore = score;
         else if (score < this.minScore) this.minScore = score;
         this.pushPixel(di, dj, score);
@@ -180,15 +178,14 @@ class Dotter {
      * @returns {undefined}
      */
     topDiagonals() {
+        console.log("TopDiagonals");
         let hws = this.hws, windowSize = this.windowSize;
         let ls1 = this.ls1, ls2 = this.ls2;
         let hlimit = ls1 - hws;
         let vsize = ls2 - this.ws2;
         let hsize = ls1 - this.ws2;
-        console.log("TopDiagonals");
         for (let j=hws; j<hlimit; j++) {
             let prevScore = this.scoreAround(hws,j); // di,dj = 0
-            //console.debug('>', prevScore, [0, j-hws])
             this.pushPixel(0, j-hws, prevScore);
             for (let dj = j-hws+1, di = 1;  // di,dj: leftmost index of the sliding window
                      dj < hsize && di < vsize;
@@ -196,7 +193,6 @@ class Dotter {
                 let score = this._oneDiagonalScore(prevScore, di, dj);
                 prevScore = score;
             }
-            //if (j > hws + 2) break;
         }
     }
 
@@ -205,24 +201,22 @@ class Dotter {
      * @returns {undefined}.
      */
     leftDiagonals() {
+        console.log("LeftDiagonals");
         let hws = this.hws, windowSize = this.windowSize;
         let ls1 = this.ls1, ls2 = this.ls2;
         let scoringFunction = this.scoringFunction;
         let vlimit = ls2 - hws;
         let vsize = ls2 - this.ws2;
         let hsize = ls1 - this.ws2;
-        console.log("LeftDiagonals");
         for (let i=hws+1; i<vlimit; i++) {
             let prevScore = this.scoreAround(i,hws); // di,dj = 0
             this.pushPixel(i-hws, 0, prevScore);
-            //console.debug('>', prevScore, [i-hws, 0], s1[0], s2[i-hws])
             for (let di = i-hws+1, dj = 1;  // di,dj: leftmost index of the sliding window
                      dj < hsize && di < vsize;
                      dj++, di++) {
                 let score = this._oneDiagonalScore(prevScore, di, dj);
                 prevScore = score;
             }
-            //if (i > hws + 2) break;
         }
     }
 
@@ -236,13 +230,6 @@ class Dotter {
         this.leftDiagonals();
         let CS = this.canvasSize;
 
-        //for (let i=0; i < this.CS2; i++) {
-        //    if (this.scores[i] === this.MIN_INT16) {
-        //        console.debug({i, CS, 'lri': this.lastRowIndex, 'lci': this.lastColIndex, 'i%cs': i%CS})
-        //        break;
-        //    }
-        //}
-
         /* Fill the bottom margin with minScore */
         for (let k = this.lastRowIndex * CS; k < this.CS2; k++) {
             this.scores[k] = this.minScore;
@@ -253,7 +240,6 @@ class Dotter {
                 this.scores[i * CS + j] = this.minScore;
             }
         }
-        //console.debug(this.scores)
     }
 
     /**
@@ -318,16 +304,15 @@ class Dotter {
      * Draw the vertical and horizontal lines showing the current position (i,j) on the canvas.
      */
     drawPositionLines(i, j) {
-        let canvas = this.clearCanvas(this.topCanvasId);
-        let ctx = canvas.getContext('2d');
         let x = this.coordinateFromSeqIndex(i);
         let y = this.coordinateFromSeqIndex(j);
-        let CS = this.canvasSize;
         // If the point size is > 1, make the lines pass in the middle.
         if (this.smallSequence) {
             x += this.scaleToPx / 2 + 1;
             y += this.scaleToPx / 2 + 1;
         }
+        let canvas = this.clearCanvas(this.topCanvasId);
+        let ctx = canvas.getContext('2d');
         ctx.fillStyle = "red";
         ctx.fillRect(x, 1, 1, this.lastRowIndex);
         ctx.fillRect(1, y, this.lastColIndex, 1);
