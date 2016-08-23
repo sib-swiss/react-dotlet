@@ -32,8 +32,8 @@ class Dotter {
 
         this.minScore = Infinity;
         this.maxScore = -Infinity;
-        this.scaleToPx = canvasSize / this.L;
-        this.scaleToSeq = this.L / canvasSize;
+        this.scaleToPx = canvasSize / (this.L - windowSize + 1);
+        this.scaleToSeq = (this.L - windowSize + 1) / canvasSize;
         this.lastRowIndex = this.coordinateFromSeqIndex(this.ls2 - 2*this.ws);
         this.lastColIndex = this.coordinateFromSeqIndex(this.ls1 - 2*this.ws);
 
@@ -172,7 +172,7 @@ class Dotter {
         for (let i=ws; i<vlimit; i++) {
             let prevScore = this.scoreAround(i,ws); // di,dj = 0
             this.pushPixel(i-ws, 0, prevScore);
-            console.debug('>', prevScore, [i-ws, 0], s1[0], s2[i-ws])
+            //console.debug('>', prevScore, [i-ws, 0], s1[0], s2[i-ws])
             for (let di = i-ws+1, dj = 1;  // di,dj: leftmost index of the sliding window
                  dj < hsize && di < vsize;
                  dj++, di++) {
@@ -180,7 +180,7 @@ class Dotter {
                 var score = prevScore
                     + scoringFunction(s1[dj + ws2], s2[di + ws2])
                     - scoringFunction(s1[dj-1], s2[di-1]);
-                console.debug('>', score, [di,dj], s1[dj], s2[di])
+                //console.debug('>', score, [di,dj], s1[dj], s2[di])
                 if (score > this.maxScore) this.maxScore = score;
                 else if (score < this.minScore) this.minScore = score;
                 this.pushPixel(di, dj, score);
