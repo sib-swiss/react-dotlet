@@ -135,8 +135,9 @@ class Dotter {
         let s1 = this.s1, s2 = this.s2, ls1 = this.ls1, ls2 = this.ls2;
         let scoringFunction = this.scoringFunction;
         let hlimit = ls1 - ws;
-        let vsize = ls2 - windowSize;
-        let hsize = ls1 - windowSize;
+        let ws2 = 2*ws;
+        let vsize = ls2 - 2*ws;
+        let hsize = ls1 - 2*ws;
         console.debug(555, hlimit, vsize, hsize)
         for (let j=ws; j<hlimit; j++) {
             let prevScore = this.scoreAround(s1,s2, ws,j); // di,dj = 0
@@ -146,7 +147,7 @@ class Dotter {
                  dj++, di++) {
                 /* Add score for next pair, remove score of the first pair */
                 var score = prevScore
-                    + scoringFunction(s1[dj + windowSize], s2[di + windowSize])
+                    + scoringFunction(s1[dj + ws2], s2[di + ws2])
                     - scoringFunction(s1[dj-1], s2[di-1]);
                 if (score > this.maxScore) this.maxScore = score;
                 else if (score < this.minScore) this.minScore = score;
@@ -161,8 +162,9 @@ class Dotter {
         let s1 = this.s1, s2 = this.s2, ls1 = this.ls1, ls2 = this.ls2;
         let scoringFunction = this.scoringFunction;
         let vlimit = ls2 - ws;
-        let vsize = ls2 - windowSize;
-        let hsize = ls1 - windowSize;
+        let ws2 = 2*ws;
+        let vsize = ls2 - ws2;
+        let hsize = ls1 - ws2;
         console.debug(666, vlimit, vsize, hsize)
         for (let i=ws; i<vlimit; i++) {
             let prevScore = this.scoreAround(s1,s2, i,ws); // di,dj = 0
@@ -172,7 +174,7 @@ class Dotter {
                  dj++, di++) {
                 /* Add score for next pair, remove score of the first pair */
                 var score = prevScore
-                    + scoringFunction(s1[dj + windowSize], s2[di + windowSize])
+                    + scoringFunction(s1[dj + ws2], s2[di + ws2])
                     - scoringFunction(s1[dj-1], s2[di-1]);
                 if (score > this.maxScore) this.maxScore = score;
                 else if (score < this.minScore) this.minScore = score;
