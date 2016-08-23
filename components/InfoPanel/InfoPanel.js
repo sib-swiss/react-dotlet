@@ -36,8 +36,8 @@ class InfoPanel extends React.Component {
     render() {
         let state = store.getState();
         let d = new Dotter(state.canvasSize, state.windowSize, state.s1, state.s2, state.scoringMatrix);
-        let i = state.i, j = state.j;
-        let score = d.scoreAround(i, j);
+        let i = this.state.i, j = this.state.j;
+        let score = d.scoreAround(j, i);
 
         return (
             <div id="info-panel" className={s.root}>
