@@ -21,6 +21,7 @@ class Dotter {
         this.ls1 = s1.length;
         this.ls2 = s2.length;
         this.L = Math.max(this.ls1, this.ls2);
+        this.smallSequence = this.L < canvasSize;
         this.hws = ~~ (windowSize / 2);   // # of nucleotides on each side
 
         this.CS2 = canvasSize * canvasSize;
@@ -41,27 +42,38 @@ class Dotter {
         this.scoringMatrix = SCORING_MATRICES[scoringMatrixName];
         this.scoringFunction = (scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY) ?
             this.calculateMatches.bind(this) : this.calculateScore.bind(this);
-
-        this.smallSequence = this.L < canvasSize;
     }
 
+    /**
+     * Returns the (approximate) pixel coordinate corresponding to that sequence `index`.
+     * @returns {Int}
+     */
     coordinateFromSeqIndex(index) {
         return ~~ (this.scaleToPx * index);
     }
+
+    /**
+     * Returns the (approximate) sequence index corresponding to that pixel coordinate `px`.
+     * @returns {Int}
+     */
     seqIndexFromCoordinate(px) {
         return ~~ (this.scaleToSeq * px);
     }
 
+    /**
+     * Check that the canvas exists, and if so clear it.
+     * @param canvasId
+     * @returns {Element} the canvas.
+     */
     clearCanvas(canvasId) {
         let canvas = document.getElementById(canvasId);
         if (canvas === null) { throw new ReferenceError("Canvas not found"); }
-        let ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
         return canvas;
     }
 
     /**
-     * In DNA-DNA comparison, return the similarity score.
+     * Returns the similarity score when the Identity comparison is used.
      * @param ss1: first sub-sequence.
      * @param ss2: second sub-sequence.
      */
@@ -100,12 +112,19 @@ class Dotter {
 
     /**
      * Get the slice of `seq` centered on `index` with `hws` elements on each side.
+     * @param seq: full sequence.
      * @param index: zero-based index of the center char in `seq`.
      */
     getSequenceAround(seq, index) {
         return seq.slice(Math.max(index - this.hws, 0), index + this.hws + 1);
     }
 
+    /**
+     * Calculates the alignment score at position (i,j) with the current window size.
+     * Returns the score (Int16).
+     * @param i: index in sequence 2 (vertical).
+     * @param j: index in sequence 1 (horizontal).
+     */
     scoreAround(i,j) {
         let ss1 = this.getSequenceAround(this.s1, j);
         let ss2 = this.getSequenceAround(this.s2, i);
@@ -113,6 +132,15 @@ class Dotter {
         return score;
     }
 
+    /**
+     * Fill the `scores` array at the (pixel-)position corresponding to sequence indices (i,j).
+     * If it already has a value, take the max.
+     * If the canvas is bigger than the longest sequence, fill squares between pixels with the same score.
+     * @param i: index in sequence 2 (vertical).
+     * @param j: index in sequence 1 (horizontal).
+     * @param score: alignment score (Int16).
+     * @returns {undefined}
+     */
     pushPixel(i,j, score) {
         let v = this.coordinateFromSeqIndex(i);
         let h = this.coordinateFromSeqIndex(j);
@@ -131,6 +159,10 @@ class Dotter {
         }
     }
 
+    /**
+     * Draw the diagonals starting from the top border of the canvas, towards bottom-right.
+     * @returns {undefined}
+     */
     topDiagonals() {
         let hws = this.hws, windowSize = this.windowSize;
         let s1 = this.s1, s2 = this.s2, ls1 = this.ls1, ls2 = this.ls2;
@@ -160,6 +192,11 @@ class Dotter {
             //if (j > hws + 2) break;
         }
     }
+
+    /**
+     * Draw the diagonals starting from the left border of the canvas, towards bottom-right.
+     * @returns {undefined}.
+     */
     leftDiagonals() {
         let hws = this.hws, windowSize = this.windowSize;
         let s1 = this.s1, s2 = this.s2, ls1 = this.ls1, ls2 = this.ls2;
@@ -221,8 +258,7 @@ class Dotter {
     }
 
     /**
-     * Return alpha values corresponding to the alignemnt scores.
-     * @param scoresObject: as returned by `calculateScores()`.
+     * Return alpha values corresponding to the (max-)alignemnt scores.
      * @returns {Uint8ClampedArray}
      */
     alphasFromScores() {
@@ -240,8 +276,10 @@ class Dotter {
 
     /**
      * Return the distribution of alignment scores in the form of a JSON-like array
-     * `[{x: <score>, y: <count>}, ...]`
-     * @param scoresObject: as returned by `calculateScores()`.
+     * `[{x: <score>, y: <count>}, ...]`.
+     * It is not calculated from all scores, but only the ones displayed in the canvas
+     * (i.e. max scores), so it can skew the distribution (Gaussian -> Gumbel),
+     * but at least it mirrors what we see.
      */
     densityFromScores() {
         let counts = {};
@@ -262,6 +300,8 @@ class Dotter {
     /**
      * Fill the dotter canvas with similarity scores; return the scores density.
      * It never stores the matrix in memory: it draws a point and forgets about it.
+     * @param alphas: a (canvasSize x canvasSize) Uint8ClampedArray.
+     * @returns {undefined}
      */
     fillCanvas(alphas) {
         let canvas = this.clearCanvas(this.canvasId);
@@ -274,7 +314,6 @@ class Dotter {
         ctx.imageSmoothingEnabled = false;
         ctx.putImageData(imageData, 0, 0);
     }
-
 
     /**
      * Draw the vertical and horizontal lines showing the current position (i,j) on the canvas.
@@ -297,37 +336,16 @@ class Dotter {
 
     //---------------------- GREY SCALE ------------------------//
 
-    /**
-     * Return the min and max alpha values among the `alphas` that are
-     * in the rectangle `(0, 0, lastColIndex, lastRowIndex)`.
-     * This is because we don't want to take the uncomputed scores (0)
-     * outside of this area into account.
-     */
-    getMinMaxAlpha(alphas) {
-        let minAlpha = 255;
-        let maxAlpha = 0;
-        for (let i=0; i < this.lastRowIndex; i++) {
-            for (let j=0; j < this.lastColIndex; j++) {
-                let alphak = alphas[i * this.canvasSize + j];
-                if (alphak < minAlpha) {
-                    minAlpha = alphak;
-                } else if (alphak > maxAlpha) {
-                    maxAlpha = alphak;
-                }
-            }
-        }
-        return {
-            minAlpha,
-            maxAlpha,
-        };
-    }
-
 
     /**
      * Rescale and clamp alpha values between `minBound` and `maxBound`:
      * All shades below `minBound` become white, and all shades above `maxBound` become black.
      * All shades in-between are rescaled to use the whole 0-255 range.
      * If `minBound` becomes bigger than `maxBound`, colors are inverted.
+     * @param initialAlphas: a (canvasSize x canvasSize) Uint8ClampedArray.
+     * @param minBound: (uint8)
+     * @param maxBound: (uint8)
+     * @returns {Uint8ClampedArray}
      **/
     rescaleAlphas(initialAlphas, minBound, maxBound) {
         let scale = d3scale.scaleLinear()
@@ -365,6 +383,7 @@ class Dotter {
      * @param initialAlphas: a canvasSize x canvasSize Uint8ClampedArray.
      * @param minBound: (uint8) all alphas lower than `minBound` become equal to `minBound`.
      * @param maxBound: (uint8) all alphas bigger than `maxBound` become equal to `maxBound`.
+     * @returns {undefined}
      */
     greyScale(initialAlphas, minBound, maxBound) {
         let canvas = document.getElementById(CANVAS_ID);
