@@ -11,9 +11,34 @@ const smallExample = {
 };
 
 const dummyExample = {
-    s1: "AAAAA",
-    s2: "ABABC",
-    scoringMatrix: SCORING_MATRIX_NAMES.BLOSUM80,
+    s1: "ATG",
+    s2: "ATG",
+    scoringMatrix: SCORING_MATRIX_NAMES.IDENTITY,
+    windowSize: 1,
+};
+const identityMidExample = {
+    s1: "ATGTTAGAGATTCGAGCTTAAATTATTTAGGCGGATAGCATGACTGCAGTCGAT",
+    s2: "ATGTTAGAGATTCGAGCTTAAATTATTTAGGCGGATAGCATCCCTGCAGTCGAT",
+    scoringMatrix: SCORING_MATRIX_NAMES.IDENTITY,
+    windowSize: 1,
+};
+const identity100Example = {
+    s1: "TTGG".repeat(25),
+    s2: "TTGG".repeat(25),
+    scoringMatrix: SCORING_MATRIX_NAMES.IDENTITY,
+    windowSize: 1,
+};
+const identity200Example = {
+    s1: "ATGG".repeat(50),
+    s2: "ATGG".repeat(50),
+    scoringMatrix: SCORING_MATRIX_NAMES.IDENTITY,
+    windowSize: 1,
+};
+const identity400Example = {
+    s1: "ATGG".repeat(100),
+    s2: "ATGG".repeat(100),
+    scoringMatrix: SCORING_MATRIX_NAMES.IDENTITY,
+    windowSize: 1,
 };
 
 const exactExample = {
@@ -68,7 +93,7 @@ let defaultState = {
     canvasSize: ~~ (0.33 * window.innerWidth),
 };
 
-Object.assign(defaultState, smallestExample);
+Object.assign(defaultState, smallExample);
 
 
 export default defaultState;
