@@ -23,6 +23,7 @@ class Dotter {
         this.L = Math.max(this.ls1, this.ls2);
         this.smallSequence = this.L < canvasSize;
         this.hws = ~~ (windowSize / 2);   // # of nucleotides on each side
+        this.ws2 = windowSize - 1;
 
         this.CS2 = canvasSize * canvasSize;
         this.scores = new Int16Array(this.CS2);
@@ -78,8 +79,8 @@ class Dotter {
      * @param ss2: second sub-sequence.
      */
     calculateMatches(ss1, ss2) {
-        if (ss1.length === 0) throw new Error("First sub-sequence is empty")
-        if (ss2.length === 0) throw new Error("Second sub-sequence is empty")
+        //if (ss1.length === 0) throw new Error("First sub-sequence is empty")
+        //if (ss2.length === 0) throw new Error("Second sub-sequence is empty")
         let L = Math.min(ss1.length, ss2.length);
         let match = 0, mismatch = 0;
         for (let i=0; i < L; i++) {
@@ -96,8 +97,8 @@ class Dotter {
      * @param ss2: second sub-sequence.
      */
     calculateScore(ss1, ss2) {
-        if (ss1.length === 0) throw new Error("First sub-sequence is empty")
-        if (ss2.length === 0) throw new Error("Second sub-sequence is empty")
+        //if (ss1.length === 0) throw new Error("First sub-sequence is empty")
+        //if (ss2.length === 0) throw new Error("Second sub-sequence is empty")
         let score = 0;
         let L = Math.min(ss1.length, ss2.length);
         for (let k=0; k < L; k++) {
@@ -160,33 +161,39 @@ class Dotter {
     }
 
     /**
+     * Common code to the two diagonal functions below.
+     */
+    _oneDiagonalScore(prevScore, di, dj) {
+        /* Add score for next pair, remove score of the first pair */
+        var score = prevScore
+            + this.scoringFunction(this.s1[dj + this.ws2], this.s2[di + this.ws2])
+            - this.scoringFunction(this.s1[dj-1], this.s2[di-1]);
+        //console.debug('>', score, [di,dj])
+        if (score > this.maxScore) this.maxScore = score;
+        else if (score < this.minScore) this.minScore = score;
+        this.pushPixel(di, dj, score);
+        return score;
+    }
+
+    /**
      * Draw the diagonals starting from the top border of the canvas, towards bottom-right.
      * @returns {undefined}
      */
     topDiagonals() {
         let hws = this.hws, windowSize = this.windowSize;
-        let s1 = this.s1, s2 = this.s2, ls1 = this.ls1, ls2 = this.ls2;
-        let scoringFunction = this.scoringFunction;
+        let ls1 = this.ls1, ls2 = this.ls2;
         let hlimit = ls1 - hws;
-        let ws2 = windowSize - 1;
-        let vsize = ls2 - ws2;
-        let hsize = ls1 - ws2;
+        let vsize = ls2 - this.ws2;
+        let hsize = ls1 - this.ws2;
         console.log("TopDiagonals");
         for (let j=hws; j<hlimit; j++) {
             let prevScore = this.scoreAround(hws,j); // di,dj = 0
             //console.debug('>', prevScore, [0, j-hws])
             this.pushPixel(0, j-hws, prevScore);
             for (let dj = j-hws+1, di = 1;  // di,dj: leftmost index of the sliding window
-                 dj < hsize && di < vsize;
-                 dj++, di++) {
-                /* Add score for next pair, remove score of the first pair */
-                var score = prevScore
-                    + scoringFunction(s1[dj + ws2], s2[di + ws2])
-                    - scoringFunction(s1[dj-1], s2[di-1]);
-                //console.debug('>', score, [di,dj])
-                if (score > this.maxScore) this.maxScore = score;
-                else if (score < this.minScore) this.minScore = score;
-                this.pushPixel(di, dj, score);
+                     dj < hsize && di < vsize;
+                     dj++, di++) {
+                let score = this._oneDiagonalScore(prevScore, di, dj);
                 prevScore = score;
             }
             //if (j > hws + 2) break;
@@ -199,28 +206,20 @@ class Dotter {
      */
     leftDiagonals() {
         let hws = this.hws, windowSize = this.windowSize;
-        let s1 = this.s1, s2 = this.s2, ls1 = this.ls1, ls2 = this.ls2;
+        let ls1 = this.ls1, ls2 = this.ls2;
         let scoringFunction = this.scoringFunction;
         let vlimit = ls2 - hws;
-        let ws2 = windowSize - 1;
-        let vsize = ls2 - ws2;
-        let hsize = ls1 - ws2;
+        let vsize = ls2 - this.ws2;
+        let hsize = ls1 - this.ws2;
         console.log("LeftDiagonals");
-        for (let i=hws; i<vlimit; i++) {
+        for (let i=hws+1; i<vlimit; i++) {
             let prevScore = this.scoreAround(i,hws); // di,dj = 0
             this.pushPixel(i-hws, 0, prevScore);
             //console.debug('>', prevScore, [i-hws, 0], s1[0], s2[i-hws])
             for (let di = i-hws+1, dj = 1;  // di,dj: leftmost index of the sliding window
-                 dj < hsize && di < vsize;
-                 dj++, di++) {
-                /* Add score for next pair, remove score of the first pair */
-                var score = prevScore
-                    + scoringFunction(s1[dj + ws2], s2[di + ws2])
-                    - scoringFunction(s1[dj-1], s2[di-1]);
-                //console.debug('>', score, [di,dj], s1[dj], s2[di])
-                if (score > this.maxScore) this.maxScore = score;
-                else if (score < this.minScore) this.minScore = score;
-                this.pushPixel(di, dj, score);
+                     dj < hsize && di < vsize;
+                     dj++, di++) {
+                let score = this._oneDiagonalScore(prevScore, di, dj);
                 prevScore = score;
             }
             //if (i > hws + 2) break;

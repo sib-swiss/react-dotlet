@@ -93,7 +93,7 @@ let defaultState = {
     canvasSize: ~~ (0.33 * window.innerWidth),
 };
 
-Object.assign(defaultState, orthologExample);
+Object.assign(defaultState, smallestExample);
 
 
 export default defaultState;
