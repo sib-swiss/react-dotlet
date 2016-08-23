@@ -22,15 +22,17 @@ class Dotter {
         this.ls2 = s2.length;
         this.L = Math.max(this.ls1, this.ls2);
         this.ws = ~~ (windowSize / 2);   // # of nucleotides on each side
+
         this.CS2 = canvasSize * canvasSize;
         this.scores = new Int16Array(this.CS2);
         this.MIN_INT16 = -32767;
         for (let k=0; k < this.CS2; k++) {
             this.scores[k] = this.MIN_INT16;
         }
+
         this.minScore = Infinity;
         this.maxScore = -Infinity;
-        this.scaleToPx = canvasSize / (this.L - windowSize);
+        this.scaleToPx = canvasSize / this.L;
         this.scaleToSeq = 1.0 / this.scaleToPx;
         this.lastRowIndex = this.coordinateFromSeqIndex(this.ls2);
         this.lastColIndex = this.coordinateFromSeqIndex(this.ls1);
@@ -39,6 +41,11 @@ class Dotter {
         this.scoringMatrix = SCORING_MATRICES[scoringMatrixName];
         this.scoringFunction = (scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY) ?
             this.calculateMatches.bind(this) : this.calculateScore.bind(this);
+
+        this.smallSequence = this.L < canvasSize;
+        //if (this.smallSequence) {
+        //    this.coordinateFromSeqIndex = (index) => index;
+        //}
     }
 
     coordinateFromSeqIndex(index) {
@@ -108,10 +115,19 @@ class Dotter {
     pushPixel(i,j, score) {
         let v = this.coordinateFromSeqIndex(i);
         let h = this.coordinateFromSeqIndex(j);
+        console.debug([i,j], '->' ,[v,h])
         let idx = v * this.canvasSize + h;
                     if (v===0 && h<5)
                             console.debug(this.scaleToPx, '>>>', i,j,h,v)
-        this.scores[idx] = Math.max(score, this.scores[idx]);
+        let maxScore = Math.max(score, this.scores[idx]);
+        this.scores[idx] = maxScore;
+        if (this.smallSequence) {
+            for (let m=0; m < this.scaleToPx; m++) {
+                for (let n=0; n < this.scaleToPx; n++) {
+                    this.scores[(v+m) * this.canvasSize + (h+n)] = score;
+                }
+            }
+        }
     }
 
     topDiagonals() {
@@ -121,6 +137,7 @@ class Dotter {
         let hlimit = ls1 - ws;
         let vsize = ls2 - windowSize;
         let hsize = ls1 - windowSize;
+        console.debug(555, hlimit, vsize, hsize)
         for (let j=ws; j<hlimit; j++) {
             let prevScore = this.scoreAround(s1,s2, ws,j); // di,dj = 0
             this.pushPixel(0, j-ws, score);
@@ -143,10 +160,10 @@ class Dotter {
         let ws = this.ws, windowSize = this.windowSize;
         let s1 = this.s1, s2 = this.s2, ls1 = this.ls1, ls2 = this.ls2;
         let scoringFunction = this.scoringFunction;
-
         let vlimit = ls2 - ws;
         let vsize = ls2 - windowSize;
         let hsize = ls1 - windowSize;
+        console.debug(666, vlimit, vsize, hsize)
         for (let i=ws; i<vlimit; i++) {
             let prevScore = this.scoreAround(s1,s2, i,ws); // di,dj = 0
             this.pushPixel(i-ws, 0, score);
@@ -191,6 +208,7 @@ class Dotter {
                 this.scores[i * CS + j] = this.minScore;
             }
         }
+        console.debug(this.scores)
     }
 
     /**
@@ -245,7 +263,15 @@ class Dotter {
             imageData.data[k+3] = alphas[k/4];
         }
         ctx.imageSmoothingEnabled = false;
-        ctx.putImageData(imageData, 0, 0);
+        //if (this.smallSequence) {
+        //    let tmpCanvas = document.createElement('canvas', {width: imageData.width, height: imageData.height});
+        //    tmpCanvas.getContext("2d").putImageData(imageData, 0, 0);
+        //    ctx.clearRect(0,0, canvas.width, canvas.heigth);
+        //    ctx.scale(this.scaleToPx, this.scaleToPx);
+        //    ctx.drawImage(tmpCanvas, 0,0)
+        //} else {
+            ctx.putImageData(imageData, 0, 0);
+        //}
     }
 
 

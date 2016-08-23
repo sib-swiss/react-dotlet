@@ -7,6 +7,7 @@ const smallExample = {
     s1Type: DNA,
     s2Type: DNA,
     scoringMatrix: SCORING_MATRIX_NAMES.BLOSUM80,
+    windowSize: 3,
 };
 
 const dummyExample = {
@@ -23,8 +24,8 @@ const exactExample = {
 };
 
 const smallestExample = {
-    s1: "APEERLLAPLLL",
-    s2: "AGGCGAGG",
+    s1: "APEERLLA",
+    s2: "AGGC",
     s1Type: DNA,
     s2Type: DNA,
     scoringMatrix: SCORING_MATRIX_NAMES.BLOSUM80,
@@ -67,7 +68,7 @@ let defaultState = {
     canvasSize: ~~ (0.33 * window.innerWidth),
 };
 
-Object.assign(defaultState, exactExample);
+Object.assign(defaultState, smallestExample);
 
 
 export default defaultState;
