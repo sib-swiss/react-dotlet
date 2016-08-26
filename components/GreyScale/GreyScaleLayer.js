@@ -21,6 +21,8 @@ class GreyScaleLayer extends React.Component {
         this.onMouseDown = this.onMouseDown.bind(this);
         this.onMouseUp = this.onMouseUp.bind(this);
         this.onMouseMove = this.onMouseMove.bind(this);
+        this.onMouseEnter = this.onMouseEnter.bind(this);
+        this.onMouseLeave = this.onMouseLeave.bind(this);
     }
 
     stateFromStore() {
@@ -45,7 +47,11 @@ class GreyScaleLayer extends React.Component {
     }
 
     /* Change grey scale when dragging the area left and right */
-    onMouseEnter(e) { document.body.style.cursor = "col-resize"; }
+    onMouseEnter(e) {
+        if (this.state.maxBound - this.state.minBound < 255) {
+           document.body.style.cursor = "col-resize";
+        }
+    }
     onMouseLeave(e) { document.body.style.cursor = "default"; }
     onMouseDown(e) {
         this.mouseDown = true;
