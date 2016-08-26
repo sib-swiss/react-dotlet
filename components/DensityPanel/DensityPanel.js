@@ -4,7 +4,8 @@ import s from './DensityPanel.css';
 import store from '../../core/store';
 
 import BarChart from '../BarChart/BarChart';
-import GreyScaleSlider from '../GreyScale/GreyScale';
+import GreyScaleSlider from '../GreyScale/GreyScaleSlider';
+import GreyScaleLayer from '../GreyScale/GreyScaleLayer';
 
 
 class DensityPanel extends React.Component {
@@ -27,10 +28,14 @@ class DensityPanel extends React.Component {
     }
 
     render() {
+        let chartWidth = 300;
+        let chartHeight = 200;
+        let chartMargins = {top: 5, right: 20, bottom: 30, left: 40};
         return (
-            <div id="density-panel" className={s.root}>
-                <BarChart data={this.state.density} width={300} height={200} />
-                <GreyScaleSlider style={{paddingLeft: '40px', paddingRight: '20px'}}/>
+            <div id="density-panel" className={s.root} style={{position: 'relative'}}>
+                <GreyScaleLayer width={chartWidth} height={chartHeight} margins={chartMargins} />
+                <BarChart data={this.state.density} width={chartWidth} height={chartHeight} margins={chartMargins} />
+                <GreyScaleSlider style={{paddingLeft: '40px', paddingRight: '20px'}} />
             </div>
         );
     }

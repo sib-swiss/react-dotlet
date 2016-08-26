@@ -22,10 +22,6 @@ class BarChart extends React.Component {
     constructor(props) {
         super(props);
         this.state = { width: 300 };
-        this.mouseDown = false;
-        this.onMouseDown = this.onMouseDown.bind(this);
-        this.onMouseUp = this.onMouseUp.bind(this);
-        this.onMouseMove = this.onMouseMove.bind(this);
     }
 
     static get propTypes() {
@@ -36,6 +32,7 @@ class BarChart extends React.Component {
             chartId: React.PropTypes.string,
             color: React.PropTypes.string,
             logColor: React.PropTypes.string,
+            margins: React.PropTypes.object,
         };
     }
 
@@ -47,22 +44,9 @@ class BarChart extends React.Component {
             chartId: 'v_chart',
             color: '#5E6EC7',
             logColor: 'darkGreen',
+            margins: {top: 5, right: 20, bottom: 30, left: 40},
         };
     }
-
-    /* Change grey scale when dragging the area left and right */
-    onMouseDown(e) {
-        this.mouseDown = true;
-        document.body.style.cursor = "col-resize";
-    }
-    onMouseUp(e) { this.mouseDown = false; }
-    onMouseMove(e) {
-        e.preventDefault();  // otherwise it selects text around the axes
-        if (this.mouseDown) {
-            store.dispatch(changeGreyScale(50, 250));
-        }
-    }
-
 
     render() {
         let _this = this;
@@ -80,7 +64,7 @@ class BarChart extends React.Component {
         let maxLogY = d3array.max(logData, d => d.y);
         //console.log("data = "+ JSON.stringify(data, null, 2))
 
-        let margin = {top: 5, right: 20, bottom: 30, left: 40},
+        let margin = this.props.margins,
             w = this.state.width - (margin.left + margin.right),
             h = this.props.height - (margin.top + margin.bottom);
 
@@ -148,10 +132,7 @@ class BarChart extends React.Component {
                             stroke={this.props.logColor} fill="none" strokeOpacity={0.5} />
 
         return(
-            <div onMouseDown={this.onMouseDown}
-                 onMouseUp={this.onMouseUp}
-                 onMouseMove={this.onMouseMove}
-                >
+            <div>
                 <svg id={this.props.chartId} width={this.state.width} height={this.props.height}>
                     <g transform={transform}>
                         {logLine}
