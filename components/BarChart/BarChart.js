@@ -13,12 +13,19 @@ import * as d3axis from 'd3-axis';
 import * as d3selection from 'd3-selection';
 import * as d3shape from 'd3-shape';
 
+import store from '../../core/store';
+import { changeGreyScale } from '../actions/actionCreators';
+
 
 class BarChart extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = { width: 300 };
+        this.mouseDown = false;
+        this.onMouseDown = this.onMouseDown.bind(this);
+        this.onMouseUp = this.onMouseUp.bind(this);
+        this.onMouseMove = this.onMouseMove.bind(this);
     }
 
     static get propTypes() {
@@ -42,6 +49,20 @@ class BarChart extends React.Component {
             logColor: 'darkGreen',
         };
     }
+
+    /* Change grey scale when dragging the area left and right */
+    onMouseDown(e) {
+        this.mouseDown = true;
+        document.body.style.cursor = "col-resize";
+    }
+    onMouseUp(e) { this.mouseDown = false; }
+    onMouseMove(e) {
+        e.preventDefault();  // otherwise it selects text around the axes
+        if (this.mouseDown) {
+            store.dispatch(changeGreyScale(50, 250));
+        }
+    }
+
 
     render() {
         let _this = this;
@@ -127,7 +148,10 @@ class BarChart extends React.Component {
                             stroke={this.props.logColor} fill="none" strokeOpacity={0.5} />
 
         return(
-            <div>
+            <div onMouseDown={this.onMouseDown}
+                 onMouseUp={this.onMouseUp}
+                 onMouseMove={this.onMouseMove}
+                >
                 <svg id={this.props.chartId} width={this.state.width} height={this.props.height}>
                     <g transform={transform}>
                         {logLine}
