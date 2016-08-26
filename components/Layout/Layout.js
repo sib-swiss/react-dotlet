@@ -51,6 +51,7 @@ class Layout extends React.Component {
 
 const titleBlue = "#3F51B5";  // title bar blue
 const lighterBlue = "#5E6EC7";
+const sibRed = "#E30613";
 
 const muiTheme = getMuiTheme({
     palette: {

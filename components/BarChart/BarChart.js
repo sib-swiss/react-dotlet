@@ -11,6 +11,7 @@ import * as d3scale from 'd3-scale';
 import * as d3array from 'd3-array';
 import * as d3axis from 'd3-axis';
 import * as d3selection from 'd3-selection';
+import * as d3shape from 'd3-shape';
 
 
 class BarChart extends React.Component {
@@ -22,20 +23,23 @@ class BarChart extends React.Component {
 
     static get propTypes() {
         return {
-            data: React.PropTypes.array,  // Typically some [{key: value}, ...]
+            data: React.PropTypes.array,  // Typically some [{x: value, y: frequency}, ...]
             width: React.PropTypes.number,
             height: React.PropTypes.number,
             chartId: React.PropTypes.string,
             color: React.PropTypes.string,
+            logColor: React.PropTypes.string,
         };
     }
 
     static get defaultProps() {
         return {
+            data: [{x: 0, y: 0}],
             width: 300,
             height: 70,
             chartId: 'v_chart',
-            color: "#5E6EC7",
+            color: '#5E6EC7',
+            logColor: 'darkGreen',
         };
     }
 
@@ -44,14 +48,16 @@ class BarChart extends React.Component {
         let data = this.props.data;
         data = data.sort((a,b) => a.x - b.x);
         let N = data.length;
-        let maxY = d3array.max(data, d => d.y);
-        let maxX = d3array.max(data, d => d.x);
-        let minX = d3array.min(data, d => d.x);
-        //console.log("data = "+ JSON.stringify(data, null, 2))
-
-        if (data.length === 0) {
+        if (N === 0) {
             return <div></div>;
         }
+
+        let maxX = d3array.max(data, d => d.x);
+        let minX = d3array.min(data, d => d.x);
+        let maxY = d3array.max(data, d => d.y);
+        let logData = data.map(d => ({x: d.x, y: Math.log(d.y)}));
+        let maxLogY = d3array.max(logData, d => d.y);
+        //console.log("data = "+ JSON.stringify(data, null, 2))
 
         let margin = {top: 5, right: 20, bottom: 30, left: 40},
             w = this.state.width - (margin.left + margin.right),
@@ -80,6 +86,10 @@ class BarChart extends React.Component {
             .domain([0, maxY])
             .range([h, 0]);
 
+        let ylog = d3scale.scaleLinear()
+            .domain([0, maxLogY])
+            .range([h, 0]);
+
         let xAxis = d3axis.axisBottom(x)
             .scale(x)
             .tickValues(xTicks);
@@ -92,16 +102,35 @@ class BarChart extends React.Component {
         let rectForeground = data.map(function(d, i) {
             return (
                 <rect fill={_this.props.color} rx="3" ry="3" key={i}
-                      x={x(d.x)} y={y(d.y)} className="shadow"
+                      x={x(d.x)} y={y(d.y)}
                       height={h-y(d.y)}
                       width={x.bandwidth()}/>
             )
         });
 
+        /* Log scale line */
+
+        var lineFunction = d3shape.line()
+            .x(function(d) { return x(d.x); })
+            .y(function(d) { return ylog(d.y); })
+            .curve(d3shape.curveBasis);
+
+        let rectLog = logData.map(function(d, i) {
+            return (
+                <rect fill={_this.props.logColor} fillOpacity={0.2} rx="3" ry="3" key={i}
+                      x={x(d.x)} y={ylog(d.y)}
+                      height={h-ylog(d.y)}
+                      width={x.bandwidth()}/>
+            )
+        });
+        let logLine = <path d={lineFunction(logData)}
+                            stroke={this.props.logColor} fill="none" strokeOpacity={0.5} />
+
         return(
             <div>
                 <svg id={this.props.chartId} width={this.state.width} height={this.props.height}>
                     <g transform={transform}>
+                        {logLine}
                         {rectForeground}
                         <Axis h={h} axis={yAxis} axisType="y" />
                         <Axis h={h} axis={xAxis} axisType="x"/>

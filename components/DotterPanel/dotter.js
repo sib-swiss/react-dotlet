@@ -40,9 +40,12 @@ class Dotter {
         this.lastColIndex = this.coordinateFromSeqIndex(this.ls1 - 2*this.hws);
 
         this.scoringMatrixName = scoringMatrixName;
+        this.isIdentityMatrix = scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY
         this.scoringMatrix = SCORING_MATRICES[scoringMatrixName];
-        this.scoringFunction = (scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY) ?
+        this.scoringFunction = this.isIdentityMatrix ?
             this.calculateMatches.bind(this) : this.calculateScore.bind(this);
+        this.scoringOneFunction = this.isIdentityMatrix ?
+            this.calculateOneMatch.bind(this) : this.calculateOneScore.bind(this);
     }
 
     /**
@@ -89,6 +92,10 @@ class Dotter {
              + this.scoringMatrix[MISMATCH] * mismatch;
     }
 
+    calculateOneMatch(char1, char2) {
+        return char1 === char2 ? this.scoringMatrix[MATCH] : this.scoringMatrix[MISMATCH];
+    }
+
     /**
      * In proteins comparison, return the similarity score.
      * @param ss1: first sub-sequence.
@@ -107,6 +114,12 @@ class Dotter {
             score += this.scoringMatrix[i][j];
         }
         return score;
+    }
+
+    calculateOneScore(char1, char2) {
+        let i = AA_MAP[char1];
+        let j = AA_MAP[char2];
+        return this.scoringMatrix[i][j];
     }
 
     /**
@@ -165,8 +178,8 @@ class Dotter {
      */
     _oneDiagonalScore(prevScore, di, dj) {
         var score = prevScore
-            + this.scoringFunction(this.s1[dj + this.ws2], this.s2[di + this.ws2])
-            - this.scoringFunction(this.s1[dj-1], this.s2[di-1]);
+            + this.scoringOneFunction(this.s1[dj + this.ws2], this.s2[di + this.ws2])
+            - this.scoringOneFunction(this.s1[dj-1], this.s2[di-1]);
         if (score > this.maxScore) this.maxScore = score;
         else if (score < this.minScore) this.minScore = score;
         this.pushPixel(di, dj, score);
