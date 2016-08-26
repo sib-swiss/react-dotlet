@@ -21,7 +21,6 @@ class TwoSeqsPanel extends React.Component {
         this.half = (this.nchars-1) / 2;  // on each side of `i`, always int if nchars is odd.
 
         this.ruler = formatSeq("|", 0, this.nchars, nbsp);  // "|"
-        this.caret = formatSeq("^", 0, this.nchars, nbsp);  // "^"
     }
 
     stateFromStore() {
@@ -142,7 +141,6 @@ class TwoSeqsPanel extends React.Component {
                         <span className={s.sequence}>{this.ruler}</span>
                         <span className={s.sequence}>{spans1}</span>
                         <span className={s.sequence}>{spans2}</span>
-                        <span className={s.sequence}>{this.caret}</span>
                         <span className={s.sequence}>{this.ruler}</span>
                         <span className={s.sequence}>{seqinfo2}</span>
                     </pre>
