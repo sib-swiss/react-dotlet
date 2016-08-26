@@ -7,6 +7,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import * as d3scale from 'd3-scale';
 import * as d3array from 'd3-array';
 import * as d3axis from 'd3-axis';
@@ -14,15 +15,10 @@ import * as d3selection from 'd3-selection';
 import * as d3shape from 'd3-shape';
 
 import store from '../../core/store';
-import { changeGreyScale } from '../actions/actionCreators';
+import s from './BarChart.css';
 
 
 class BarChart extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = { width: 300 };
-    }
 
     static get propTypes() {
         return {
@@ -43,13 +39,35 @@ class BarChart extends React.Component {
             height: 70,
             chartId: 'v_chart',
             color: '#5E6EC7',
-            logColor: 'darkGreen',
+            logColor: 'green',
             margins: {top: 5, right: 20, bottom: 30, left: 40},
         };
     }
 
+    constructor(props) {
+        super(props);
+        this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+        this.state = this.stateFromStore();
+    }
+
+    stateFromStore() {
+        return {
+            minBound: store.getState().greyScale.minBound,
+            maxBound: store.getState().greyScale.maxBound,
+        }
+    }
+
+    componentWillMount() {
+        store.subscribe(() => {
+            this.setState( this.stateFromStore() );
+        });
+    }
+
     render() {
         let _this = this;
+        let width = this.props.width;
+        let height = this.props.height;
+
         let data = this.props.data;
         data = data.sort((a,b) => a.x - b.x);
         let N = data.length;
@@ -65,8 +83,8 @@ class BarChart extends React.Component {
         //console.log("data = "+ JSON.stringify(data, null, 2))
 
         let margin = this.props.margins,
-            w = this.state.width - (margin.left + margin.right),
-            h = this.props.height - (margin.top + margin.bottom);
+            w = width - (margin.left + margin.right),
+            h = height - (margin.top + margin.bottom);
 
         let transform = 'translate('+ margin.left +','+ margin.top +')';
 
@@ -120,20 +138,12 @@ class BarChart extends React.Component {
             .y(function(d) { return ylog(d.y); })
             .curve(d3shape.curveBasis);
 
-        let rectLog = logData.map(function(d, i) {
-            return (
-                <rect fill={_this.props.logColor} fillOpacity={0.2} rx="3" ry="3" key={i}
-                      x={x(d.x)} y={ylog(d.y)}
-                      height={h-ylog(d.y)}
-                      width={x.bandwidth()}/>
-            )
-        });
         let logLine = <path d={lineFunction(logData)}
-                            stroke={this.props.logColor} fill="none" strokeOpacity={0.5} />
+                            stroke={this.props.logColor} fill="none" strokeOpacity={1} />
 
         return(
-            <div>
-                <svg id={this.props.chartId} width={this.state.width} height={this.props.height}>
+            <div className={s.root}>
+                <svg id={this.props.chartId} width={this.props.width} height={this.props.height} >
                     <g transform={transform}>
                         {logLine}
                         {rectForeground}
