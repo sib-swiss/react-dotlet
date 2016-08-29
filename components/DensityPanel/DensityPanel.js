@@ -6,7 +6,6 @@ import store from '../../core/store';
 import BarChart from '../BarChart/BarChart';
 import GreyScaleSlider from '../GreyScale/GreyScaleSlider';
 import GreyScaleLayer from '../GreyScale/GreyScaleLayer';
-import GreyScaleGradient from '../GreyScale/GreyScaleGradient';
 
 
 class DensityPanel extends React.Component {
@@ -38,9 +37,6 @@ class DensityPanel extends React.Component {
         return (
             <div id="density-panel" className={s.root} >
                 <div style={{position: "relative", width: chartWidth, height: chartHeight}}>
-                    <GreyScaleGradient
-                        width={innerWidth} height={innerHeight} margins={chartMargins}
-                    />
                     <BarChart
                         data={this.state.density}
                         width={chartWidth} height={chartHeight} margins={chartMargins}

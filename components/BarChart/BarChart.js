@@ -38,8 +38,9 @@ class BarChart extends React.Component {
             width: 300,
             height: 70,
             chartId: 'v_chart',
-            color: '#5E6EC7',
-            logColor: 'green',
+            colorLight: '#B3D4FB', //'#8492DC', //'#5E6EC7',
+            colorDark: '#8492DC', //'#5E6EC7',
+            logColor: '#0F9A0F', //'green',
             margins: {top: 5, right: 20, bottom: 30, left: 40},
         };
     }
@@ -67,6 +68,8 @@ class BarChart extends React.Component {
         let _this = this;
         let width = this.props.width;
         let height = this.props.height;
+        let min = this.state.minBound * (100/255);
+        let max = this.state.maxBound * (100/255);
 
         let data = this.props.data;
         data = data.sort((a,b) => a.x - b.x);
@@ -122,9 +125,9 @@ class BarChart extends React.Component {
 
         /* Bars */
 
-        let rectForeground = data.map(function(d, i) {
+        let densityBars = data.map(function(d, i) {
             return (
-                <rect fill={_this.props.color} rx="3" ry="3" key={i}
+                <rect fill={_this.props.colorLight} rx="3" ry="3" key={i}
                       x={x(d.x)} y={y(d.y)}
                       height={h-y(d.y)}
                       width={x.bandwidth()}/>
@@ -141,16 +144,38 @@ class BarChart extends React.Component {
         let logLine = <path d={lineFunction(logData)}
                             stroke={this.props.logColor} fill="none" strokeOpacity={1} />
 
+        /* Grey scale background */
+
+        let greyScaleGradient = (
+                <defs>
+                    <linearGradient id="greyscale-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="black" stopOpacity="100%" />
+                        <stop offset={min +"%"} stopColor="black" stopOpacity="100%" />
+                        <stop offset={max +"%"} stopColor="white" stopOpacity="100%" />
+                        <stop offset="100%" stopColor="white" stopOpacity="100%" />
+                    </linearGradient>
+                </defs>);
+
+        let background = (
+            <g>
+                {greyScaleGradient}
+                <rect x={0} y={0} width={width-margin.left-margin.right} height={height-margin.top-margin.bottom}
+                      fill="url(#greyscale-gradient)">
+                </rect>
+            </g>);
+
         return(
             <div className={s.root}>
-                <svg id={this.props.chartId} width={this.props.width} height={this.props.height} >
+                <svg id={this.props.chartId} width={width} height={height} >
                     <g transform={transform}>
+                        {background}
                         {logLine}
-                        {rectForeground}
+                        {densityBars}
                         <Axis h={h} axis={yAxis} axisType="y" />
                         <Axis h={h} axis={xAxis} axisType="x"/>
                     </g>
                 </svg>
+
             </div>
         );
     }
