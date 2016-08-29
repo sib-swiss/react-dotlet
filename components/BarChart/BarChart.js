@@ -38,9 +38,9 @@ class BarChart extends React.Component {
             width: 300,
             height: 70,
             chartId: 'v_chart',
-            colorLight: '#B3D4FB', //'#8492DC', //'#5E6EC7',
+            colorLight: '#88B9F3', //'#B3D4FB', //'#8492DC',
             colorDark: '#8492DC', //'#5E6EC7',
-            logColor: '#0F9A0F', //'green',
+            logColor: 'red', // '#0F9A0F', //'green',
             margins: {top: 5, right: 20, bottom: 30, left: 40},
         };
     }
