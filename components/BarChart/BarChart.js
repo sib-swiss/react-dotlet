@@ -16,6 +16,7 @@ import * as d3shape from 'd3-shape';
 
 import store from '../../core/store';
 import s from './BarChart.css';
+import * as theme from '../constants/theme';
 
 
 class BarChart extends React.Component {
@@ -38,9 +39,9 @@ class BarChart extends React.Component {
             width: 300,
             height: 70,
             chartId: 'v_chart',
-            colorLight: '#88B9F3', //'#B3D4FB', //'#8492DC',
+            colorLight: theme.lighterBlue, //'#B3D4FB', //'#8492DC',
             colorDark: '#8492DC', //'#5E6EC7',
-            logColor: 'red', // '#0F9A0F', //'green',
+            logColor: theme.sibRed,
             margins: {top: 5, right: 20, bottom: 30, left: 40},
         };
     }
@@ -157,25 +158,26 @@ class BarChart extends React.Component {
                 </defs>);
 
         let background = (
-            <g>
+            <g transform={'translate('+margin.left+')'}>
                 {greyScaleGradient}
-                <rect x={0} y={0} width={width-margin.left-margin.right} height={height-margin.top-margin.bottom}
-                      fill="url(#greyscale-gradient)">
-                </rect>
+                <rect x={0} y={0}
+                    width={width - margin.left - margin.right}
+                    height={height - margin.bottom}
+                    fill="url(#greyscale-gradient)"
+                ></rect>
             </g>);
 
         return(
             <div className={s.root}>
                 <svg id={this.props.chartId} width={width} height={height} >
+                    {background}
                     <g transform={transform}>
-                        {background}
                         {logLine}
                         {densityBars}
                         <Axis h={h} axis={yAxis} axisType="y" />
                         <Axis h={h} axis={xAxis} axisType="x"/>
                     </g>
                 </svg>
-
             </div>
         );
     }

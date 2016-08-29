@@ -7,7 +7,7 @@ import Footer from './Footer';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import * as mColors from 'material-ui/styles/colors';
-import * as theme from './theme';
+import * as theme from '../constants/theme';
 
 
 /*

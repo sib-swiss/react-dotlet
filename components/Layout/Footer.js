@@ -10,7 +10,7 @@
 
 import React from 'react';
 import s from './Layout.css'
-import * as theme from './theme';
+import * as theme from '../constants/theme';
 
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
