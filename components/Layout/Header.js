@@ -14,7 +14,7 @@ class Header extends React.Component {
                             <img src={require("../../public/images/sib_logo_small.png")} height="36"/></a></div>
                     <div className="mdl-logo">
                         <a href="https://www.vital-it.ch/">
-                            <img src={require("../../public/images/vital-it.png")} height="36"/></a></div>
+                            <img src={require("../../public/images/vital-it_small.png")} height="36"/></a></div>
                 </div>
             </header>
         );
