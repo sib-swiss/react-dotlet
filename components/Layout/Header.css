@@ -1,0 +1,15 @@
+
+.header {
+    /*
+    background: url("../../public/images/banner-small.jpg");
+    background: linear-gradient(to right, #3F51B5, #3F51B5, white);
+    */
+    height: 52px;
+    min-height: 52px;
+    background-color: #3F51B5;
+    background-size: cover;
+}
+.headerRow {
+    height: 52px;
+    min-height: 52px;
+}

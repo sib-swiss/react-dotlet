@@ -1,0 +1,15 @@
+
+.footer {
+    height: 50px;
+    width: 75%;
+    margin: 0 auto;
+    padding: 0;
+}
+.footerItem {
+    padding: 7px;
+    z-index: 1;
+}
+.footerLeft {
+    margin-left: 15px;
+}
+

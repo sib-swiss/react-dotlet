@@ -65,6 +65,11 @@ const muiTheme = getMuiTheme({
     //    textColor: "black",
     //    primary1Color: theme.primaryColor,
     //},
+    toolbar: {
+        //color: fade(palette.textColor, 0.54),
+        //hoverColor: fade(palette.textColor, 0.87),
+        //backgroundColor: theme.primaryColor,
+    },
     textField: {
         textColor: "black",
     },

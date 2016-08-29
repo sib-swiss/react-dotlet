@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import s from './Layout.css'
+import s from './Footer.css'
 import * as theme from '../constants/theme';
 
 import IconButton from 'material-ui/IconButton';

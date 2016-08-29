@@ -18,15 +18,3 @@
     padding: 8px;
 }
 
-.translateButtonContainer {
-    border: 1px solid #ccc;
-    position: absolute;
-    top: 12px;
-    right: -49px;
-    background-color: white;
-    float: right;
-}
-.translateButtonContainer:hover {
-    background-color: #FB4049;  /* Same as sequence input secondaryColor */
-}
-

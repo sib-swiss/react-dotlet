@@ -37,31 +37,3 @@
     z-index: -1;
 }
 
-.footer {
-    height: 50px;
-    width: 75%;
-    margin: 0 auto;
-    padding: 0;
-}
-.footerItem {
-    padding: 7px;
-    z-index: 1;
-}
-.footerLeft {
-    margin-left: 15px;
-}
-
-.header {
-    /*
-    background: url("../../public/images/banner-small.jpg");
-    background: linear-gradient(to right, #3F51B5, #3F51B5, white);
-    */
-    height: 52px;
-    min-height: 52px;
-    background-color: #3F51B5;
-    background-size: cover;
-}
-.headerRow {
-    height: 52px;
-    min-height: 52px;
-}
