@@ -8,30 +8,60 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-.root {
+.backgroundWrapper {
     background-color: #f8f8f8;
+    height: 100%;
+}
+.background {
+    height: 100%;
+    width: 75%;
+    margin: 0 auto;
+    background-color: white;
 }
 
 .innerContainer {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
     margin-bottom: -50px;
-}
-
-.contentWrapper {
 }
 
 .content {
     width: 75%;
     max-width: 900px;
     margin: 0 auto;
-    background-color: white;
-    padding-bottom: 50px;
+    padding-bottom: 30px;
 }
-
 .filler {
+    height: 50px;
+    z-index: -1;
 }
 
 .footer {
     height: 50px;
     width: 75%;
     margin: 0 auto;
+    padding: 0;
+}
+.footerItem {
+    padding: 7px;
+    z-index: 1;
+}
+.footerLeft {
+    margin-left: 15px;
+}
+
+.header {
+    /*
+    background: url("../../public/images/banner-small.jpg");
+    background: linear-gradient(to right, #3F51B5, #3F51B5, white);
+    */
+    height: 52px;
+    min-height: 52px;
+    background-color: #3F51B5;
+    background-size: cover;
+}
+.headerRow {
+    height: 52px;
+    min-height: 52px;
 }

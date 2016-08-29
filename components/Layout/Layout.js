@@ -1,6 +1,7 @@
 import React from 'react';
-import Header from './Header';
 import s from './Layout.css';
+import Header from './Header';
+import Footer from './Footer';
 
 /* Material-UI, see theme customization below */
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -23,17 +24,26 @@ class Layout extends React.Component {
     render() {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
-            <div className={"mdl-layout mdl-js-layout "+s.root} ref="root">
-                <div className={"mdl-layout__inner-container "+s.innerContainer}>
+            <div>
+                <div className={"mdl-layout mdl-js-layout "+ s.backgroundWrapper}>
+                    <div className={s.background} />
+                </div>
 
-                    <Header />
+                <div className={"mdl-layout mdl-js-layout "+s.root} ref="root">
+                    <div className={"mdl-layout__inner-container "+s.innerContainer}>
 
-                    <main className={"mdl-layout__content "+s.contentWrapper}>
-                        <div className={s.content} {...this.props} />
-                    </main>
+                        <Header />
+
+                        <main className="mdl-layout__content ">
+                            <div className={s.content} {...this.props} />
+                        </main>
+                        <div className={s.filler}/>
+
+                    </div>
+
+                    <Footer />
 
                 </div>
-                <div className={s.footer} style={{background: theme.primaryColor}} />
             </div>
             </MuiThemeProvider>
         );
@@ -51,21 +61,17 @@ class Layout extends React.Component {
  */
 
 const muiTheme = getMuiTheme({
-    palette: {
-        textColor: "black",
-        primary1Color: theme.primaryColor,
-    },
-    appBar: {
-        height: 50,
-        color: 'white',
-    },
+    //palette: {
+    //    textColor: "black",
+    //    primary1Color: theme.primaryColor,
+    //},
     textField: {
         textColor: "black",
     },
     raisedButton: {
         primaryColor: theme.lighterBlue,
         secondaryTextColor: "black",
-        secondaryColor: "#FB4049",
+        secondaryColor: "#F17076",
     },
     slider: {
         selectionColor: mColors.grey400,   // the part left to handle... and the handle...

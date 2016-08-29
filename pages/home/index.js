@@ -40,7 +40,6 @@ class HomePage extends React.Component {
                 <div className={s.twoSeqsPanelContainer}>
                     <TwoSeqsPanel />
                 </div>
-                <div className={s.filler} />
             </div>
             </Layout>
         );
