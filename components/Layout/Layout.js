@@ -5,7 +5,8 @@ import s from './Layout.css';
 /* Material-UI, see theme customization below */
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import * as colors from 'material-ui/styles/colors';
+import * as mColors from 'material-ui/styles/colors';
+import * as theme from './theme';
 
 
 /*
@@ -23,15 +24,16 @@ class Layout extends React.Component {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
             <div className={"mdl-layout mdl-js-layout "+s.root} ref="root">
-                <div className="mdl-layout__inner-container">
+                <div className={"mdl-layout__inner-container "+s.innerContainer}>
 
                     <Header />
 
-                    <main className="mdl-layout__content">
+                    <main className={"mdl-layout__content "+s.contentWrapper}>
                         <div className={s.content} {...this.props} />
                     </main>
 
                 </div>
+                <div className={s.footer} style={{background: theme.primaryColor}} />
             </div>
             </MuiThemeProvider>
         );
@@ -48,15 +50,10 @@ class Layout extends React.Component {
  * https://github.com/callemall/material-ui/blob/master/src/styles/baseThemes/lightBaseTheme.js
  */
 
-
-const titleBlue = "#3F51B5";  // title bar blue
-const lighterBlue = "#5E6EC7";
-const sibRed = "#E30613";
-
 const muiTheme = getMuiTheme({
     palette: {
         textColor: "black",
-        primary1Color: titleBlue,
+        primary1Color: theme.primaryColor,
     },
     appBar: {
         height: 50,
@@ -66,17 +63,17 @@ const muiTheme = getMuiTheme({
         textColor: "black",
     },
     raisedButton: {
-        primaryColor: lighterBlue,
+        primaryColor: theme.lighterBlue,
         secondaryTextColor: "black",
         secondaryColor: "#FB4049",
     },
     slider: {
-        selectionColor: colors.grey400,   // the part left to handle... and the handle...
-        handleColorZero: colors.grey400,  // the handle border when at 0
-        handleFillColor: colors.grey400,  // the handle fill when at 0
-        rippleColor: colors.grey500,      // the glow when :hover
-        trackColor: colors.grey400,       // the base line
-        trackColorSelected: colors.grey400,  // the base line, when used
+        selectionColor: mColors.grey400,   // the part left to handle... and the handle...
+        handleColorZero: mColors.grey400,  // the handle border when at 0
+        handleFillColor: mColors.grey400,  // the handle fill when at 0
+        rippleColor: mColors.grey500,      // the glow when :hover
+        trackColor: mColors.grey400,       // the base line
+        trackColorSelected: mColors.grey400,  // the base line, when used
     }
 });
 

@@ -26,7 +26,7 @@ class HomePage extends React.Component {
     render() {
         return (
             <Layout>
-            <div ref="root" className='test'>
+            <div ref="root" className={s.root}>
                 <InputPanel />
                 <div className={s.midPanel}>
                     <div className={s.dotterPanelContainer}>
@@ -40,6 +40,7 @@ class HomePage extends React.Component {
                 <div className={s.twoSeqsPanelContainer}>
                     <TwoSeqsPanel />
                 </div>
+                <div className={s.filler} />
             </div>
             </Layout>
         );

@@ -12,10 +12,26 @@
     background-color: #f8f8f8;
 }
 
+.innerContainer {
+    margin-bottom: -50px;
+}
+
+.contentWrapper {
+}
+
 .content {
     width: 75%;
     max-width: 900px;
     margin: 0 auto;
-    padding-bottom: 80px;
     background-color: white;
+    padding-bottom: 50px;
+}
+
+.filler {
+}
+
+.footer {
+    height: 50px;
+    width: 75%;
+    margin: 0 auto;
 }
