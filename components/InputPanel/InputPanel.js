@@ -88,11 +88,11 @@ class InputPanel extends React.Component {
 
         return (
         <div className={s.root}>
-        <Toolbar style={{paddingBottom: '52px', height: '52px'}}>
+        <Toolbar>
 
             {/* Sequences input */}
 
-            <ToolbarGroup style={{marginTop: '-3px'}}>
+            <ToolbarGroup>
                 <RaisedButton onClick={this.openTextarea.bind(this, 1)}
                     secondary={this.state.open && this.state.activeSequence === 1} label="Sequence&nbsp;1" />
                 <RaisedButton onClick={this.openTextarea.bind(this, 2)}
