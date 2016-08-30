@@ -13,8 +13,8 @@ const SCORING_MATRIX_NAMES = {
     PAM70: 'PAM_70',
 };
 
-const DNA = 'Type_DNA_string';
-const PROTEIN = 'Type_protein_string';
+const DNA = 'DNA/RNA';
+const PROTEIN = 'protein';
 
 // Aminoacids, in the same order as in the scoring matrices. Missing 'O', 'U' from full alphabet.
 const AA = ['A', 'R', 'N', 'D', 'C', 'Q', 'E', 'G', 'H', 'I', 'L', 'K', 'M',

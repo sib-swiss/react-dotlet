@@ -9,9 +9,6 @@ describe('InputPanel test suite', () => {
     it('input.guessSequenceType pure DNA', () => {
         expect(guessSequenceType("AUATG")).to.be.equal(DNA);
     });
-    it('input.guessSequenceType with aminoacid char but length % 3 != 0', () => {
-        expect(guessSequenceType("AUAKGKLL")).to.be.equal(DNA);
-    });
     it('input.guessSequenceType check only first N chars', () => {
         expect(guessSequenceType("AUATGKLLL", 4)).to.be.equal(DNA);
         expect(guessSequenceType("AUATGKLLL", 20)).to.be.equal(PROTEIN);

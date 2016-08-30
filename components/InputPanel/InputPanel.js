@@ -4,7 +4,7 @@ import store from '../../core/store';
 import s from './InputPanel.css';
 import { changeSequence, changeWindowSize, changeScoringMatrix, openToast } from '../actions/actionCreators';
 import { SCORING_MATRIX_NAMES, DNA, CANVAS_ID } from '../constants/constants';
-import { commonSeqType } from './input';
+import { commonSeqType, guessSequenceType } from './input';
 import { printCanvas } from './helpers';
 import * as validators from './validators';
 
@@ -35,8 +35,6 @@ class InputPanel extends React.Component {
         return {
             s1: storeState.s1,
             s2: storeState.s2,
-            s1Type: storeState.s1Type,
-            s2Type: storeState.s2Type,
             windowSize: storeState.windowSize,
             scoringMatrix: storeState.scoringMatrix,
         };
@@ -56,21 +54,26 @@ class InputPanel extends React.Component {
         });
     }
     onChangeSeq1 = (e) => {
-        let value = e.target.value;
-        let s1 = value.toUpperCase();
-        let isValid = validators.isValidInputSequence(s1, this.state.s1Type);
+        let s1 = e.target.value.toUpperCase();
+        let s1Type = guessSequenceType(s1, 200);
+        let isValid = validators.isValidInputSequence(s1, s1Type);
         if (isValid.valid) {
             this.setState({ s1 });
             store.dispatch(changeSequence(1, s1));
         } else {
-            store.dispatch(openToast("Invalid input character '"+ isValid.wrongChar +"'"));
+            store.dispatch(openToast("Invalid "+ s1Type +" sequence character '"+ isValid.wrongChar +"'"));
         }
     };
     onChangeSeq2 = (e) => {
-        let value = e.target.value;
-        let s2 = value.replace(/\s/g,'').toUpperCase();
-        this.setState({ s2 });
-        store.dispatch(changeSequence(2, s2));
+        let s2 = e.target.value.toUpperCase();
+        let s2Type = guessSequenceType(s2, 200);
+        let isValid = validators.isValidInputSequence(s2, s2Type);
+        if (isValid.valid) {
+            this.setState({ s2 });
+            store.dispatch(changeSequence(2, s2));
+        } else {
+            store.dispatch(openToast("Invalid "+ s2Type +" sequence character '"+ isValid.wrongChar +"'"));
+        }
     };
     onChangeWindowSize = (e, value) => {
         if (value !== '') {

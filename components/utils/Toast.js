@@ -1,4 +1,3 @@
-
 import React from 'react';
 import store from '../../core/store';
 import SnackBar from 'material-ui/SnackBar';
@@ -36,7 +35,7 @@ class Toast extends React.Component {
             <SnackBar
                 open={this.state.open}
                 message={this.state.message}
-                autoHideDuration={2500}
+                autoHideDuration={2800}
                 action="Close"
                 onRequestClose={this.handleRequestClose}
                 onActionTouchTap={this.handleActionTouchTap}

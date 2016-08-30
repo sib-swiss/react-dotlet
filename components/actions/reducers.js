@@ -50,6 +50,7 @@ let reducer = (state = defaultState, action) => {
         }
         seq = undefined;  // free space
         newState.i = 0; newState.j = 0;
+        newState.toast = defaultState.toast;
         let ls1 = newState.s1.length;
         let ls2 = newState.s2.length;
         addToState = updateScores(newState.s1, newState.s2, state.windowSize, state.scoringMatrix, state.greyScale, state.canvasSize);

@@ -7,10 +7,6 @@ import geneticCode from '../constants/geneticCode';
  */
 function guessSequenceType(seq, nchars=200) {
     let L = seq.length;
-    // A protein's RNA length must be a multiple of 3
-    if (L % 3 !== 0) {
-        return DNA;
-    }
     // The longest known protein, Titin, has up to 33K aminoacids.
     if (L === 0 || L > 40000) {
         return DNA;

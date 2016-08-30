@@ -13,19 +13,14 @@ function isNumeric(s) {
 function isValidInputSequence(s, type) {
     var valid = true;
     var wrongChar = null;
-    if (type === PROTEIN) {
-        for (let char of s) {
-            if (! AA_CHARS.has(char)) {
-                valid = false;
-                wrongChar = char;
-            }
-        }
-    } else {
-        for (let char of s) {
-            if (! DNA_CHARS.has(char)) {
-                valid = false;
-                wrongChar = char;
-            }
+    let charset = (type === PROTEIN) ? AA_CHARS : DNA_CHARS;
+    console.debug(type, charset)
+    for (let char of s) {
+        if (! charset.has(char)) {
+            console.debug(char)
+            valid = false;
+            wrongChar = char;
+            break;
         }
     }
     return {valid, wrongChar};
