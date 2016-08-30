@@ -1,6 +1,9 @@
 archive/
 tests.html
 
+*.jpg
+*.png
+
 .idea
 .DS_Store
 *.iml
