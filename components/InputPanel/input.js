@@ -29,6 +29,9 @@ function guessSequenceType(seq, nchars=200) {
  * Return `DNA` if both sequences are DNA, and `PROTEIN` otherwise.
  */
 function commonSeqType(s1Type, s2Type) {
+    if (!s1Type || !s2Type) {
+        return undefined;
+    }
     return (s1Type === DNA && s2Type === DNA) ? DNA : PROTEIN;
 }
 

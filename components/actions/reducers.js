@@ -1,10 +1,8 @@
 import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
          INSPECT_COORDINATE, CHANGE_GREY_SCALE, RESIZE_CANVAS, OPEN_TOAST } from './actionTypes';
 import Dotter from '../DotterPanel/dotter';
-import { guessSequenceType, commonSeqType } from '../InputPanel/input';
-//import { PROTEIN, DNA, CANVAS_SIZE } from '../constants/constants';
-//import { translateProtein } from '../common/genetics';
 import defaultState from './defaultState';
+import { commonSeqType } from '../InputPanel/input';
 
 
 let reducer = (state = defaultState, action) => {
@@ -19,6 +17,7 @@ let reducer = (state = defaultState, action) => {
          greyScale = state.greyScale, canvasSize = state.canvasSize,
     }) {
         let commonType = commonSeqType(s1Type, s2Type);
+console.debug(commonType)
         let d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
         d.calculateScores();
         let density = d.densityFromScores();

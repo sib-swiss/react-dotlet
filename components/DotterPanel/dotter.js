@@ -2,7 +2,8 @@
 import { CANVAS_ID } from '../constants/constants';
 import { SCORING_MATRIX_NAMES } from '../constants/constants';
 import { SCORING_MATRICES } from '../constants/scoring_matrices/scoring_matrices';
-import { MATCH, MISMATCH, AA_MAP } from '../constants/constants';
+import { MATCH, MISMATCH, AA_MAP, PROTEIN, DNA } from '../constants/constants';
+import { translateProtein } from '../common/genetics';
 import * as d3scale from 'd3-scale';
 
 /**
@@ -12,19 +13,32 @@ import * as d3scale from 'd3-scale';
 
 class Dotter {
     constructor(canvasSize, windowSize, s1,s2, scoringMatrixName) {
+        /* Pure input */
         this.canvasId = CANVAS_ID;
         this.topCanvasId = CANVAS_ID +'-topLayer';
         this.canvasSize = canvasSize;
         this.windowSize = windowSize;
+        this.scoringMatrixName = scoringMatrixName;
         this.s1 = s1;
         this.s2 = s2;
+        this.minScore = Infinity;
+        this.maxScore = -Infinity;
+
+        /* Shorteners for window size bits */
+        this.hws = ~~ (windowSize / 2);   // # of nucleotides on each side
+        this.ws2 = windowSize - 1;
+
+        /* What depends on input sequences */
         this.ls1 = s1.length;
         this.ls2 = s2.length;
         this.L = Math.max(this.ls1, this.ls2);
         this.smallSequence = this.L < canvasSize;
-        this.hws = ~~ (windowSize / 2);   // # of nucleotides on each side
-        this.ws2 = windowSize - 1;
+        this.scaleToPx = canvasSize / (this.L - windowSize + 1);
+        this.scaleToSeq = (this.L - windowSize + 1) / canvasSize;
+        this.lastRowIndex = this.coordinateFromSeqIndex(this.ls2 - 2*this.hws);
+        this.lastColIndex = this.coordinateFromSeqIndex(this.ls1 - 2*this.hws);
 
+        /* Init scores array (depends only on canvas size) */
         this.CS2 = canvasSize * canvasSize;
         this.scores = new Int16Array(this.CS2);
         this.MIN_INT16 = -32767;
@@ -32,15 +46,8 @@ class Dotter {
             this.scores[k] = this.MIN_INT16;
         }
 
-        this.minScore = Infinity;
-        this.maxScore = -Infinity;
-        this.scaleToPx = canvasSize / (this.L - windowSize + 1);
-        this.scaleToSeq = (this.L - windowSize + 1) / canvasSize;
-        this.lastRowIndex = this.coordinateFromSeqIndex(this.ls2 - 2*this.hws);
-        this.lastColIndex = this.coordinateFromSeqIndex(this.ls1 - 2*this.hws);
-
-        this.scoringMatrixName = scoringMatrixName;
-        this.isIdentityMatrix = scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY
+        /* Scoring functions */
+        this.isIdentityMatrix = scoringMatrixName === SCORING_MATRIX_NAMES.IDENTITY;
         this.scoringMatrix = SCORING_MATRICES[scoringMatrixName];
         this.scoringFunction = this.isIdentityMatrix ?
             this.calculateMatches.bind(this) : this.calculateScore.bind(this);
@@ -394,7 +401,33 @@ class Dotter {
         }
         ctx.putImageData(imageData, 0, 0);
     }
+}
 
+
+
+class DotterWithTranslation extends Dotter {
+    constructor(canvasSize, windowSize, s1,s2, scoringMatrixName, s1Type, s2Type) {
+        super(canvasSize, windowSize, s1,s2, scoringMatrixName);
+
+        console.debug(11, this.L);
+
+        if (s1Type === DNA) {
+            console.debug("translating s1");
+            this.ls1 = ~~ (this.ls1 / 3);
+            //s1 = translateProtein(s1, 0)
+            //s1 = translateProtein(s1, 1)
+            //s1 = translateProtein(s1, 2)
+        } else {
+            console.debug("translating s2");
+            this.ls2 = ~~ (this.ls2 / 3);
+            //s2 = translateProtein(s2)
+        }
+        this.L = Math.max(this.ls1, this.ls2);
+        this.smallSequence = this.L < canvasSize;
+
+        console.debug(22, this.L)
+
+    }
 }
 
 
