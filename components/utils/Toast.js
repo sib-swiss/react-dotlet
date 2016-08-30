@@ -24,10 +24,10 @@ class Toast extends React.Component {
     }
 
     handleRequestClose() {
-        this.setState({ open: false });
+        this.setState({ open: false, message: "" });
     }
     handleActionTouchTap() {
-        this.setState({ open: false });
+        this.setState({ open: false, message: "" });
     }
 
     render() {
