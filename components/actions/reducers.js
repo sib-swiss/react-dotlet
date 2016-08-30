@@ -39,13 +39,10 @@ let reducer = (state = defaultState, action) => {
         let s1, s2;
         let seqtype;
         let seq = action.sequence;
-        let guessedType = guessSequenceType(seq, 200);
         if (action.seqn === 1) {
-            seqtype = commonSeqType(guessedType, state.s2Type);
             newState.s1 = seq;
             newState.s1Type = action.seqtype;
         } else {
-            seqtype = commonSeqType(state.s1Type, guessedType);
             newState.s2 = seq;
             newState.s2Type = action.seqtype;
         }

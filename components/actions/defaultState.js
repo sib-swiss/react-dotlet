@@ -13,6 +13,8 @@ const smallExample = {
 const dummyExample = {
     s1: "ATG",
     s2: "ATG",
+    s1Type: DNA,
+    s2Type: DNA,
     scoringMatrix: SCORING_MATRIX_NAMES.IDENTITY,
     windowSize: 1,
 };
@@ -95,7 +97,7 @@ let defaultState = {
     toast: {open: false, message: ""},
 };
 
-Object.assign(defaultState, orthologExample);
+Object.assign(defaultState, dummyExample);
 
 
 export default defaultState;

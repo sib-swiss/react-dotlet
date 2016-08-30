@@ -59,7 +59,7 @@ class InputPanel extends React.Component {
         let isValid = validators.isValidInputSequence(s1, s1Type);
         if (isValid.valid) {
             this.setState({ s1 });
-            store.dispatch(changeSequence(1, s1));
+            store.dispatch(changeSequence(1, s1, s1Type));
         } else {
             store.dispatch(openToast("Invalid "+ s1Type +" sequence character '"+ isValid.wrongChar +"'"));
         }
@@ -70,7 +70,7 @@ class InputPanel extends React.Component {
         let isValid = validators.isValidInputSequence(s2, s2Type);
         if (isValid.valid) {
             this.setState({ s2 });
-            store.dispatch(changeSequence(2, s2));
+            store.dispatch(changeSequence(2, s2, s2Type));
         } else {
             store.dispatch(openToast("Invalid "+ s2Type +" sequence character '"+ isValid.wrongChar +"'"));
         }
@@ -96,7 +96,7 @@ class InputPanel extends React.Component {
     render() {
         let seq1type = store.getState().s1Type;
         let seq2type = store.getState().s2Type;
-        let commonType = commonSeqType(seq1type, seq2type);  // to know which matrices are available
+        let commonType = commonSeqType(seq1type, seq2type);  // to know which scoring matrices are available
 
         return (
         <div className={s.root}>
