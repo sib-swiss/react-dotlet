@@ -7,24 +7,30 @@ import { guessSequenceType, commonSeqType } from '../InputPanel/input';
 import defaultState from './defaultState';
 
 
-let updateScores = function(s1, s2, windowSize, scoringMatrixName, greyScale, canvasSize) {
-    let d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
-    d.calculateScores();
-    let density = d.densityFromScores();
-    let alphas = d.alphasFromScores();
-    let addToState = {
-        density: density,
-        greyScale : {initialAlphas: alphas, minBound: greyScale.minBound, maxBound: greyScale.maxBound},
-        toast: defaultState.toast,
-    };
-    return addToState;
-};
-
-
 let reducer = (state = defaultState, action) => {
     let newState, addToState;  // because reused in many switch cases
     let density;
     let scores;
+
+    let updateScores = function({
+         s1 = state.s1, s2 = state.s2,
+         s1Type = state.s1Type, s2Type = state.s2Type,
+         windowSize = state.windowSize, scoringMatrixName = state.scoringMatrix,
+         greyScale = state.greyScale, canvasSize = state.canvasSize,
+    }) {
+        let commonType = commonSeqType(s1Type, s2Type);
+        let d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
+        d.calculateScores();
+        let density = d.densityFromScores();
+        let alphas = d.alphasFromScores();
+        let addToState = {
+            density: density,
+            greyScale : {initialAlphas: alphas, minBound: greyScale.minBound, maxBound: greyScale.maxBound},
+            toast: defaultState.toast,
+        };
+        return addToState;
+    };
+
 
     switch (action.type) {
 
@@ -50,7 +56,7 @@ let reducer = (state = defaultState, action) => {
         newState.i = 0; newState.j = 0;
         let ls1 = newState.s1.length;
         let ls2 = newState.s2.length;
-        addToState = updateScores(newState.s1, newState.s2, state.windowSize, state.scoringMatrix, state.greyScale, state.canvasSize);
+        addToState = updateScores({s1: newState.s1, s2:newState.s2});
         Object.assign(newState, addToState);
         return newState;
 
@@ -60,7 +66,7 @@ let reducer = (state = defaultState, action) => {
      */
     case CHANGE_WINDOW_SIZE:
         let winsize = action.windowSize || 1;
-        addToState = updateScores(state.s1, state.s2, winsize, state.scoringMatrix, state.greyScale, state.canvasSize);
+        addToState = updateScores({windowSize: winsize});
         return Object.assign({}, state, addToState, {windowSize: parseInt(winsize)});
 
     /*
@@ -68,8 +74,8 @@ let reducer = (state = defaultState, action) => {
      * Expects `action.scoringMatrix`.
      */
     case CHANGE_SCORING_MATRIX:
-        addToState = updateScores(state.s1, state.s2, state.windowSize, action.scoringMatrix, state.greyScale, state.canvasSize);
-        return Object.assign({}, state, addToState, {scoringMatrix: action.scoringMatrix});
+        addToState = updateScores({scoringMatrix: action.scoringMatrix});
+        return Object.assign({}, state, addToState, {scoringMatrixName: action.scoringMatrix});
 
     /*
      * When we change the inspected position on the canvas (mouse or keyboard).
@@ -91,7 +97,7 @@ let reducer = (state = defaultState, action) => {
         return newState;
 
     case RESIZE_CANVAS:
-        addToState = updateScores(state.s1, state.s2, state.windowSize, state.scoringMatrix, state.greyScale, action.canvasSize);
+        addToState = updateScores({canvasSize: action.canvasSize});
         return Object.assign({}, state, addToState, {canvasSize: action.canvasSize});
 
     /*
