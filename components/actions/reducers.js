@@ -1,5 +1,5 @@
 import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
-         INSPECT_COORDINATE, CHANGE_GREY_SCALE, RESIZE_CANVAS } from './actionTypes';
+         INSPECT_COORDINATE, CHANGE_GREY_SCALE, RESIZE_CANVAS, OPEN_TOAST } from './actionTypes';
 import Dotter from '../DotterPanel/dotter';
 import { guessSequenceType, commonSeqType } from '../InputPanel/input';
 //import { PROTEIN, DNA, CANVAS_SIZE } from '../constants/constants';
@@ -95,6 +95,13 @@ let reducer = (state = defaultState, action) => {
     case RESIZE_CANVAS:
         addToState = updateScores(state.s1, state.s2, state.windowSize, state.scoringMatrix, state.greyScale, action.canvasSize);
         return Object.assign({}, state, addToState, {canvasSize: action.canvasSize});
+
+    /*
+     * When a message is sent to be open in a Toast (bottom screen temp messager).
+     * Expects `action.message`.
+     */
+    case OPEN_TOAST:
+        return Object.assign({}, state, {toast: {open: true, message: action.message}});
 
     default:
         return state;

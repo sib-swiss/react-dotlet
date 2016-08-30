@@ -92,6 +92,7 @@ let defaultState = {
         initialAlphas: new Uint8ClampedArray([0]),
     },
     canvasSize: ~~ (0.33 * window.innerWidth),
+    toast: {open: false, message: ""},
 };
 
 Object.assign(defaultState, orthologExample);

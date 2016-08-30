@@ -16,7 +16,7 @@ const SCORING_MATRIX_NAMES = {
 const DNA = 'Type_DNA_string';
 const PROTEIN = 'Type_protein_string';
 
-// Aminoacids, in the same order as in the scoring matrices.
+// Aminoacids, in the same order as in the scoring matrices. Missing 'O', 'U' from full alphabet.
 const AA = ['A', 'R', 'N', 'D', 'C', 'Q', 'E', 'G', 'H', 'I', 'L', 'K', 'M',
             'F', 'P', 'S', 'T', 'W', 'Y', 'V', 'B', 'J', 'Z', 'X', '*'];
 
@@ -25,6 +25,8 @@ let temp = {};
 AA.forEach( (aa, i) => { temp[aa] = i; } );
 const AA_MAP = temp;
 
+const DNA_CHARS = new Set(['A','T','G','C','U']);
+const AA_CHARS = new Set(AA);
 
 
 export {
@@ -33,7 +35,8 @@ export {
     CANVAS_SIZE,
     CANVAS_ID,
     SCORING_MATRIX_NAMES,
-    AA,
+    DNA_CHARS,
+    AA_CHARS,
     AA_MAP,
     DNA,
     PROTEIN,

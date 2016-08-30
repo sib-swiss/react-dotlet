@@ -2,6 +2,7 @@ import React from 'react';
 import s from './Layout.css';
 import Header from './Header';
 import Footer from './Footer';
+import Toast from '../utils/Toast';
 
 /* Material-UI, see theme customization below */
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -42,6 +43,7 @@ class Layout extends React.Component {
                     </div>
 
                     <Footer />
+                    <Toast />
 
                 </div>
             </div>

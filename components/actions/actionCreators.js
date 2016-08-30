@@ -3,7 +3,8 @@ import { CHANGE_SEQUENCE,
          CHANGE_SCORING_MATRIX,
          INSPECT_COORDINATE,
          RESIZE_CANVAS,
-         CHANGE_GREY_SCALE
+         CHANGE_GREY_SCALE,
+         OPEN_TOAST,
        } from './actionTypes';
 
 /**
@@ -57,6 +58,13 @@ function resizeCanvas(canvasSize) {
     };
 }
 
+function openToast(message) {
+    return {
+        type: OPEN_TOAST,
+        message: message,
+    }
+}
+
 
 
 export {
@@ -66,4 +74,5 @@ export {
     inspectCoordinate,
     changeGreyScale,
     resizeCanvas,
+    openToast,
 };

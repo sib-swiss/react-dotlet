@@ -5,7 +5,10 @@ import Slider from 'material-ui/Slider';
 import { changeGreyScale } from '../actions/actionCreators';
 import s from './GreyScaleSlider.css';
 
-
+/**
+ * Two sliders to change the grey scale, one for the white threshold,
+ * the second for the black threshold.
+ */
 class GreyScaleSlider extends React.Component {
     constructor() {
         super();
