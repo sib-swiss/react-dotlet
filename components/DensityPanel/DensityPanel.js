@@ -3,7 +3,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import s from './DensityPanel.css';
 import store from '../../core/store';
 
-import BarChart from '../BarChart/BarChart';
+import BarChart from './BarChart/BarChart';
 import GreyScaleSlider from '../GreyScale/GreyScaleSlider';
 import GreyScaleLayer from '../GreyScale/GreyScaleLayer';
 

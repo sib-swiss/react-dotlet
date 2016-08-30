@@ -14,9 +14,9 @@ import * as d3axis from 'd3-axis';
 import * as d3selection from 'd3-selection';
 import * as d3shape from 'd3-shape';
 
-import store from '../../core/store';
+import store from '../../../core/store';
 import s from './BarChart.css';
-import * as theme from '../constants/theme';
+import * as theme from '../../constants/theme';
 
 
 class BarChart extends React.Component {
