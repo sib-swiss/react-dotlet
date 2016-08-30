@@ -1,5 +1,5 @@
 import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
-         INSPECT_COORDINATE, CHANGE_GREY_SCALE, RESIZE_CANVAS, OPEN_TOAST } from './actionTypes';
+         INSPECT_COORDINATE, CHANGE_GREY_SCALE, RESIZE_CANVAS, OPEN_TOAST, ZOOM } from './actionTypes';
 import Dotter from '../DotterPanel/dotter';
 import defaultState from './defaultState';
 import { commonSeqType } from '../InputPanel/input';
@@ -105,6 +105,12 @@ console.debug(commonType)
      */
     case OPEN_TOAST:
         return Object.assign({}, state, {toast: {open: true, message: action.message}});
+
+    /*
+     * Expects `action.scalingFactor`.
+     */
+    case ZOOM:
+        return Object.assign({}, state, {zoom: action.scalingFactor});
 
     default:
         return state;

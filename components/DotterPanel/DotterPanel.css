@@ -1,6 +1,6 @@
 
 .root {
-    margin: 15px;
+    margin: 15px 30px 15px 15px;
     padding-left: 25px;  /* To leave space for the legend */
 }
 
@@ -20,4 +20,19 @@
     float: left;
     width: 100%;
     padding-top: 7px;
+}
+
+.verticalToolbar {
+    position: absolute;
+    right: -33px;
+    top: 0;
+    width: 30px;
+    height: 100%;
+    border: 1px solid grey;
+}
+.verticalButton {
+    padding: 0;
+    margin: 5px 1px 5px 5px;
+    width: 24px;
+    height: 24px;
 }

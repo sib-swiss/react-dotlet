@@ -301,14 +301,29 @@ class Dotter {
         return data;
     }
 
+    /**
+     * Zoom on an ImageData using a temporary unmounted canvas.
+     * Source: http://stackoverflow.com/questions/3448347/how-to-scale-an-imagedata-in-html-canvas
+     * Equivalent to ``ctx.putImageData(imageData, 0, 0)``
+     * if the `scalingFactor` is 1.
+     */
+    _zoom(ctx, imageData, scalingFactor) {
+        let tempCanvas = document.createElement("canvas");
+        tempCanvas.width = imageData.width;
+        tempCanvas.height = imageData.height;
+        tempCanvas.getContext("2d").putImageData(imageData, 0, 0);
+        ctx.scale(scalingFactor, scalingFactor);
+        ctx.drawImage(tempCanvas, 0, 0);
+    }
 
     /**
      * Fill the dotter canvas with similarity scores; return the scores density.
      * It never stores the matrix in memory: it draws a point and forgets about it.
      * @param alphas: a (canvasSize x canvasSize) Uint8ClampedArray.
+     * @param zoom: relative scaling factor, usually in [0.5, 1, 2].
      * @returns {undefined}
      */
-    fillCanvas(alphas) {
+    fillCanvas(alphas, zoom) {
         let canvas = this.clearCanvas(this.canvasId);
         let ctx = canvas.getContext('2d');
         let imageData = ctx.getImageData(0,0, canvas.width, canvas.height);
@@ -317,15 +332,21 @@ class Dotter {
             imageData.data[k+3] = alphas[k/4];
         }
         ctx.imageSmoothingEnabled = false;
-        ctx.putImageData(imageData, 0, 0);
+        if (zoom === 1) {
+            ctx.putImageData(imageData, 0, 0);
+        } else {
+            this._zoom(ctx, imageData, zoom);
+        }
+
     }
 
     /**
      * Draw the vertical and horizontal lines showing the current position (i,j) on the canvas.
+     * @param zoom: absolute scaling factor (1,2,4,8,...).
      */
-    drawPositionLines(i, j) {
-        let x = this.coordinateFromSeqIndex(i);
-        let y = this.coordinateFromSeqIndex(j);
+    drawPositionLines(i, j, zoom=1) {
+        let x = this.coordinateFromSeqIndex(i) * zoom;
+        let y = this.coordinateFromSeqIndex(j) * zoom;
         // If the point size is > 1, make the lines pass in the middle.
         if (this.smallSequence) {
             x += this.scaleToPx / 2 + 1;
@@ -390,7 +411,7 @@ class Dotter {
      * @returns {undefined}
      */
     greyScale(initialAlphas, minBound, maxBound) {
-        let canvas = document.getElementById(CANVAS_ID);
+        let canvas = document.getElementById(this.canvasId);
         let ctx = canvas.getContext('2d');
         let imageData = ctx.getImageData(0,0, canvas.width, canvas.height);
         let data = imageData.data;
@@ -401,6 +422,7 @@ class Dotter {
         }
         ctx.putImageData(imageData, 0, 0);
     }
+
 }
 
 

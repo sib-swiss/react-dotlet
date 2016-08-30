@@ -4,8 +4,12 @@ import s from './DotterPanel.css';
 import Dotter from './dotter';
 import store from '../../core/store';
 import { CANVAS_ID } from '../constants/constants';
-import { resizeCanvas } from '../actions/actionCreators';
+import { resizeCanvas, zoom } from '../actions/actionCreators';
 import PositionLinesLayer from './PositionLinesLayer';
+
+/* Material-UI */
+import IconButton from 'material-ui/IconButton';
+import FontIcon from 'material-ui/FontIcon';
 
 
 class DotterPanel extends React.Component {
@@ -14,6 +18,8 @@ class DotterPanel extends React.Component {
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
         this.state = this.stateFromStore();
         this._onResize = this._onResize.bind(this);
+        this.zoomIn = this.zoomIn.bind(this);
+        this.zoomOut = this.zoomOut.bind(this);
     }
 
     stateFromStore() {
@@ -23,6 +29,7 @@ class DotterPanel extends React.Component {
             windowSize: storeState.windowSize,
             scoringMatrix: storeState.scoringMatrix,
             canvasSize: storeState.canvasSize,
+            zoom: storeState.zoom,
         }
     }
 
@@ -39,12 +46,14 @@ class DotterPanel extends React.Component {
     componentWillUnmount() {
         window.addEventListener('resize', this._onResize);
     }
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
         let state = store.getState();
         let d = new Dotter(state.canvasSize, state.windowSize, state.s1, state.s2, state.scoringMatrix);
         let greyScale = state.greyScale;
         let scaledAlphas = d.rescaleAlphas(greyScale.initialAlphas, greyScale.minBound, greyScale.maxBound);
-        d.fillCanvas(scaledAlphas);
+        let zoomFactor = this.state.zoom / prevState.zoom;
+        console.debug("zoom factor: ", zoomFactor, this.state.zoom)
+        d.fillCanvas(scaledAlphas, zoomFactor);
     }
 
     /* Events */
@@ -58,8 +67,23 @@ class DotterPanel extends React.Component {
         }, 250);
     }
 
+    zoomIn() {
+        let currentZoom = this.state.zoom;
+        store.dispatch(zoom( 2 * currentZoom ));
+    }
+    zoomOut() {
+        let currentZoom = this.state.zoom;
+        if (currentZoom > 1) {
+            store.dispatch(zoom( currentZoom / 2 ));
+        }
+    }
+
+
     render() {
         let canvasSize = this.state.canvasSize;
+        // Set style here because Material-UI doesn't give a shit about my class name.
+        let verticalButtonStyle = {margin: "5px 1px 5px 5px", padding: "0", height: "24px", width: "24px"};
+
         return (
             <div className={s.root}>
                 <div className={s.legendX}>{"Sequence 1"}</div>
@@ -84,6 +108,17 @@ class DotterPanel extends React.Component {
                         {/* Top layer: the lines indicating the current position */}
 
                         <PositionLinesLayer canvasSize={canvasSize} />
+
+                        {/* Zoom buttons */}
+
+                        <div className={s.verticalToolbar} >
+                            <IconButton className={s.verticalButton} style={verticalButtonStyle} onClick={this.zoomIn} >
+                                <FontIcon className="material-icons">zoom_in</FontIcon>
+                            </IconButton>
+                            <IconButton className={s.verticalButton} style={verticalButtonStyle} onClick={this.zoomOut} >
+                                <FontIcon className="material-icons">zoom_out</FontIcon>
+                            </IconButton>
+                        </div>
 
                     </div>
                 </div>

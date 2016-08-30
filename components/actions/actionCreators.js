@@ -5,6 +5,7 @@ import { CHANGE_SEQUENCE,
          RESIZE_CANVAS,
          CHANGE_GREY_SCALE,
          OPEN_TOAST,
+         ZOOM,
        } from './actionTypes';
 
 /**
@@ -65,6 +66,13 @@ function openToast(message) {
     }
 }
 
+function zoom(scalingFactor) {
+    return {
+        type: ZOOM,
+        scalingFactor: scalingFactor,
+    }
+}
+
 
 
 export {
@@ -75,4 +83,5 @@ export {
     changeGreyScale,
     resizeCanvas,
     openToast,
+    zoom,
 };

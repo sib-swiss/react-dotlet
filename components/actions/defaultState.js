@@ -95,9 +95,10 @@ let defaultState = {
     },
     canvasSize: ~~ (0.33 * window.innerWidth),
     toast: {open: false, message: ""},
+    zoom: 1,
 };
 
-Object.assign(defaultState, dummyExample);
+Object.assign(defaultState, orthologExample);
 
 
 export default defaultState;

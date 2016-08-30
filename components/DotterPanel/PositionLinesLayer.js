@@ -20,9 +20,11 @@ class PositionLinesLayer extends React.Component {
     }
 
     stateFromStore() {
+        let storeState = store.getState();
         return {
-            i: store.getState().i,
-            j: store.getState().j,
+            i: storeState.i,
+            j: storeState.j,
+            zoom: storeState.zoom,
         }
     }
 
@@ -40,7 +42,7 @@ class PositionLinesLayer extends React.Component {
     componentDidUpdate() {
         let state = store.getState();
         let d = new Dotter(state.canvasSize, state.windowSize, state.s1, state.s2, state.scoringMatrix);
-        d.drawPositionLines(this.state.i, this.state.j);
+        d.drawPositionLines(this.state.i, this.state.j, this.state.zoom);
     }
 
     _onClick(e) {
@@ -89,6 +91,7 @@ class PositionLinesLayer extends React.Component {
      */
     inspect(event) {
         let canvasSize = this.props.canvasSize;
+        let zoom = this.state.zoom;
         // Get canvas coordinates
         let canvas = event.target;
         let dims = canvas.getBoundingClientRect();
@@ -98,8 +101,8 @@ class PositionLinesLayer extends React.Component {
         let state = store.getState();
         let d = new Dotter(state.canvasSize, state.windowSize, state.s1, state.s2, state.scoringMatrix);
         // Return corresponding char indices
-        let i = d.seqIndexFromCoordinate(x);
-        let j = d.seqIndexFromCoordinate(y);
+        let i = d.seqIndexFromCoordinate(~~(x / zoom));
+        let j = d.seqIndexFromCoordinate(~~(y / zoom));
         // Make sure we don't get out of bounds while dragging
         i = Math.min(Math.max(0, i), d.ls1-1);
         j = Math.min(Math.max(0, j), d.ls2-1);
