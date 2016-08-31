@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 
-
 import { DNA, PROTEIN } from '../../constants/constants';
 import { guessSequenceType } from '../input';
+
 
 describe('InputPanel test suite', () => {
 
