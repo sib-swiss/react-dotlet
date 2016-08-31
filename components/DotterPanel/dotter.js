@@ -323,7 +323,7 @@ class Dotter {
      * @param zoom: relative scaling factor, usually in [0.5, 1, 2].
      * @returns {undefined}
      */
-    fillCanvas(alphas, zoom) {
+    fillCanvas(alphas) {
         let canvas = this.clearCanvas(this.canvasId);
         let ctx = canvas.getContext('2d');
         let imageData = ctx.getImageData(0,0, canvas.width, canvas.height);
@@ -332,19 +332,14 @@ class Dotter {
             imageData.data[k+3] = alphas[k/4];
         }
         ctx.imageSmoothingEnabled = false;
-        if (zoom === 1) {
-            ctx.putImageData(imageData, 0, 0);
-        } else {
-            this._zoom(ctx, imageData, zoom);
-        }
-
+        ctx.putImageData(imageData, 0, 0);
     }
 
     /**
      * Draw the vertical and horizontal lines showing the current position (i,j) on the canvas.
      * @param zoom: absolute scaling factor (1,2,4,8,...).
      */
-    drawPositionLines(i, j, zoom=1) {
+    drawPositionLines(i, j, zoom) {
         let x = this.coordinateFromSeqIndex(i) * zoom;
         let y = this.coordinateFromSeqIndex(j) * zoom;
         // If the point size is > 1, make the lines pass in the middle.

@@ -95,7 +95,7 @@ let defaultState = {
     },
     canvasSize: ~~ (0.33 * window.innerWidth),
     toast: {open: false, message: ""},
-    zoom: 1,
+    zoomLevel: 1,
 };
 
 Object.assign(defaultState, orthologExample);

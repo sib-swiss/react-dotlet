@@ -3,6 +3,7 @@ import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
 import Dotter from '../DotterPanel/dotter';
 import defaultState from './defaultState';
 import { commonSeqType } from '../InputPanel/input';
+import { zoomInSequence, zoomOutSequence } from '../common/helpers';
 
 
 let reducer = (state = defaultState, action) => {
@@ -11,13 +12,23 @@ let reducer = (state = defaultState, action) => {
     let scores;
 
     let updateScores = function({
-         s1 = state.s1, s2 = state.s2,
-         s1Type = state.s1Type, s2Type = state.s2Type,
-         windowSize = state.windowSize, scoringMatrixName = state.scoringMatrix,
-         greyScale = state.greyScale, canvasSize = state.canvasSize,
+         s1 = state.s1,
+         s2 = state.s2,
+         s1Type = state.s1Type,
+         s2Type = state.s2Type,
+         windowSize = state.windowSize,
+         scoringMatrixName = state.scoringMatrix,
+         greyScale = state.greyScale,
+         canvasSize = state.canvasSize,
+         zoomLevel = state.zoomLevel,
     }) {
         let commonType = commonSeqType(s1Type, s2Type);
-console.debug(commonType)
+        s1 = zoomInSequence(s1, state.j, zoomLevel);
+        s2 = zoomInSequence(s2, state.i, zoomLevel);
+        console.debug(zoomLevel)
+        console.debug(s1)
+        console.debug(s2)
+        //console.debug(commonType)
         let d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
         d.calculateScores();
         let density = d.densityFromScores();
@@ -25,7 +36,7 @@ console.debug(commonType)
         let addToState = {
             density: density,
             greyScale : {initialAlphas: alphas, minBound: greyScale.minBound, maxBound: greyScale.maxBound},
-            toast: defaultState.toast,
+            toast: defaultState.toast,  // reset
         };
         return addToState;
     };
@@ -110,7 +121,8 @@ console.debug(commonType)
      * Expects `action.scalingFactor`.
      */
     case ZOOM:
-        return Object.assign({}, state, {zoom: action.scalingFactor});
+        addToState = updateScores({zoomLevel: action.zoomLevel});
+        return Object.assign({}, state, {zoomLevel: action.zoomLevel}, addToState);
 
     default:
         return state;

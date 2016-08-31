@@ -24,7 +24,7 @@ class PositionLinesLayer extends React.Component {
         return {
             i: storeState.i,
             j: storeState.j,
-            zoom: storeState.zoom,
+            zoomLevel: storeState.zoomLevel,
         }
     }
 
@@ -42,7 +42,7 @@ class PositionLinesLayer extends React.Component {
     componentDidUpdate() {
         let state = store.getState();
         let d = new Dotter(state.canvasSize, state.windowSize, state.s1, state.s2, state.scoringMatrix);
-        d.drawPositionLines(this.state.i, this.state.j, this.state.zoom);
+        d.drawPositionLines(this.state.i, this.state.j, this.state.zoomLevel);
     }
 
     _onClick(e) {
@@ -91,7 +91,7 @@ class PositionLinesLayer extends React.Component {
      */
     inspect(event) {
         let canvasSize = this.props.canvasSize;
-        let zoom = this.state.zoom;
+        let zoom = this.state.zoomLevel;
         // Get canvas coordinates
         let canvas = event.target;
         let dims = canvas.getBoundingClientRect();

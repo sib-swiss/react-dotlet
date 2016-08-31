@@ -29,7 +29,6 @@ class DotterPanel extends React.Component {
             windowSize: storeState.windowSize,
             scoringMatrix: storeState.scoringMatrix,
             canvasSize: storeState.canvasSize,
-            zoom: storeState.zoom,
         }
     }
 
@@ -51,9 +50,7 @@ class DotterPanel extends React.Component {
         let d = new Dotter(state.canvasSize, state.windowSize, state.s1, state.s2, state.scoringMatrix);
         let greyScale = state.greyScale;
         let scaledAlphas = d.rescaleAlphas(greyScale.initialAlphas, greyScale.minBound, greyScale.maxBound);
-        let zoomFactor = this.state.zoom / prevState.zoom;
-        console.debug("zoom factor: ", zoomFactor, this.state.zoom)
-        d.fillCanvas(scaledAlphas, zoomFactor);
+        d.fillCanvas(scaledAlphas);
     }
 
     /* Events */
@@ -67,14 +64,15 @@ class DotterPanel extends React.Component {
         }, 250);
     }
 
+    /* Calculate the zoom level here because it could be a slider or anything */
     zoomIn() {
-        let currentZoom = this.state.zoom;
-        store.dispatch(zoom( 2 * currentZoom ));
+        let currentZoom = store.getState().zoomLevel;
+        store.dispatch(zoom( 2 * currentZoom , "in"));
     }
     zoomOut() {
-        let currentZoom = this.state.zoom;
+        let currentZoom = store.getState().zoomLevel;
         if (currentZoom > 1) {
-            store.dispatch(zoom( currentZoom / 2 ));
+            store.dispatch(zoom( currentZoom / 2 , "out"));
         }
     }
 

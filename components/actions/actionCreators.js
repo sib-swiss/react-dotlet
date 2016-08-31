@@ -66,10 +66,11 @@ function openToast(message) {
     }
 }
 
-function zoom(scalingFactor) {
+function zoom(zoomLevel, direction) {
     return {
         type: ZOOM,
-        scalingFactor: scalingFactor,
+        zoomLevel: zoomLevel,
+        direction: direction,
     }
 }
 
