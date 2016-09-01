@@ -2,9 +2,13 @@
 .root {
     flex: 1;
     margin: 15px auto;
+    position: relative;
 }
 
 
 .canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
     border: 1px solid black;
 }

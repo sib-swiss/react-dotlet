@@ -32,34 +32,8 @@ function viewRectangleCoordinates(i, j, L, canvasSize, zoomLevel) {
 }
 
 
-function zoomInSequence(seq, index, zoomLevel) {
-    let ws = ~~ (seq.length / zoomLevel / 2);
-    index = Math.max(index, ws);
-    return getSequenceAround(seq, index, ws);
-}
-
-function zoomOutSequence(seq, index, zoomLevel) {
-    let ws = ~~ (seq.length * zoomLevel / 2);
-    index = Math.max(index, ws);
-    return getSequenceAround(seq, index, ws);
-}
-
-//calculateMean(scores) {
-//    let mean = 0;
-//    let n = 0;
-//    for (let key of Object.keys(scores)) {
-//        let val = scores[key];
-//        mean += key * val;
-//        n += val;
-//    }
-//    return n > 0 ? (mean / n).toFixed(2) : 0;
-//}
-
-
 
 export {
     getSequenceAround,
     viewRectangleCoordinates,
-    zoomInSequence,
-    zoomOutSequence,
 };

@@ -3,7 +3,7 @@ import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
 import Dotter from '../DotterPanel/dotter';
 import defaultState from './defaultState';
 import { commonSeqType } from '../InputPanel/input';
-import { zoomInSequence, zoomOutSequence } from '../common/helpers';
+import { zoomInSequence, zoomOutSequence, viewRectangleCoordinates } from '../common/helpers';
 
 
 let reducer = (state = defaultState, action) => {
@@ -23,13 +23,21 @@ let reducer = (state = defaultState, action) => {
          zoomLevel = state.zoomLevel,
     }) {
         let commonType = commonSeqType(s1Type, s2Type);
-        s1 = zoomInSequence(s1, state.j, zoomLevel);
-        s2 = zoomInSequence(s2, state.i, zoomLevel);
-        console.debug(zoomLevel)
-        console.debug(s1)
-        console.debug(s2)
+        let L = Math.max(s1.length, s2.length);
+        if (zoomLevel !== state.zoomLevel) {
+            var d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
+            let rect = viewRectangleCoordinates(state.i, state.j, L, canvasSize, zoomLevel);
+            let yy = d.seqIndexFromCoordinate(rect.y);
+            let xx = d.seqIndexFromCoordinate(rect.x);
+            s1 = s1.slice(xx, xx + ~~(L/zoomLevel));
+            s2 = s2.slice(yy, yy + ~~(L/zoomLevel));
+            console.debug("i,j:", state.i, state.j)
+            console.debug("xx,yy:", xx, yy, ~~(L/zoomLevel))
+            console.debug("slice:", s1.length, s2.length)
+            console.debug("zoom:", zoomLevel)
+        }
         //console.debug(commonType)
-        let d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
+        var d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
         d.calculateScores();
         let density = d.densityFromScores();
         let alphas = d.alphasFromScores();
