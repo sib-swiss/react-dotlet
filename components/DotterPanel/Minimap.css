@@ -2,6 +2,9 @@
 .root {
     flex: 1;
     margin: 15px auto;
-    background: transparent;
 }
 
+
+.canvas {
+    border: 1px solid black;
+}

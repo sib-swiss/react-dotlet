@@ -2,7 +2,7 @@ import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import Dotter from './dotter';
 import store from '../../core/store';
-import { CANVAS_ID } from '../constants/constants';
+import { CANVAS_ID_LINES } from '../constants/constants';
 import { inspectCoordinate } from '../actions/actionCreators';
 
 
@@ -114,7 +114,7 @@ class PositionLinesLayer extends React.Component {
     render() {
         let canvasSize = this.props.canvasSize;
         return (
-            <canvas id={CANVAS_ID +'-topLayer'}
+            <canvas id={CANVAS_ID_LINES}
                     width={canvasSize}
                     height={canvasSize}
                     style={{

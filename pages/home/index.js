@@ -16,6 +16,7 @@ import InputPanel from '../../components/InputPanel';
 import DensityPanel from '../../components/DensityPanel';
 import TwoSeqsPanel from '../../components/TwoSeqsPanel';
 import InfoPanel from '../../components/InfoPanel';
+import Minimap from '../../components/DotterPanel/Minimap';
 
 
 /*
@@ -31,10 +32,11 @@ class HomePage extends React.Component {
                 <div className={s.midPanel}>
                     <div className={s.dotterPanelContainer}>
                         <DotterPanel />
+                        <InfoPanel />
                     </div>
                     <div className={s.densityPanelContainer}>
+                        <Minimap />
                         <DensityPanel />
-                        <InfoPanel />
                     </div>
                 </div>
                 <div className={s.twoSeqsPanelContainer}>

@@ -2,7 +2,11 @@
 const MATCH = 'match';
 const MISMATCH = 'mismatch';
 const CANVAS_SIZE = 400;
+
 const CANVAS_ID = "dotter-canvas";
+const CANVAS_ID_LINES = "dotter-canvas-topLayer";
+const CANVAS_ID_MINIMAP_SQUARE = "dotter-canvas-minimap-square";
+const CANVAS_ID_MINIMAP_LINES = "dotter-canvas-minimap-lines";
 
 const SCORING_MATRIX_NAMES = {
     IDENTITY: 'Identity',
@@ -34,6 +38,9 @@ export {
     MISMATCH,
     CANVAS_SIZE,
     CANVAS_ID,
+    CANVAS_ID_LINES,
+    CANVAS_ID_MINIMAP_SQUARE,
+    CANVAS_ID_MINIMAP_LINES,
     SCORING_MATRIX_NAMES,
     DNA_CHARS,
     AA_CHARS,
