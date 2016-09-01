@@ -6,6 +6,7 @@ import { changeSequence, changeWindowSize, changeScoringMatrix, openToast } from
 import { SCORING_MATRIX_NAMES, DNA, CANVAS_ID } from '../constants/constants';
 import { commonSeqType, guessSequenceType } from './input';
 import { printCanvas } from './helpers';
+import setCaretToPos from '../utils/setCaretToPos';
 import * as validators from './validators';
 
 
@@ -28,6 +29,8 @@ class InputPanel extends React.Component {
             open: false,
             activeSequence: 1,
         });
+        this._textArea = null;
+        this.caretPos = 0;
     }
 
     getStoreState() {
@@ -43,6 +46,11 @@ class InputPanel extends React.Component {
     componentDidMount() {
         // Trigger any event to initialize the canvas with default parameters already in store.
         store.dispatch(changeWindowSize(this.state.windowSize));
+    }
+    componentDidUpdate() {
+        if (this.state.open) {
+            this.focusTextArea();
+        }
     }
 
     /* Callbacks */
@@ -90,6 +98,14 @@ class InputPanel extends React.Component {
     };
     onPrint() {
         printCanvas(CANVAS_ID);
+    }
+
+    focusTextArea() {
+        this._textArea.focus();
+        setCaretToPos(this._textArea, this.caretPos);
+    }
+    onClickTextArea() {
+        this.caretPos = this._textArea.selectionEnd;
     }
 
 
@@ -178,10 +194,11 @@ class InputPanel extends React.Component {
             {/* Where we enter the sequence */}
 
             <div className={s.textareaContainer} style={{display: this.state.open ? 'block' : 'none'}}>
-                <textarea className={s.textarea} rows={3}
+                <textarea className={s.textarea} rows={3} ref={(c) => this._textArea = c}
                     value={this.state.activeSequence === 1 ? this.state.s1 : this.state.s2}
                     placeholder={this.state.activeSequence === 1 ? 'Sequence 1:' : 'Sequence 2:'}
                     onChange={this.state.activeSequence === 1 ? this.onChangeSeq1 : this.onChangeSeq2}
+                    onClick={this.onClickTextArea.bind(this)}
                 />
             </div>
         </div>);
