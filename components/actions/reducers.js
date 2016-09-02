@@ -5,6 +5,7 @@ import Dotter from '../DotterPanel/dotter';
 import defaultState from './defaultState';
 import { commonSeqType } from '../InputPanel/input';
 import { viewRectangleCoordinates } from '../common/helpers';
+import { MINIMAP_SIZE } from '../constants/constants';
 
 
 let reducer = (state = defaultState, action) => {
@@ -137,10 +138,12 @@ let reducer = (state = defaultState, action) => {
         return Object.assign({}, state, {zoomLevel: action.zoomLevel}, addToState);
 
     case DRAG_MINIMAP:
-        let view = Object.assign({}, state.view);
-        view.x = view.x + action.xShift;
-        view.y = view.y + action.yShift;
-        return Object.assign({}, state, {view: view});
+        let current = state.minimapView;
+        let minimapView = {
+            x: Math.min(Math.max(0, current.x + action.xShift), MINIMAP_SIZE / state.zoomLevel),
+            y: Math.min(Math.max(0, current.y + action.yShift), MINIMAP_SIZE / state.zoomLevel),
+        };
+        return Object.assign({}, state, {minimapView: minimapView});
 
     default:
         return state;

@@ -105,7 +105,10 @@ let defaultState = {
     view: {
         i: 0, j: 0, L: 0,
         x: 0, y: 0, size: 0,
-    }
+    },
+    minimapView: {
+        x: 0, y: 0,
+    },
 };
 defaultState.L = Math.max(defaultState.s1.length, defaultState.s2.length);
 defaultState.view.L = defaultState.L;

@@ -2,6 +2,7 @@
 const MATCH = 'match';
 const MISMATCH = 'mismatch';
 const CANVAS_SIZE = 400;
+const MINIMAP_SIZE = 150;
 
 const CANVAS_ID = "dotter-canvas";
 const CANVAS_ID_LINES = "dotter-canvas-topLayer";
@@ -38,6 +39,7 @@ export {
     MATCH,
     MISMATCH,
     CANVAS_SIZE,
+    MINIMAP_SIZE,
     CANVAS_ID,
     CANVAS_ID_LINES,
     CANVAS_ID_MINIMAP_SQUARE,
