@@ -87,7 +87,8 @@ class PositionLinesLayer extends React.Component {
         this.inspect(e);
     }
     _onKeyDown(e) {
-        if ( document.activeElement.tagName.toLowerCase() === 'textarea') {
+        if ( document.activeElement.tagName.toLowerCase() === 'textarea'
+          || document.activeElement.tagName.toLowerCase() === 'input' ) {
             return;
         }
         var keyCode = e.keyCode;

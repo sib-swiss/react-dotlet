@@ -17,7 +17,7 @@ let reducer = (state = defaultState, action) => {
          s1Type = state.s1Type,
          s2Type = state.s2Type,
          windowSize = state.windowSize,
-         scoringMatrixName = state.scoringMatrix,
+         scoringMatrix = state.scoringMatrix,
          greyScale = state.greyScale,
          canvasSize = state.canvasSize,
          zoomLevel = state.zoomLevel,
@@ -27,7 +27,7 @@ let reducer = (state = defaultState, action) => {
         let view = state.view;
         let d;
         if (zoomLevel !== state.zoomLevel) {
-            d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
+            d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrix);
             let rect = viewRectangleCoordinates(state.i, state.j, L, canvasSize, zoomLevel);
             let yy = d.seqIndexFromCoordinate(rect.y);
             let xx = d.seqIndexFromCoordinate(rect.x);
@@ -37,7 +37,7 @@ let reducer = (state = defaultState, action) => {
                     x: rect.x, y: rect.y, size: rect.size};
         }
         //console.debug(commonType)
-        d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
+        d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrix);
         d.calculateScores();
         let density = d.densityFromScores();
         let alphas = d.alphasFromScores();
@@ -95,7 +95,7 @@ let reducer = (state = defaultState, action) => {
      */
     case CHANGE_SCORING_MATRIX:
         addToState = updateScores({scoringMatrix: action.scoringMatrix});
-        return Object.assign({}, state, addToState, {scoringMatrixName: action.scoringMatrix});
+        return Object.assign({}, state, addToState, {scoringMatrix: action.scoringMatrix});
 
     /*
      * When we change the inspected position on the canvas (mouse or keyboard).
