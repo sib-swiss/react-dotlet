@@ -12,11 +12,11 @@ import React from 'react';
 import s from './styles.css';
 import Layout from '../../components/Layout';
 import DotterPanel from '../../components/DotterPanel';
+import Minimap from '../../components/DotterPanel/Minimap';
 import InputPanel from '../../components/InputPanel';
 import DensityPanel from '../../components/DensityPanel';
 import TwoSeqsPanel from '../../components/TwoSeqsPanel';
 import InfoPanel from '../../components/InfoPanel';
-import Minimap from '../../components/DotterPanel/Minimap';
 
 
 /*

@@ -114,7 +114,6 @@ class LinesLayer extends React.Component {
     draw() {
         let size = this.props.size;
         let zoom = this.state.zoomLevel;
-        console.debug(zoom)
         let canvas = document.getElementById(CANVAS_ID_MINIMAP_LINES);
         let ctx = canvas.getContext("2d");
         ctx.clearRect(0,0, size, size);

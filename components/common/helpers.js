@@ -17,15 +17,15 @@ function viewRectangleCoordinates(i, j, L, canvasSize, zoomLevel) {
     let size = ~~ (canvasSize / zoomLevel);
     let hSize = ~~ (size / 2);
     // Transform to pixel coordinates
-    let scale = (index) => ~~ ((canvasSize / L) * index);
+    let scale = (index) => ((canvasSize / L) * index);
     let x = scale(i) - hSize;
     let y = scale(j) - hSize;
     // Top and left borders must not go beyond the canvas borders
     x = Math.max(x, 0);
     y = Math.max(y, 0);
     // Bottom and right borders must not go beyond the canvas borders
-    x = Math.min(x, canvasSize - size);
-    y = Math.min(y, canvasSize - size);
+    x = ~~ Math.min(x, canvasSize - size);
+    y = ~~ Math.min(y, canvasSize - size);
     return {
         x, y, size
     }

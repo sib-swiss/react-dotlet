@@ -30,6 +30,7 @@ class DotterPanel extends React.Component {
             windowSize: storeState.windowSize,
             scoringMatrix: storeState.scoringMatrix,
             canvasSize: storeState.canvasSize,
+            zoomLevel: storeState.zoomLevel,
         }
     }
 
@@ -67,11 +68,10 @@ class DotterPanel extends React.Component {
 
     /* Calculate the zoom level here because it could be a slider or anything */
     zoomIn() {
-        let currentZoom = store.getState().zoomLevel;
-        store.dispatch(zoom( 2 * currentZoom , "in"));
+        store.dispatch(zoom( 2 * this.state.zoomLevel , "in"));
     }
     zoomOut() {
-        let currentZoom = store.getState().zoomLevel;
+        let currentZoom = this.state.zoomLevel;
         if (currentZoom > 1) {
             store.dispatch(zoom( currentZoom / 2 , "out"));
         }
@@ -80,6 +80,7 @@ class DotterPanel extends React.Component {
 
     render() {
         let canvasSize = this.state.canvasSize;
+        let zoomLevel = this.state.zoomLevel;
         // Set style here because Material-UI doesn't give a shit about my class name.
         let verticalButtonStyle = {margin: "5px 1px 5px 5px", padding: "0", height: "24px", width: "24px"};
 
@@ -106,7 +107,7 @@ class DotterPanel extends React.Component {
 
                         {/* Top layer: the lines indicating the current position */}
 
-                        <PositionLinesLayer canvasSize={canvasSize} />
+                        <PositionLinesLayer canvasSize={canvasSize} zoomLevel={zoomLevel} />
 
                         {/* Zoom buttons */}
 

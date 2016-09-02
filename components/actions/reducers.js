@@ -31,10 +31,10 @@ let reducer = (state = defaultState, action) => {
             let xx = d.seqIndexFromCoordinate(rect.x);
             s1 = s1.slice(xx, xx + ~~(L/zoomLevel));
             s2 = s2.slice(yy, yy + ~~(L/zoomLevel));
-            console.debug("i,j:", state.i, state.j)
-            console.debug("xx,yy:", xx, yy, ~~(L/zoomLevel))
-            console.debug("slice:", s1.length, s2.length)
-            console.debug("zoom:", zoomLevel)
+            //console.debug("i,j:", state.i, state.j)
+            //console.debug("xx,yy:", xx, yy, ~~(L/zoomLevel))
+            //console.debug("slice:", s1.length, s2.length)
+            //console.debug("zoom:", zoomLevel)
         }
         //console.debug(commonType)
         var d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
