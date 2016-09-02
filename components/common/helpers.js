@@ -31,9 +31,22 @@ function viewRectangleCoordinates(i, j, L, canvasSize, zoomLevel) {
     }
 }
 
+/**
+ * Get the (x,y) pixel coordinates of a mouse event in the canvas, relative to the canvas.
+ * @param event
+ */
+function getCanvasMouseCoordinates(event) {
+    let canvas = event.target;
+    let dims = canvas.getBoundingClientRect();
+    let x = event.pageX - dims.left,
+        y = event.pageY - dims.top;
+    return {x, y};
+}
+
 
 
 export {
     getSequenceAround,
     viewRectangleCoordinates,
+    getCanvasMouseCoordinates,
 };

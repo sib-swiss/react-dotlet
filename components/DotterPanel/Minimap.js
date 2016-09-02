@@ -4,7 +4,7 @@ import s from './Minimap.css';
 
 import store from '../../core/store';
 import { CANVAS_ID_MINIMAP_SQUARE, CANVAS_ID_MINIMAP_LINES, CANVAS_ID_MINIMAP_TOP } from '../constants/constants';
-import { viewRectangleCoordinates } from '../common/helpers';
+import { viewRectangleCoordinates, getCanvasMouseCoordinates } from '../common/helpers';
 
 
 class Minimap extends React.Component {
@@ -39,7 +39,6 @@ class LinesLayer extends React.Component {
             j: storeState.j,
             s1: storeState.s1,
             s2: storeState.s2,
-            L: storeState.L,
         }
     }
     componentWillMount() {
@@ -55,7 +54,8 @@ class LinesLayer extends React.Component {
      * Return the pixel corresponding to that sequence index.
      */
     scale(index) {
-        return ~~ ((this.props.size / this.state.L) * index);
+        let L = Math.max(this.state.s1.length, this.state.s2.length);
+        return ~~ ((this.props.size / L) * index);
     }
 
     draw() {
@@ -178,20 +178,26 @@ class MoveLayer extends React.Component {
     componentDidUpdate() {
     }
 
-    getViewRectange() {
-        let size = this.props.size;
+    isInRect(x,y) {
+        let rect = this.state.rect;
+        return (x >= rect.x && x < rect.x + rect.size
+             && y >= rect.y && y < rect.y + rect.size);
     }
 
-    _onMouseDown() {
-        this.mouseDown = true;
+    _onMouseDown(e) {
         document.body.style.cursor = "move";
+        let coords = getCanvasMouseCoordinates(e);
+        if (this.isInRect(coords.x, coords.y)) {
+            this.mouseDown = true;
+        }
     }
     _onMouseUp() {
         this.mouseDown = false;
         document.body.style.cursor = "default";
     }
     _onMouseMove() {
-        console.debug(this.mouseDown)
+        if (this.mouseDown) {
+        }
     }
 
     render() {

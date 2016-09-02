@@ -4,7 +4,7 @@ import Dotter from './dotter';
 import store from '../../core/store';
 import { CANVAS_ID_LINES } from '../constants/constants';
 import { inspectCoordinate } from '../actions/actionCreators';
-import { viewRectangleCoordinates } from '../common/helpers';
+import { getCanvasMouseCoordinates } from '../common/helpers';
 
 
 class PositionLinesLayer extends React.Component {
@@ -121,20 +121,14 @@ class PositionLinesLayer extends React.Component {
      */
     inspect(event) {
         let state = store.getState();
-        let canvasSize = this.props.canvasSize;
         let zoomLevel = this.props.zoomLevel;
-
-        // Get canvas coordinates
-        let canvas = event.target;
-        let dims = canvas.getBoundingClientRect();
-        let x = event.pageX - dims.left,
-            y = event.pageY - dims.top;
+        let coords = getCanvasMouseCoordinates(event);
 
         // Return corresponding char indices
         let view = state.view;
         let d = new Dotter(state);
-        let i = d.seqIndexFromCoordinate(view.x + x/zoomLevel);
-        let j = d.seqIndexFromCoordinate(view.y + y/zoomLevel);
+        let i = d.seqIndexFromCoordinate(view.x + coords.x / zoomLevel);
+        let j = d.seqIndexFromCoordinate(view.y + coords.y / zoomLevel);
 
         // Make sure we don't get out of seq bounds while dragging
         i = Math.min(Math.max(0, i), d.ls1-1);
