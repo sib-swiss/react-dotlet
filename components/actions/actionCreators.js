@@ -6,6 +6,7 @@ import { CHANGE_SEQUENCE,
          CHANGE_GREY_SCALE,
          OPEN_TOAST,
          ZOOM,
+         DRAG_MINIMAP,
        } from './actionTypes';
 
 /**
@@ -63,7 +64,7 @@ function openToast(message) {
     return {
         type: OPEN_TOAST,
         message: message,
-    }
+    };
 }
 
 function zoom(zoomLevel, direction) {
@@ -71,7 +72,15 @@ function zoom(zoomLevel, direction) {
         type: ZOOM,
         zoomLevel: zoomLevel,
         direction: direction,
-    }
+    };
+}
+
+function dragMinimap(xShift, yShift) {
+    return {
+        type: DRAG_MINIMAP,
+        xShift: xShift,
+        yShift: yShift,
+    };
 }
 
 
@@ -85,4 +94,5 @@ export {
     resizeCanvas,
     openToast,
     zoom,
+    dragMinimap,
 };

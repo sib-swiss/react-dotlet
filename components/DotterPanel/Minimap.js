@@ -5,6 +5,7 @@ import s from './Minimap.css';
 import store from '../../core/store';
 import { CANVAS_ID_MINIMAP_SQUARE, CANVAS_ID_MINIMAP_LINES, CANVAS_ID_MINIMAP_TOP } from '../constants/constants';
 import { viewRectangleCoordinates, getCanvasMouseCoordinates } from '../common/helpers';
+import { dragMinimap } from '../actions/actionCreators';
 
 
 class Minimap extends React.Component {
@@ -155,6 +156,7 @@ class MoveLayer extends React.Component {
         super();
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
         this.mouseDown = false;
+        this.initCoords = {};
         this._onMouseDown = this._onMouseDown.bind(this);
         this._onMouseMove = this._onMouseMove.bind(this);
         this._onMouseUp = this._onMouseUp.bind(this);
@@ -187,6 +189,7 @@ class MoveLayer extends React.Component {
     _onMouseDown(e) {
         document.body.style.cursor = "move";
         let coords = getCanvasMouseCoordinates(e);
+        this.initCoords = coords;
         if (this.isInRect(coords.x, coords.y)) {
             this.mouseDown = true;
         }
@@ -195,8 +198,12 @@ class MoveLayer extends React.Component {
         this.mouseDown = false;
         document.body.style.cursor = "default";
     }
-    _onMouseMove() {
+    _onMouseMove(e) {
         if (this.mouseDown) {
+            let coords = getCanvasMouseCoordinates(e);
+            let xShift = coords.x - this.initCoords.x;
+            let yShift = coords.y - this.initCoords.y;
+            //store.dispatch(dragMinimap(xShift, yShift));
         }
     }
 

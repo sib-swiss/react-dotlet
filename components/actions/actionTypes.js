@@ -12,6 +12,7 @@ const CHANGE_GREY_SCALE = "CHANGE_GREY_SCALE";
 const RESIZE_CANVAS = "RESIZE_CANVAS";
 const OPEN_TOAST = "OPEN_TOAST";
 const ZOOM = "ZOOM";
+const DRAG_MINIMAP = "DRAG_MINIMAP";
 
 export {
     CHANGE_SEQUENCE,
@@ -22,4 +23,5 @@ export {
     RESIZE_CANVAS,
     OPEN_TOAST,
     ZOOM,
+    DRAG_MINIMAP,
 };

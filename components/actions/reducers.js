@@ -1,5 +1,6 @@
 import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
-         INSPECT_COORDINATE, CHANGE_GREY_SCALE, RESIZE_CANVAS, OPEN_TOAST, ZOOM } from './actionTypes';
+         INSPECT_COORDINATE, CHANGE_GREY_SCALE, RESIZE_CANVAS, OPEN_TOAST,
+         ZOOM, DRAG_MINIMAP } from './actionTypes';
 import Dotter from '../DotterPanel/dotter';
 import defaultState from './defaultState';
 import { commonSeqType } from '../InputPanel/input';
@@ -133,6 +134,12 @@ let reducer = (state = defaultState, action) => {
     case ZOOM:
         addToState = updateScores({zoomLevel: action.zoomLevel});
         return Object.assign({}, state, {zoomLevel: action.zoomLevel}, addToState);
+
+    case DRAG_MINIMAP:
+        let view = Object.assign({}, state.view);
+        view.x = view.x + action.xShift;
+        view.y = view.y + action.yShift;
+        return Object.assign({}, state, {view: view});
 
     default:
         return state;
