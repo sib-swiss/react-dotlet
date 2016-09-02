@@ -31,16 +31,6 @@ class LinesLayer extends React.Component {
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     }
 
-    componentWillMount() {
-        store.subscribe(() => {
-            this.setState( this.stateFromStore() );
-        });
-    }
-
-    componentDidUpdate() {
-        this.draw();
-    }
-
     stateFromStore() {
         let storeState = store.getState();
         return {
@@ -49,6 +39,14 @@ class LinesLayer extends React.Component {
             j: storeState.j,
             L: storeState.L,
         }
+    }
+    componentWillMount() {
+        store.subscribe(() => {
+            this.setState( this.stateFromStore() );
+        });
+    }
+    componentDidUpdate() {
+        this.draw();
     }
 
     /**
@@ -90,16 +88,6 @@ class SquareLayer extends React.Component {
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     }
 
-    componentWillMount() {
-        store.subscribe(() => {
-            this.setState( this.stateFromStore() );
-        });
-    }
-
-    componentDidUpdate() {
-        this.draw();
-    }
-
     stateFromStore() {
         let storeState = store.getState();
         return {
@@ -109,6 +97,15 @@ class SquareLayer extends React.Component {
             zoomLevel: storeState.zoomLevel,
         }
     }
+    componentWillMount() {
+        store.subscribe(() => {
+            this.setState( this.stateFromStore() );
+        });
+    }
+    componentDidUpdate() {
+        this.draw();
+    }
+
 
     draw() {
         let size = this.props.size;
