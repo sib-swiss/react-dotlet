@@ -147,7 +147,7 @@ class BarChart extends React.Component {
 
         /* Grey scale background */
 
-        let greyScaleGradient = (
+        let greyScaleGradient = min < max ?
                 <defs>
                     <linearGradient id="greyscale-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stopColor="black" stopOpacity="100%" />
@@ -155,7 +155,17 @@ class BarChart extends React.Component {
                         <stop offset={max +"%"} stopColor="white" stopOpacity="100%" />
                         <stop offset="100%" stopColor="white" stopOpacity="100%" />
                     </linearGradient>
-                </defs>);
+                </defs>
+            :   // reverse colors 
+                <defs>
+                    <linearGradient id="greyscale-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="white" stopOpacity="100%" />
+                        <stop offset={max +"%"} stopColor="white" stopOpacity="100%" />
+                        <stop offset={min +"%"} stopColor="black" stopOpacity="100%" />
+                        <stop offset="100%" stopColor="black" stopOpacity="100%" />
+                    </linearGradient>
+                </defs>
+        ;
 
         let background = (
             <g transform={'translate('+margin.left+')'}>
