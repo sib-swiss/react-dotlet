@@ -7,6 +7,7 @@ const CANVAS_ID = "dotter-canvas";
 const CANVAS_ID_LINES = "dotter-canvas-topLayer";
 const CANVAS_ID_MINIMAP_SQUARE = "dotter-canvas-minimap-square";
 const CANVAS_ID_MINIMAP_LINES = "dotter-canvas-minimap-lines";
+const CANVAS_ID_MINIMAP_TOP = "dotter-canvas-minimap-top";
 
 const SCORING_MATRIX_NAMES = {
     IDENTITY: 'Identity',
@@ -41,6 +42,7 @@ export {
     CANVAS_ID_LINES,
     CANVAS_ID_MINIMAP_SQUARE,
     CANVAS_ID_MINIMAP_LINES,
+    CANVAS_ID_MINIMAP_TOP,
     SCORING_MATRIX_NAMES,
     DNA_CHARS,
     AA_CHARS,
