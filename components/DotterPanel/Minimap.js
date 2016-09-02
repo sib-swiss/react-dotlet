@@ -88,20 +88,15 @@ class SquareLayer extends React.Component {
     constructor() {
         super();
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-        this.mouseDown = false;
-        this._onMouseDown = this._onMouseDown.bind(this);
-        this._onMouseMove = this._onMouseMove.bind(this);
-        this._onMouseUp = this._onMouseUp.bind(this);
     }
 
     stateFromStore() {
         let storeState = store.getState();
-        let rect = viewRectangleCoordinates(storeState.i, storeState.j, storeState.L, this.props.size, storeState.zoomLevel);
         return {
             s1: storeState.s1,
             s2: storeState.s2,
+            zoomLevel: storeState.zoomLevel,
             //windowSize: storeState.windowSize,
-            rect: rect,
         }
     }
     componentWillMount() {
@@ -113,21 +108,10 @@ class SquareLayer extends React.Component {
         this.draw();
     }
 
-    _onMouseDown() {
-        this.mouseDown = true;
-        document.body.style.cursor = "move";
-    }
-    _onMouseUp() {
-        this.mouseDown = false;
-        document.body.style.cursor = "default";
-    }
-    _onMouseMove() {
-        console.debug(this.mouseDown)
-    }
-
     draw() {
         let size = this.props.size;
-        let rect = this.state.rect;
+        let storeState = store.getState();
+        let rect = viewRectangleCoordinates(storeState.i, storeState.j, storeState.L, this.props.size, this.state.zoomLevel);
         // Draw the view rectangle
         let canvas = document.getElementById(CANVAS_ID_MINIMAP_SQUARE);
         let ctx = canvas.getContext("2d");
@@ -140,9 +124,7 @@ class SquareLayer extends React.Component {
 
     render() {
         return <div>
-            <canvas id={CANVAS_ID_MINIMAP_SQUARE} height={this.props.size} width={this.props.size}
-                    onMouseDown={this._onMouseDown} onMouseUp={this._onMouseUp}
-                    onMouseMove={this._onMouseMove} />
+            <canvas id={CANVAS_ID_MINIMAP_SQUARE} height={this.props.size} width={this.props.size} />
         </div>;
     }
 }

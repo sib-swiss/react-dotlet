@@ -24,6 +24,7 @@ let reducer = (state = defaultState, action) => {
          zoomLevel = state.zoomLevel,
     }) {
         //let commonType = commonSeqType(s1Type, s2Type);
+        console.log("UPDATE_SCORES")
         let L = Math.max(s1.length, s2.length);
         let view = state.view;
         let d;
