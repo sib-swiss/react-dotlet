@@ -39,39 +39,41 @@ class PositionLinesLayer extends React.Component {
     componentWillUnmount() {
         document.removeEventListener('keydown', this._onKeyDown, true);
     }
+    componentDidUpdate() {
+        this.drawPositionLines();
+    }
+
     /**
      * Draw the vertical and horizontal lines showing the current position (i,j) on the canvas.
-     * @param zoom: absolute scaling factor (1,2,4,8,...).
      */
-    componentDidUpdate() {
+    drawPositionLines() {
         let state = store.getState();
-        let s1 = state.s1;
-        let s2 = state.s2;
         let zoomLevel = this.props.zoomLevel;
 
+        /* Compute the pixel coordinates in the square view that correspond
+           to the currenly looked-up sequence indices. */
         var d = new Dotter(state);
         let x = d.coordinateFromSeqIndex(this.state.i);
         let y = d.coordinateFromSeqIndex(this.state.j);
         let view = state.view;
         x = (x - view.x) * zoomLevel;
         y = (y - view.y) * zoomLevel;
+
         /* If the point size is > 1, make the lines pass in the middle. */
         if (this.smallSequence) {
             x += d.scaleToPx / 2 + 0.5;
             y += d.scaleToPx / 2 + 0.5;
         }
 
+        /* Draw */
         let canvas = document.getElementById(CANVAS_ID_LINES);
         let ctx = canvas.getContext('2d');
         ctx.clearRect(0,0, canvas.width, canvas.height);
         ctx.fillStyle = "red";
-        ctx.fillRect(x, 1, 1, d.lastRowIndex);
-        ctx.fillRect(1, y, d.lastColIndex, 1);
+        ctx.fillRect(x, 1, 1, canvas.width);
+        ctx.fillRect(1, y, canvas.height, 1);
     }
 
-    _onClick(e) {
-        this.inspect(e);
-    }
     _onMouseEnter() { document.body.style.cursor = "crosshair"; }
     _onMouseLeave() { document.body.style.cursor = "default"; }
     _onMouseDown() { this.mouseDown = true; }
@@ -80,6 +82,9 @@ class PositionLinesLayer extends React.Component {
         if (this.mouseDown) {
             this.inspect(e);
         }
+    }
+    _onClick(e) {
+        this.inspect(e);
     }
     _onKeyDown(e) {
         if ( document.activeElement.tagName.toLowerCase() === 'textarea') {
@@ -117,20 +122,23 @@ class PositionLinesLayer extends React.Component {
         let state = store.getState();
         let canvasSize = this.props.canvasSize;
         let zoomLevel = this.props.zoomLevel;
+
         // Get canvas coordinates
         let canvas = event.target;
         let dims = canvas.getBoundingClientRect();
         let x = event.pageX - dims.left,
             y = event.pageY - dims.top;
+
         // Return corresponding char indices
         let view = state.view;
         let d = new Dotter(state);
         let i = d.seqIndexFromCoordinate(view.x + x/zoomLevel);
         let j = d.seqIndexFromCoordinate(view.y + y/zoomLevel);
+
         // Make sure we don't get out of seq bounds while dragging
         i = Math.min(Math.max(0, i), d.ls1-1);
         j = Math.min(Math.max(0, j), d.ls2-1);
-        // Draw and dispatch
+
         store.dispatch(inspectCoordinate(i, j));
     }
 

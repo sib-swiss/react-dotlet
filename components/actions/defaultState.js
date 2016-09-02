@@ -93,6 +93,7 @@ let defaultState = {
     scoringMatrix: SCORING_MATRIX_NAMES.IDENTITY,
     i: 0,
     j: 0,
+    L: 0,
     greyScale: {
         minBound: 0,
         maxBound: 255,
@@ -100,7 +101,7 @@ let defaultState = {
     },
     canvasSize: ~~ (0.33 * window.innerWidth),
     toast: {open: false, message: ""},
-    zoomLevel: 1,
+    zoomLevel: 1,  // 1,2,4,8,...
     view: {
         i: 0, j: 0, L: 0,
         x: 0, y: 0, size: 0,
@@ -109,6 +110,7 @@ let defaultState = {
 defaultState.L = Math.max(defaultState.s1.length, defaultState.s2.length);
 defaultState.view.L = defaultState.L;
 defaultState.view.size = defaultState.canvasSize;
+
 
 Object.assign(defaultState, patternExample);
 

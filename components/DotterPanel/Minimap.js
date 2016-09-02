@@ -48,7 +48,6 @@ class SquareLayer extends React.Component {
             s2: storeState.s2,
             windowSize: storeState.windowSize,
             zoomLevel: storeState.zoomLevel,
-            L: Math.max(storeState.s1.length, storeState.s2.length),
         }
     }
 
@@ -58,8 +57,7 @@ class SquareLayer extends React.Component {
         let canvas = document.getElementById(CANVAS_ID_MINIMAP_SQUARE);
         let ctx = canvas.getContext("2d");
         ctx.clearRect(0,0, size, size);
-        let i = storeState.i, j = storeState.j;
-        let rect = viewRectangleCoordinates(i, j, this.state.L, size, this.state.zoomLevel);
+        let rect = viewRectangleCoordinates(storeState.i, storeState.j, storeState.L, size, this.state.zoomLevel);
         // Draw the view rectangle
         ctx.fillStyle = "#ccc";
         ctx.fillRect(0,0, size, size);
@@ -100,7 +98,7 @@ class LinesLayer extends React.Component {
             zoomLevel: storeState.zoomLevel,
             i: storeState.i,
             j: storeState.j,
-            L: Math.max(storeState.s1.length, storeState.s2.length),
+            L: storeState.L,
         }
     }
 
@@ -119,7 +117,7 @@ class LinesLayer extends React.Component {
         ctx.clearRect(0,0, size, size);
         let i = this.state.i;
         let j = this.state.j;
-        let x = this.scale(i);  // where it should be if no zoom
+        let x = this.scale(i);
         let y = this.scale(j);
         ctx.fillStyle = "red";
         ctx.fillRect(x+0.5, 0, 1, size);

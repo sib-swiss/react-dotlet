@@ -3,7 +3,7 @@ import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
 import Dotter from '../DotterPanel/dotter';
 import defaultState from './defaultState';
 import { commonSeqType } from '../InputPanel/input';
-import { zoomInSequence, zoomOutSequence, viewRectangleCoordinates } from '../common/helpers';
+import { viewRectangleCoordinates } from '../common/helpers';
 
 
 let reducer = (state = defaultState, action) => {
@@ -24,7 +24,7 @@ let reducer = (state = defaultState, action) => {
     }) {
         //let commonType = commonSeqType(s1Type, s2Type);
         let L = Math.max(s1.length, s2.length);
-        let view;
+        let view = state.view;
         let d;
         if (zoomLevel !== state.zoomLevel) {
             d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
@@ -35,8 +35,6 @@ let reducer = (state = defaultState, action) => {
             s2 = s2.slice(yy, yy + ~~(L/zoomLevel));
             view = {i: xx, j: yy, L: ~~(L/zoomLevel),
                     x: rect.x, y: rect.y, size: rect.size};
-        } else {
-            view = state.view;
         }
         //console.debug(commonType)
         d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
@@ -48,6 +46,7 @@ let reducer = (state = defaultState, action) => {
             greyScale : {initialAlphas: alphas, minBound: greyScale.minBound, maxBound: greyScale.maxBound},
             toast: defaultState.toast,  // reset
             view: view,
+            L: L,
         };
         return addToState;
     };
