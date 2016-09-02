@@ -156,7 +156,7 @@ class BarChart extends React.Component {
                         <stop offset="100%" stopColor="white" stopOpacity="100%" />
                     </linearGradient>
                 </defs>
-            :   // reverse colors 
+            :   // reverse colors
                 <defs>
                     <linearGradient id="greyscale-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stopColor="white" stopOpacity="100%" />

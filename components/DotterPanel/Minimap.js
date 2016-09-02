@@ -23,57 +23,6 @@ class Minimap extends React.Component {
 
 
 /**
- * Bottom canvas layer with the square representing the current zooming window.
- */
-class SquareLayer extends React.Component {
-    constructor() {
-        super();
-        this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-    }
-
-    componentWillMount() {
-        store.subscribe(() => {
-            this.setState( this.stateFromStore() );
-        });
-    }
-
-    componentDidUpdate() {
-        this.draw();
-    }
-
-    stateFromStore() {
-        let storeState = store.getState();
-        return {
-            s1: storeState.s1,
-            s2: storeState.s2,
-            windowSize: storeState.windowSize,
-            zoomLevel: storeState.zoomLevel,
-        }
-    }
-
-    draw() {
-        let size = this.props.size;
-        let storeState = store.getState();
-        let canvas = document.getElementById(CANVAS_ID_MINIMAP_SQUARE);
-        let ctx = canvas.getContext("2d");
-        ctx.clearRect(0,0, size, size);
-        let rect = viewRectangleCoordinates(storeState.i, storeState.j, storeState.L, size, this.state.zoomLevel);
-        // Draw the view rectangle
-        ctx.fillStyle = "#ccc";
-        ctx.fillRect(0,0, size, size);
-        ctx.fillStyle = "white";
-        ctx.fillRect(rect.x, rect.y, rect.size, rect.size);
-    }
-
-    render() {
-        return <div>
-            <canvas id={CANVAS_ID_MINIMAP_SQUARE} height={this.props.size} width={this.props.size} />
-        </div>;
-    }
-}
-
-
-/**
  * Top canvas layer with the position lines.
  */
 class LinesLayer extends React.Component {
@@ -130,6 +79,58 @@ class LinesLayer extends React.Component {
         </div>;
     }
 }
+
+
+/**
+ * Bottom canvas layer with the square representing the current zooming window.
+ */
+class SquareLayer extends React.Component {
+    constructor() {
+        super();
+        this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+    }
+
+    componentWillMount() {
+        store.subscribe(() => {
+            this.setState( this.stateFromStore() );
+        });
+    }
+
+    componentDidUpdate() {
+        this.draw();
+    }
+
+    stateFromStore() {
+        let storeState = store.getState();
+        return {
+            s1: storeState.s1,
+            s2: storeState.s2,
+            windowSize: storeState.windowSize,
+            zoomLevel: storeState.zoomLevel,
+        }
+    }
+
+    draw() {
+        let size = this.props.size;
+        let storeState = store.getState();
+        let canvas = document.getElementById(CANVAS_ID_MINIMAP_SQUARE);
+        let ctx = canvas.getContext("2d");
+        ctx.clearRect(0,0, size, size);
+        let rect = viewRectangleCoordinates(storeState.i, storeState.j, storeState.L, size, this.state.zoomLevel);
+        // Draw the view rectangle
+        ctx.fillStyle = "#ccc";
+        ctx.fillRect(0,0, size, size);
+        ctx.fillStyle = "white";
+        ctx.fillRect(rect.x, rect.y, rect.size, rect.size);
+    }
+
+    render() {
+        return <div>
+            <canvas id={CANVAS_ID_MINIMAP_SQUARE} height={this.props.size} width={this.props.size} />
+        </div>;
+    }
+}
+
 
 
 export default Minimap;
