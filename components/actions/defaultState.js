@@ -1,4 +1,4 @@
-import { SCORING_MATRIX_NAMES, DNA, PROTEIN } from '../constants/constants';
+import { SCORING_MATRIX_NAMES, DNA, PROTEIN, MINIMAP_SIZE } from '../constants/constants';
 
 
 const smallExample = {
@@ -107,7 +107,7 @@ let defaultState = {
         x: 0, y: 0, size: 0,
     },
     minimapView: {
-        x: 0, y: 0,
+        x: 0, y: 0, size: MINIMAP_SIZE,
     },
 };
 defaultState.L = Math.max(defaultState.s1.length, defaultState.s2.length);

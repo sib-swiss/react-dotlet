@@ -28,6 +28,7 @@ let reducer = (state = defaultState, action) => {
         console.log("UPDATE_SCORES")
         let L = Math.max(s1.length, s2.length);
         let view = state.view;
+        let minimapView = state.minimapView;
         let d;
         if (zoomLevel !== state.zoomLevel) {
             d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrix);
@@ -38,6 +39,9 @@ let reducer = (state = defaultState, action) => {
             s2 = s2.slice(yy, yy + ~~(L/zoomLevel));
             view = {i: xx, j: yy, L: ~~(L/zoomLevel),
                     x: rect.x, y: rect.y, size: rect.size};
+            // Minimap
+            let miniRect = viewRectangleCoordinates(state.i, state.j, L, MINIMAP_SIZE, zoomLevel);
+            minimapView = {x: miniRect.x, y: miniRect.y, size: miniRect.size};
         }
         //console.debug(commonType)
         d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrix);
@@ -49,6 +53,7 @@ let reducer = (state = defaultState, action) => {
             greyScale : {initialAlphas: alphas, minBound: greyScale.minBound, maxBound: greyScale.maxBound},
             toast: defaultState.toast,  // reset
             view: view,
+            minimapView: minimapView,
             L: L,
         };
         return addToState;
@@ -137,13 +142,12 @@ let reducer = (state = defaultState, action) => {
         addToState = updateScores({zoomLevel: action.zoomLevel});
         return Object.assign({}, state, {zoomLevel: action.zoomLevel}, addToState);
 
+    /*
+     * Expects `action.x` and `action.y`, the new top-left coordinates of the minimap square view.
+     */
     case DRAG_MINIMAP:
-        let current = state.minimapView;
-        let minimapView = {
-            x: Math.min(Math.max(0, current.x + action.xShift), MINIMAP_SIZE / state.zoomLevel),
-            y: Math.min(Math.max(0, current.y + action.yShift), MINIMAP_SIZE / state.zoomLevel),
-        };
-        return Object.assign({}, state, {minimapView: minimapView});
+        let view = {x: action.x, y: action.y, size: state.minimapView.size};
+        return Object.assign({}, state, {minimapView: view});
 
     default:
         return state;

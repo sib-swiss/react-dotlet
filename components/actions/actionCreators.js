@@ -75,11 +75,11 @@ function zoom(zoomLevel, direction) {
     };
 }
 
-function dragMinimap(xShift, yShift) {
+function dragMinimap(x, y) {
     return {
         type: DRAG_MINIMAP,
-        xShift: xShift,
-        yShift: yShift,
+        x: x,
+        y: y,
     };
 }
 

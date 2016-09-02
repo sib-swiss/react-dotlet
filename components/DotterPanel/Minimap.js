@@ -87,6 +87,7 @@ class LinesLayer extends React.Component {
 class SquareLayer extends React.Component {
     constructor() {
         super();
+        this.state = this.stateFromStore();
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     }
 
@@ -95,9 +96,7 @@ class SquareLayer extends React.Component {
         return {
             s1: storeState.s1,
             s2: storeState.s2,
-            zoomLevel: storeState.zoomLevel,
             minimapView: storeState.minimapView,
-            //windowSize: storeState.windowSize,
         }
     }
     componentWillMount() {
@@ -111,9 +110,7 @@ class SquareLayer extends React.Component {
 
     draw() {
         let size = this.props.size;
-        let storeState = store.getState();
-        let rect = viewRectangleCoordinates(storeState.i, storeState.j, storeState.L, size, this.state.zoomLevel);
-        // Draw the view rectangle
+        let rect = this.state.minimapView;
         let canvas = document.getElementById(CANVAS_ID_MINIMAP_SQUARE);
         let ctx = canvas.getContext("2d");
         ctx.clearRect(0,0, size, size);
@@ -140,6 +137,7 @@ class MoveLayer extends React.Component {
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
         this.mouseDown = false;
         this.initCoords = {};
+        this.initRect = {};
         this._onMouseDown = this._onMouseDown.bind(this);
         this._onMouseMove = this._onMouseMove.bind(this);
         this._onMouseUp = this._onMouseUp.bind(this);
@@ -170,8 +168,10 @@ class MoveLayer extends React.Component {
 
     _onMouseDown(e) {
         document.body.style.cursor = "move";
+        let storeState = store.getState();
         let coords = getCanvasMouseCoordinates(e);
         this.initCoords = coords;
+        this.initRect = storeState.minimapView;
         if (this.isInRect(coords.x, coords.y)) {
             this.mouseDown = true;
         }
@@ -185,7 +185,9 @@ class MoveLayer extends React.Component {
             let coords = getCanvasMouseCoordinates(e);
             let xShift = coords.x - this.initCoords.x;
             let yShift = coords.y - this.initCoords.y;
-            store.dispatch(dragMinimap(xShift, yShift));
+            let x = this.initRect.x + xShift;
+            let y = this.initRect.y + yShift;
+            store.dispatch(dragMinimap(x, y));
         }
     }
 

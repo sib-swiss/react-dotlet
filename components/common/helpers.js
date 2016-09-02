@@ -14,8 +14,8 @@ function getSequenceAround(seq, index, ws) {
  * while always remaining entirely inside the canvas.
  */
 function viewRectangleCoordinates(i, j, L, canvasSize, zoomLevel) {
-    let size = ~~ (canvasSize / zoomLevel);
-    let hSize = ~~ (size / 2);
+    let size = canvasSize / zoomLevel;
+    let hSize = size / 2;
     // Transform to pixel coordinates
     let scale = (index) => ((canvasSize / L) * index);
     let x = scale(i) - hSize;
@@ -28,7 +28,7 @@ function viewRectangleCoordinates(i, j, L, canvasSize, zoomLevel) {
     y = ~~ Math.min(y, canvasSize - size);
     return {
         x, y, size
-    }
+    };
 }
 
 /**
