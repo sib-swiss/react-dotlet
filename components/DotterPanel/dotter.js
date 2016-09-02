@@ -14,6 +14,18 @@ import * as d3scale from 'd3-scale';
 
 class Dotter {
     constructor(canvasSize, windowSize, s1,s2, scoringMatrixName) {
+
+        /* Shortcut to pass the state in as unique argument.
+           Stupid JS does not support alternative constructors */
+        if (arguments.length === 1) {
+            let state = canvasSize; // first argument, forget the name
+            canvasSize = state.canvasSize;
+            windowSize = state.windowSize;
+            s1 = state.s1;
+            s2 = state.s2;
+            scoringMatrixName = state.scoringMatrix;
+        }
+
         /* Pure input */
         this.canvasId = CANVAS_ID;
         this.topCanvasId = CANVAS_ID +'-topLayer';

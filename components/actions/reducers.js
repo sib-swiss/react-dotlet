@@ -22,22 +22,24 @@ let reducer = (state = defaultState, action) => {
          canvasSize = state.canvasSize,
          zoomLevel = state.zoomLevel,
     }) {
-        let commonType = commonSeqType(s1Type, s2Type);
+        //let commonType = commonSeqType(s1Type, s2Type);
         let L = Math.max(s1.length, s2.length);
+        let view;
+        let d;
         if (zoomLevel !== state.zoomLevel) {
-            var d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
+            d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
             let rect = viewRectangleCoordinates(state.i, state.j, L, canvasSize, zoomLevel);
             let yy = d.seqIndexFromCoordinate(rect.y);
             let xx = d.seqIndexFromCoordinate(rect.x);
             s1 = s1.slice(xx, xx + ~~(L/zoomLevel));
             s2 = s2.slice(yy, yy + ~~(L/zoomLevel));
-            //console.debug("i,j:", state.i, state.j)
-            //console.debug("xx,yy:", xx, yy, ~~(L/zoomLevel))
-            //console.debug("slice:", s1.length, s2.length)
-            //console.debug("zoom:", zoomLevel)
+            view = {i: xx, j: yy, L: ~~(L/zoomLevel),
+                    x: rect.x, y: rect.y, size: rect.size};
+        } else {
+            view = state.view;
         }
         //console.debug(commonType)
-        var d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
+        d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrixName);
         d.calculateScores();
         let density = d.densityFromScores();
         let alphas = d.alphasFromScores();
@@ -45,6 +47,7 @@ let reducer = (state = defaultState, action) => {
             density: density,
             greyScale : {initialAlphas: alphas, minBound: greyScale.minBound, maxBound: greyScale.maxBound},
             toast: defaultState.toast,  // reset
+            view: view,
         };
         return addToState;
     };

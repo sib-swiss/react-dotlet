@@ -49,7 +49,7 @@ class DotterPanel extends React.Component {
     }
     componentDidUpdate(prevProps, prevState) {
         let state = store.getState();
-        let d = new Dotter(state.canvasSize, state.windowSize, state.s1, state.s2, state.scoringMatrix);
+        let d = new Dotter(state);
         let greyScale = state.greyScale;
         let scaledAlphas = d.rescaleAlphas(greyScale.initialAlphas, greyScale.minBound, greyScale.maxBound);
         d.fillCanvas(scaledAlphas);

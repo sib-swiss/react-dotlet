@@ -45,21 +45,16 @@ class PositionLinesLayer extends React.Component {
      */
     componentDidUpdate() {
         let state = store.getState();
-        let i = state.i;
-        let j = state.j;
         let s1 = state.s1;
         let s2 = state.s2;
-        let windowSize = state.windowSize;
-        let matrix = state.scoringMatrixName;
-        let canvasSize = this.props.canvasSize;
         let zoomLevel = this.props.zoomLevel;
 
-        var d = new Dotter(canvasSize, windowSize, s1, s2, matrix);
-        let rect = viewRectangleCoordinates(i, j, d.L, canvasSize, zoomLevel);
-        let x = d.coordinateFromSeqIndex(i);
-        let y = d.coordinateFromSeqIndex(j);
-        x = (x - rect.x) * zoomLevel;
-        y = (y - rect.y) * zoomLevel;
+        var d = new Dotter(state);
+        let x = d.coordinateFromSeqIndex(this.state.i);
+        let y = d.coordinateFromSeqIndex(this.state.j);
+        let view = state.view;
+        x = (x - view.x) * zoomLevel;
+        y = (y - view.y) * zoomLevel;
         /* If the point size is > 1, make the lines pass in the middle. */
         if (this.smallSequence) {
             x += d.scaleToPx / 2 + 0.5;
@@ -119,6 +114,7 @@ class PositionLinesLayer extends React.Component {
      * and fire an action.
      */
     inspect(event) {
+        let state = store.getState();
         let canvasSize = this.props.canvasSize;
         let zoomLevel = this.props.zoomLevel;
         // Get canvas coordinates
@@ -126,14 +122,12 @@ class PositionLinesLayer extends React.Component {
         let dims = canvas.getBoundingClientRect();
         let x = event.pageX - dims.left,
             y = event.pageY - dims.top;
-        // Fetch store state to get the seq lengths
-        let state = store.getState();
-        let d = new Dotter(state.canvasSize, state.windowSize, state.s1, state.s2, state.scoringMatrix);
-        let rect = viewRectangleCoordinates(i, j, d.L, canvasSize, zoomLevel);
         // Return corresponding char indices
-        let i = d.seqIndexFromCoordinate(x);
-        let j = d.seqIndexFromCoordinate(y);
-        // Make sure we don't get out of bounds while dragging
+        let view = state.view;
+        let d = new Dotter(state);
+        let i = d.seqIndexFromCoordinate(view.x + x/zoomLevel);
+        let j = d.seqIndexFromCoordinate(view.y + y/zoomLevel);
+        // Make sure we don't get out of seq bounds while dragging
         i = Math.min(Math.max(0, i), d.ls1-1);
         j = Math.min(Math.max(0, j), d.ls2-1);
         // Draw and dispatch
