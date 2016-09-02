@@ -146,12 +146,10 @@ class MoveLayer extends React.Component {
 
     stateFromStore() {
         let storeState = store.getState();
-        let rect = viewRectangleCoordinates(storeState.i, storeState.j, storeState.L, this.props.size, storeState.zoomLevel);
         return {
             s1: storeState.s1,
             s2: storeState.s2,
             zoomLevel: storeState.zoomLevel,
-            rect: rect,
         }
     }
     componentWillMount() {
@@ -163,7 +161,8 @@ class MoveLayer extends React.Component {
     }
 
     isInRect(x,y) {
-        let rect = this.state.rect;
+        let storeState = store.getState();
+        let rect = viewRectangleCoordinates(storeState.i, storeState.j, storeState.L, this.props.size, storeState.zoomLevel);
         return (x >= rect.x && x < rect.x + rect.size
              && y >= rect.y && y < rect.y + rect.size);
     }
