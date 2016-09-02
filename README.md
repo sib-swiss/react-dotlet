@@ -35,3 +35,10 @@ Start the server
 ```
 node run start [--release]
 ```
+
+Run tests
+---------
+
+```
+npm run test[:watch]
+```

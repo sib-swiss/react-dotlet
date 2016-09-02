@@ -184,7 +184,7 @@ class InputPanel extends React.Component {
             {/* Print button */}
 
             <ToolbarGroup style={{marginTop: '1px'}} >
-                <IconButton onClick={this.onPrint} >
+                <IconButton onClick={this.onPrint} tooltip="Print canvas" >
                     <FontIcon className="material-icons">print</FontIcon>
                 </IconButton>
             </ToolbarGroup>

@@ -36,8 +36,12 @@ class Footer extends React.Component {
                     <ul className="mdl-mini-footer__link-list">
 
                         <li className="mdl-mini-footer--social-btn" style={{ backgroundColor: 'transparent' }}>
-                            <div className={s.footerItem}>
-                                <Github />
+                            <div>
+                                <a href="https://gitlab.isb-sib.ch/jdelafon/react-dotlet" target="_blank">
+                                    <IconButton iconStyle={{color:'white', fontSize: '35px'}} style={{padding:'8px'}} >
+                                        <Github />
+                                    </IconButton>
+                                </a>
                             </div>
                         </li>
 
