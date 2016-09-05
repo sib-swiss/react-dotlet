@@ -7,6 +7,7 @@ import { CHANGE_SEQUENCE,
          OPEN_TOAST,
          ZOOM,
          DRAG_MINIMAP,
+         CHANGE_VIEW_POSITION,
        } from './actionTypes';
 
 /**
@@ -83,6 +84,14 @@ function dragMinimap(x, y) {
     };
 }
 
+function changeViewPosition(i, j) {
+    return {
+        type: CHANGE_VIEW_POSITION,
+        i: i,
+        j: j,
+    };
+}
+
 
 
 export {
@@ -95,4 +104,5 @@ export {
     openToast,
     zoom,
     dragMinimap,
+    changeViewPosition,
 };

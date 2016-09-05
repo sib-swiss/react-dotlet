@@ -1,6 +1,6 @@
 import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
          INSPECT_COORDINATE, CHANGE_GREY_SCALE, RESIZE_CANVAS, OPEN_TOAST,
-         ZOOM, DRAG_MINIMAP } from './actionTypes';
+         ZOOM, DRAG_MINIMAP, CHANGE_VIEW_POSITION } from './actionTypes';
 import Dotter from '../DotterPanel/dotter';
 import defaultState from './defaultState';
 import { commonSeqType } from '../InputPanel/input';
@@ -16,6 +16,8 @@ let reducer = (state = defaultState, action) => {
     let updateScores = function({
          s1 = state.s1,
          s2 = state.s2,
+         i = state.i,
+         j = state.j,
          s1Type = state.s1Type,
          s2Type = state.s2Type,
          windowSize = state.windowSize,
@@ -30,9 +32,9 @@ let reducer = (state = defaultState, action) => {
         let view = state.view;
         let minimapView = state.minimapView;
         let d;
-        if (zoomLevel !== state.zoomLevel) {
+        if (zoomLevel !== 1 || zoomLevel !== state.zoomLevel) {
+            let rect = viewRectangleCoordinates(i, j, L, canvasSize, zoomLevel);
             d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrix);
-            let rect = viewRectangleCoordinates(state.i, state.j, L, canvasSize, zoomLevel);
             let yy = d.seqIndexFromCoordinate(rect.y);
             let xx = d.seqIndexFromCoordinate(rect.x);
             s1 = s1.slice(xx, xx + ~~(L/zoomLevel));
@@ -40,7 +42,7 @@ let reducer = (state = defaultState, action) => {
             view = {i: xx, j: yy, L: ~~(L/zoomLevel),
                     x: rect.x, y: rect.y, size: rect.size};
             // Minimap
-            let miniRect = viewRectangleCoordinates(state.i, state.j, L, MINIMAP_SIZE, zoomLevel);
+            let miniRect = viewRectangleCoordinates(i, j, L, MINIMAP_SIZE, zoomLevel);
             minimapView = {x: miniRect.x, y: miniRect.y, size: miniRect.size};
         }
         //console.debug(commonType)
@@ -146,8 +148,14 @@ let reducer = (state = defaultState, action) => {
      * Expects `action.x` and `action.y`, the new top-left coordinates of the minimap square view.
      */
     case DRAG_MINIMAP:
-        let view = {x: action.x, y: action.y, size: state.minimapView.size};
-        return Object.assign({}, state, {minimapView: view});
+        let minimapView = {x: action.x, y: action.y, size: state.minimapView.size};
+        return Object.assign({}, state, {minimapView: minimapView});
+
+    case CHANGE_VIEW_POSITION:
+        let i = Math.min(Math.max(0, action.i), state.s2.length-1);
+        let j = Math.min(Math.max(0, action.j), state.s1.length-1);
+        addToState = updateScores({i, j});
+        return Object.assign({}, state, addToState, {i, j});
 
     default:
         return state;

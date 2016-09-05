@@ -5,7 +5,7 @@ import s from './Minimap.css';
 import store from '../../core/store';
 import { MINIMAP_SIZE, CANVAS_ID_MINIMAP_SQUARE, CANVAS_ID_MINIMAP_LINES, CANVAS_ID_MINIMAP_TOP } from '../constants/constants';
 import { viewRectangleCoordinates, getCanvasMouseCoordinates } from '../common/helpers';
-import { dragMinimap } from '../actions/actionCreators';
+import { dragMinimap, changeViewPosition } from '../actions/actionCreators';
 
 
 class Minimap extends React.Component {
@@ -138,9 +138,12 @@ class MoveLayer extends React.Component {
         this.mouseDown = false;
         this.initCoords = {};
         this.initRect = {};
+        this.shortClick = true;
         this._onMouseDown = this._onMouseDown.bind(this);
         this._onMouseMove = this._onMouseMove.bind(this);
         this._onMouseUp = this._onMouseUp.bind(this);
+        this._onClick = this._onClick.bind(this);
+        this._onMouseLeave = this._onMouseLeave.bind(this);
     }
 
     stateFromStore() {
@@ -156,9 +159,27 @@ class MoveLayer extends React.Component {
             this.setState( this.stateFromStore() );
         });
     }
-    componentDidUpdate() {
-    }
 
+    /**
+     * Return the sequence index corresponding to that sequence pixel
+     */
+    scale(px) {
+        let L = Math.max(this.state.s1.length, this.state.s2.length);
+        return ~~ ((L / this.props.size) * px);
+    }
+    seqCoordsFromMinimapView(minimapView) {
+        let x = minimapView.x + minimapView.size/2;
+        let y = minimapView.y + minimapView.size/2;
+        let i = this.scale(x);
+        let j = this.scale(y);
+        return {i, j};
+    }
+    viewPosition(mouseEvent) {
+        let coords = getCanvasMouseCoordinates(mouseEvent);
+        let i = this.scale(coords.x);
+        let j = this.scale(coords.y);
+        store.dispatch(changeViewPosition(i, j));
+    }
     isInRect(x,y) {
         let storeState = store.getState();
         let rect = viewRectangleCoordinates(storeState.i, storeState.j, storeState.L, this.props.size, storeState.zoomLevel);
@@ -166,28 +187,49 @@ class MoveLayer extends React.Component {
              && y >= rect.y && y < rect.y + rect.size);
     }
 
+    /**** EVENTS ****/
+
     _onMouseDown(e) {
-        document.body.style.cursor = "move";
         let storeState = store.getState();
         let coords = getCanvasMouseCoordinates(e);
-        this.initCoords = coords;
-        this.initRect = storeState.minimapView;
-        if (this.isInRect(coords.x, coords.y)) {
+        this.shortClick = true;  // A priori, a simple click is expected
+        if (storeState.zoomLevel > 1 && this.isInRect(coords.x, coords.y)) {
+            document.body.style.cursor = "move";
+            this.initCoords = coords;
+            this.initRect = storeState.minimapView;
             this.mouseDown = true;
+            // If held down for more than a few ms, consider it as a drag event instead of simple click
+            this.cancelClickTimeout = setTimeout( () => {this.shortClick = false;}, 100 );
         }
     }
-    _onMouseUp() {
-        this.mouseDown = false;
-        document.body.style.cursor = "default";
+    _onMouseUp(e) {
+        if (this.mouseDown && ! this.shortClick) {
+            this.mouseDown = false;
+            document.body.style.cursor = "default";
+            let minimapView = store.getState().minimapView;
+            let idx = this.seqCoordsFromMinimapView(minimapView);
+            store.dispatch(changeViewPosition(idx.i, idx.j));
+            clearTimeout( this.cancelClickTimeout );
+        }
     }
     _onMouseMove(e) {
-        if (this.mouseDown) {
+        if (this.mouseDown && ! this.shortClick) {
             let coords = getCanvasMouseCoordinates(e);
             let xShift = coords.x - this.initCoords.x;
             let yShift = coords.y - this.initCoords.y;
             let x = this.initRect.x + xShift;
             let y = this.initRect.y + yShift;
             store.dispatch(dragMinimap(x, y));
+        }
+    }
+    _onMouseLeave(e) {
+        document.body.style.cursor = "default";
+        this.mouseDown = false;
+        this.viewPosition(e);
+    }
+    _onClick(e) {
+        if (this.shortClick) {
+            this.viewPosition(e);
         }
     }
 
@@ -197,6 +239,8 @@ class MoveLayer extends React.Component {
                     onMouseDown={this._onMouseDown}
                     onMouseUp={this._onMouseUp}
                     onMouseMove={this._onMouseMove}
+                    onMouseLeave={this._onMouseLeave}
+                    onClick={this._onClick}
             />
         </div>;
     }
