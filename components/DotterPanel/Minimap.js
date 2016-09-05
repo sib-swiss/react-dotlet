@@ -212,20 +212,20 @@ class MoveLayer extends React.Component {
             this.initRect = storeState.minimapView;
             this.mouseDown = true;
             //
-            this.cancelClickTimeout = setTimeout( () => {this.shortClick = false;}, 100 );
+            this.cancelClickTimeout = setTimeout( () => {this.shortClick = false;}, 50 );
         }
     }
     /**
      * Release the dragging of the minimap square.
      */
     _onMouseUp(e) {
+        clearTimeout( this.cancelClickTimeout );
         if (this.mouseDown && ! this.shortClick) {
-            this.mouseDown = false;
             document.body.style.cursor = "default";
+            this.mouseDown = false;
             let minimapView = store.getState().minimapView;
             let idx = this.seqCoordsFromMinimapView(minimapView);
             store.dispatch(changeViewPosition(idx.i, idx.j));
-            clearTimeout( this.cancelClickTimeout );
         }
     }
     /**
@@ -256,10 +256,10 @@ class MoveLayer extends React.Component {
      * Move the minimap square to that position and redraw.
      */
     _onClick(e) {
+        clearTimeout( this.cancelClickTimeout );
         if (this.shortClick) {
             this.viewPosition(e);
             document.body.style.cursor = "default";
-            clearTimeout( this.cancelClickTimeout );
         }
     }
 
