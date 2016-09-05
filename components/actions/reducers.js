@@ -9,11 +9,39 @@ import { MINIMAP_SIZE } from '../constants/constants';
 
 
 let reducer = (state = defaultState, action) => {
-    let newState, addToState;  // because reused in many switch cases
-    let density;
-    let scores;
 
-    let updateScores = function({
+    /**
+     * Called every time an action involving the zoom is fired.
+     */
+    function updateView({
+        i = state.i,
+        j = state.j,
+        zoomLevel = state.zoomLevel,
+    }) {
+        let L = state.L;
+        let s1 = state.s1, s2 = state.s2;
+        // Minimap view square
+        let miniRect = viewRectangleCoordinates(i, j, L, MINIMAP_SIZE, zoomLevel);
+        let minimapView = {x: miniRect.x, y: miniRect.y, size: miniRect.size};
+        // View square
+        let d = new Dotter(state);
+        var rect = viewRectangleCoordinates(i, j, L, state.canvasSize, zoomLevel);
+        var yy = d.seqIndexFromCoordinate(rect.y);
+        var xx = d.seqIndexFromCoordinate(rect.x);
+        let view = {i: xx, j: yy, L: ~~(L/zoomLevel),
+                    x: rect.x, y: rect.y, size: rect.size};
+        // Recalculate the view with subsequences, without changing state.s1 and state.s2
+        if (zoomLevel !== 1) {
+            s1 = s1.slice(xx, xx + ~~(L/zoomLevel));
+            s2 = s2.slice(yy, yy + ~~(L/zoomLevel));
+        }
+        return {s1, s2, view, minimapView};
+    }
+
+    /**
+     * Called every time an action triggering a redraw is fired.
+     */
+    function updateScores({
          s1 = state.s1,
          s2 = state.s2,
          i = state.i,
@@ -24,42 +52,22 @@ let reducer = (state = defaultState, action) => {
          scoringMatrix = state.scoringMatrix,
          greyScale = state.greyScale,
          canvasSize = state.canvasSize,
-         zoomLevel = state.zoomLevel,
     }) {
         //let commonType = commonSeqType(s1Type, s2Type);
-        console.log("UPDATE_SCORES")
-        let L = Math.max(s1.length, s2.length);
-        let view = state.view;
-        let minimapView = state.minimapView;
-        let d;
-        if (zoomLevel !== 1 || zoomLevel !== state.zoomLevel) {
-            let rect = viewRectangleCoordinates(i, j, L, canvasSize, zoomLevel);
-            d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrix);
-            let yy = d.seqIndexFromCoordinate(rect.y);
-            let xx = d.seqIndexFromCoordinate(rect.x);
-            s1 = s1.slice(xx, xx + ~~(L/zoomLevel));
-            s2 = s2.slice(yy, yy + ~~(L/zoomLevel));
-            view = {i: xx, j: yy, L: ~~(L/zoomLevel),
-                    x: rect.x, y: rect.y, size: rect.size};
-            // Minimap
-            let miniRect = viewRectangleCoordinates(i, j, L, MINIMAP_SIZE, zoomLevel);
-            minimapView = {x: miniRect.x, y: miniRect.y, size: miniRect.size};
-        }
-        //console.debug(commonType)
-        d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrix);
+        console.log("UPDATE_SCORES");
+        let L = Math.max(state.s1.length, state.s2.length);  // the constant ones
+        let d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrix);  // the possible zoomed ones
         d.calculateScores();
         let density = d.densityFromScores();
         let alphas = d.alphasFromScores();
         let addToState = {
+            L: L,
             density: density,
             greyScale : {initialAlphas: alphas, minBound: greyScale.minBound, maxBound: greyScale.maxBound},
             toast: defaultState.toast,  // reset
-            view: view,
-            minimapView: minimapView,
-            L: L,
         };
         return addToState;
-    };
+    }
 
 
     switch (action.type) {
@@ -70,8 +78,8 @@ let reducer = (state = defaultState, action) => {
      * Expects `action.seqn` in [1|2]: the sequence number,
      * and `action.sequence`, the new string.
      */
-    case CHANGE_SEQUENCE:
-        newState = Object.assign({}, state);
+    case CHANGE_SEQUENCE: {
+        let newState = Object.assign({}, state);
         let s1, s2;
         let seqtype;
         let seq = action.sequence;
@@ -86,76 +94,91 @@ let reducer = (state = defaultState, action) => {
         newState.i = 0; newState.j = 0;
         let ls1 = newState.s1.length;
         let ls2 = newState.s2.length;
-        addToState = updateScores({s1: newState.s1, s2:newState.s2});
+        let addToState = updateScores({s1: newState.s1, s2:newState.s2});
         Object.assign(newState, addToState);
         return newState;
+    }
 
     /*
      * When the user changes the size of the sliding window.
      * Expects `action.windowSize`.
      */
-    case CHANGE_WINDOW_SIZE:
+    case CHANGE_WINDOW_SIZE: {
         let winsize = action.windowSize || 1;
-        addToState = updateScores({windowSize: winsize});
+        let addToState = updateScores({windowSize: winsize});
         return Object.assign({}, state, addToState, {windowSize: parseInt(winsize)});
+    }
 
     /*
      * When the user changes the scoring matrix.
      * Expects `action.scoringMatrix`.
      */
-    case CHANGE_SCORING_MATRIX:
-        addToState = updateScores({scoringMatrix: action.scoringMatrix});
+    case CHANGE_SCORING_MATRIX: {
+        let addToState = updateScores({scoringMatrix: action.scoringMatrix});
         return Object.assign({}, state, addToState, {scoringMatrix: action.scoringMatrix});
+    }
 
     /*
      * When we change the inspected position on the canvas (mouse or keyboard).
      * Expects `action.i`, `action.j`.
      */
-    case INSPECT_COORDINATE:
+    case INSPECT_COORDINATE: {
         return Object.assign({}, state, {i: action.i, j: action.j});
+    }
 
     /*
      * When the grey scale slider is moved.
      * Expects `action.minBound`, `action.maxBound`.
      */
-    case CHANGE_GREY_SCALE:
-        newState = Object.assign({}, state);
+    case CHANGE_GREY_SCALE: {
+        let newState = Object.assign({}, state);
         let d = new Dotter(state.canvasSize, state.windowSize, state.s1, state.s2, state.scoringMatrix);
         d.greyScale(state.greyScale.initialAlphas, action.minBound, action.maxBound);
         newState.greyScale.minBound = action.minBound;
         newState.greyScale.maxBound = action.maxBound;
         return newState;
+    }
 
-    case RESIZE_CANVAS:
-        addToState = updateScores({canvasSize: action.canvasSize});
+    case RESIZE_CANVAS: {
+        let addToState = updateScores({canvasSize: action.canvasSize});
         return Object.assign({}, state, addToState, {canvasSize: action.canvasSize});
+    }
 
     /*
      * When a message is sent to be open in a Toast (bottom screen temp messager).
      * Expects `action.message`.
      */
-    case OPEN_TOAST:
+    case OPEN_TOAST: {
         return Object.assign({}, state, {toast: {open: true, message: action.message}});
-
-    /*
-     * Expects `action.scalingFactor`.
-     */
-    case ZOOM:
-        addToState = updateScores({zoomLevel: action.zoomLevel});
-        return Object.assign({}, state, {zoomLevel: action.zoomLevel}, addToState);
+    }
 
     /*
      * Expects `action.x` and `action.y`, the new top-left coordinates of the minimap square view.
      */
-    case DRAG_MINIMAP:
+    case DRAG_MINIMAP: {
         let minimapView = {x: action.x, y: action.y, size: state.minimapView.size};
         return Object.assign({}, state, {minimapView: minimapView});
+    }
 
-    case CHANGE_VIEW_POSITION:
+    /*
+     * Expects `action.scalingFactor`.
+     */
+    case ZOOM: {
+        let zoomLevel = action.zoomLevel;
+        let uv = updateView({zoomLevel});
+        let addToState = updateScores({s1: uv.s1, s2: uv.s2});
+        let newState = {zoomLevel: zoomLevel, view: uv.view, minimapView: uv.minimapView};
+        return Object.assign({}, state, newState, addToState);
+    }
+
+    case CHANGE_VIEW_POSITION: {
         let i = Math.min(Math.max(0, action.i), state.s2.length-1);
         let j = Math.min(Math.max(0, action.j), state.s1.length-1);
-        addToState = updateScores({i, j});
-        return Object.assign({}, state, addToState, {i, j});
+        let uv = updateView({i, j});
+        let addToState = updateScores({s1: uv.s1, s2: uv.s2});
+        let newState = {i: i, j: j, view: uv.view, minimapView: uv.minimapView};
+        return Object.assign({}, state, newState, addToState);
+    }
 
     default:
         return state;

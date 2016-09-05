@@ -167,6 +167,9 @@ class MoveLayer extends React.Component {
         let L = Math.max(this.state.s1.length, this.state.s2.length);
         return ~~ ((L / this.props.size) * px);
     }
+    /**
+     * Return the sequence indices (i,j) at the center of the minmap square `minimapView`.
+     */
     seqCoordsFromMinimapView(minimapView) {
         let x = minimapView.x + minimapView.size/2;
         let y = minimapView.y + minimapView.size/2;
@@ -174,12 +177,18 @@ class MoveLayer extends React.Component {
         let j = this.scale(y);
         return {i, j};
     }
+    /**
+     * Draw the region corresponding to the position we click on the minimap.
+     */
     viewPosition(mouseEvent) {
         let coords = getCanvasMouseCoordinates(mouseEvent);
         let i = this.scale(coords.x);
         let j = this.scale(coords.y);
         store.dispatch(changeViewPosition(i, j));
     }
+    /**
+     * Return whether minimap pixel coordinates (x,y) are inside the moving square.
+     */
     isInRect(x,y) {
         let storeState = store.getState();
         let rect = viewRectangleCoordinates(storeState.i, storeState.j, storeState.L, this.props.size, storeState.zoomLevel);
@@ -189,6 +198,10 @@ class MoveLayer extends React.Component {
 
     /**** EVENTS ****/
 
+    /**
+     * If mouse button is held down for more than a few ms,
+     * consider it as a drag event instead of simple click.
+     */
     _onMouseDown(e) {
         let storeState = store.getState();
         let coords = getCanvasMouseCoordinates(e);
@@ -198,10 +211,14 @@ class MoveLayer extends React.Component {
             this.initCoords = coords;
             this.initRect = storeState.minimapView;
             this.mouseDown = true;
-            // If held down for more than a few ms, consider it as a drag event instead of simple click
+            //
             this.cancelClickTimeout = setTimeout( () => {this.shortClick = false;}, 100 );
         }
     }
+
+    /**
+     * Release the dragging of the minimap square.
+     */
     _onMouseUp(e) {
         if (this.mouseDown && ! this.shortClick) {
             this.mouseDown = false;
@@ -212,6 +229,10 @@ class MoveLayer extends React.Component {
             clearTimeout( this.cancelClickTimeout );
         }
     }
+
+    /**
+     * Move the minimap square, but don't redraw yet (maybe in the future).
+     */
     _onMouseMove(e) {
         if (this.mouseDown && ! this.shortClick) {
             let coords = getCanvasMouseCoordinates(e);
@@ -222,11 +243,22 @@ class MoveLayer extends React.Component {
             store.dispatch(dragMinimap(x, y));
         }
     }
+
+    /**
+     * Prevent bugs when pointing outside of the canvas while dragging.
+     */
     _onMouseLeave(e) {
         document.body.style.cursor = "default";
-        this.mouseDown = false;
-        this.viewPosition(e);
+        if (this.mouseDown && ! this.shortClick) {
+            this.mouseDown = false;
+            this.shortClick = true;
+            this.viewPosition(e);
+        }
     }
+
+    /**
+     * Move the minimap square to that position and redraw.
+     */
     _onClick(e) {
         if (this.shortClick) {
             this.viewPosition(e);
