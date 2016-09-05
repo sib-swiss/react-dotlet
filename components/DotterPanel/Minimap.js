@@ -230,6 +230,8 @@ class MoveLayer extends React.Component {
     _onClick(e) {
         if (this.shortClick) {
             this.viewPosition(e);
+            document.body.style.cursor = "default";
+            clearTimeout( this.cancelClickTimeout );
         }
     }
 

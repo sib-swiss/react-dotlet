@@ -38,7 +38,11 @@ class Footer extends React.Component {
                         <li className="mdl-mini-footer--social-btn" style={{ backgroundColor: 'transparent' }}>
                             <div>
                                 <a href="https://gitlab.isb-sib.ch/jdelafon/react-dotlet" target="_blank">
-                                    <IconButton iconStyle={{color:'white', fontSize: '35px'}} style={{padding:'8px'}} >
+                                    <IconButton iconStyle={{color:'white', fontSize: '35px'}}
+                                                style={{padding:'8px'}}
+                                                tooltip="Source code"
+                                                tooltipPosition="top-center"
+                                    >
                                         <Github />
                                     </IconButton>
                                 </a>
@@ -48,7 +52,11 @@ class Footer extends React.Component {
                         <li className="mdl-mini-footer--social-btn" style={{ backgroundColor: 'transparent' }}>
                             <div>
                                 <a href="http://myhits.isb-sib.ch/util/dotlet/doc/dotlet_help.html" target="_blank">
-                                    <IconButton iconStyle={{color:'white', fontSize: '35px'}} style={{padding:'8px'}} >
+                                    <IconButton iconStyle={{color:'white', fontSize: '35px'}}
+                                                style={{padding:'8px'}}
+                                                tooltip="Documentation"
+                                                tooltipPosition="top-center"
+                                    >
                                         <FontIcon className="material-icons">help</FontIcon>
                                     </IconButton>
                                 </a>

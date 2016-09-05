@@ -21,7 +21,7 @@ const webpackHotMiddleware = require('webpack-hot-middleware');
 
 // TODO: Update configuration settings
 const config = {
-  title: 'Dotlet Reborn',                                  // Your website title
+  title: 'Dotlet JS',                                      // Your website title
   url: 'https://gitlab.isb-sib.ch/jdelafon/react-dotlet',  // Your website URL
   project: 'react-dotlet',                                 // Firebase project. See README.md -> How to Deploy
   trackingID: 'UA-XXXXX-Y',                                // Google Analytics Site's ID
