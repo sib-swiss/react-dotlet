@@ -223,6 +223,7 @@ class MoveLayer extends React.Component {
         if (this.mouseDown && ! this.shortClick) {
             document.body.style.cursor = "default";
             this.mouseDown = false;
+            this.shortClick = true;
             let minimapView = store.getState().minimapView;
             let idx = this.seqCoordsFromMinimapView(minimapView);
             store.dispatch(changeViewPosition(idx.i, idx.j));
@@ -247,6 +248,7 @@ class MoveLayer extends React.Component {
     _onMouseLeave(e) {
         document.body.style.cursor = "default";
         if (this.mouseDown && ! this.shortClick) {
+            clearTimeout( this.cancelClickTimeout );
             this.mouseDown = false;
             this.shortClick = true;
             this.viewPosition(e);
