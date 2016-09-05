@@ -115,7 +115,7 @@ defaultState.view.L = defaultState.L;
 defaultState.view.size = defaultState.canvasSize;
 
 
-Object.assign(defaultState, zoomExample);
+Object.assign(defaultState, orthologExample);
 
 
 export default defaultState;

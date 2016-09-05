@@ -1,12 +1,3 @@
-/**
- * React Static Boilerplate
- * https://github.com/kriasoft/react-static-boilerplate
- *
- * Copyright © 2015-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
 
 import React from 'react';
 import s from './Footer.css'
@@ -16,11 +7,6 @@ import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import Github from './Github';
 
-
-/*
- * Wrapper for a common header layout.
- * Layout.js chooses what to put in it.
- */
 
 class Footer extends React.Component {
     render() {
