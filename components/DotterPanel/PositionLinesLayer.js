@@ -60,9 +60,10 @@ class PositionLinesLayer extends React.Component {
         y = (y - view.y) * zoomLevel;
 
         /* If the point size is > 1, make the lines pass in the middle. */
-        if (this.smallSequence) {
-            x += d.scaleToPx / 2 + 0.5;
-            y += d.scaleToPx / 2 + 0.5;
+        if (d.smallSequence) {
+            let ptSize = d.scaleToPx * zoomLevel;
+            x += ptSize / 2 + 0.5;
+            y += ptSize / 2 + 0.5;
         }
 
         /* Draw */

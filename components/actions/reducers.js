@@ -20,20 +20,21 @@ let reducer = (state = defaultState, action) => {
     }) {
         let L = state.L;
         let s1 = state.s1, s2 = state.s2;
+        let windowSize = state.windowSize;
         // Minimap view square
-        let miniRect = viewRectangleCoordinates(i, j, L, MINIMAP_SIZE, zoomLevel);
+        let miniRect = viewRectangleCoordinates(i, j, L, MINIMAP_SIZE, 1, zoomLevel);
         let minimapView = {x: miniRect.x, y: miniRect.y, size: miniRect.size};
         // View square
         let d = new Dotter(state);
-        var rect = viewRectangleCoordinates(i, j, L, state.canvasSize, zoomLevel);
-        var yy = d.seqIndexFromCoordinate(rect.y);
+        var rect = viewRectangleCoordinates(i, j, L, state.canvasSize, windowSize, zoomLevel);
         var xx = d.seqIndexFromCoordinate(rect.x);
-        let view = {i: xx, j: yy, L: ~~(L/zoomLevel),
+        var yy = d.seqIndexFromCoordinate(rect.y);
+        let view = {i: xx, j: yy, L: L/zoomLevel,
                     x: rect.x, y: rect.y, size: rect.size};
         // Recalculate the view with subsequences, without changing state.s1 and state.s2
         if (zoomLevel !== 1) {
-            s1 = s1.slice(xx, xx + ~~(L/zoomLevel));
-            s2 = s2.slice(yy, yy + ~~(L/zoomLevel));
+            s1 = s1.slice(xx, Math.round(xx + L/zoomLevel) + 1);
+            s2 = s2.slice(yy, Math.round(yy + L/zoomLevel) + 1);
         }
         return {s1, s2, view, minimapView};
     }

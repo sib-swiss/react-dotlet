@@ -348,25 +348,6 @@ class Dotter {
         ctx.putImageData(imageData, 0, 0);
     }
 
-    //drawPositionLines(i, j, zoom) {
-    //    let x = this.coordinateFromSeqIndex(i);
-    //    let y = this.coordinateFromSeqIndex(j);
-    //    //let rect = viewRectangleCoordinates(i, j, this.L, this.canvasSize, zoom);
-    //    //console.debug([i,j], [x,y], rect)
-    //    //x = x - rect.x;
-    //    //y = y - rect.y;
-    //    console.debug("->", [x,y])
-    //    // If the point size is > 1, make the lines pass in the middle.
-    //    if (this.smallSequence) {
-    //        x += this.scaleToPx / 2 + 1;
-    //        y += this.scaleToPx / 2 + 1;
-    //    }
-    //    let canvas = this.clearCanvas(this.topCanvasId);
-    //    let ctx = canvas.getContext('2d');
-    //    ctx.fillStyle = "red";
-    //    ctx.fillRect(x, 1, 1, this.lastRowIndex);
-    //    ctx.fillRect(1, y, this.lastColIndex, 1);
-    //}
 
     //---------------------- GREY SCALE ------------------------//
 

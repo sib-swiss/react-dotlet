@@ -10,11 +10,12 @@
 
 import { expect } from 'chai';
 
-import { getSequenceAround } from '../components/common/helpers';
+import { getSequenceAround, viewRectangleCoordinates } from '../components/common/helpers';
 import { translateProtein } from '../components/common/genetics';
+import Dotter from '../components/DotterPanel/dotter';
 
 
-describe('Global component helpers', () => {
+describe('Global component helpers:', () => {
 
     it('getSequenceAround', () => {
         expect(getSequenceAround("ATGC", 0, 0)).to.be.equal("A");
@@ -55,6 +56,41 @@ describe('Global component helpers', () => {
         expect(translateProtein("TTTT")).to.be.equal('TTTT');
     });
 
+    it('dotter.viewRectangleCoordinates with no zoom', () => {
+        let rect = viewRectangleCoordinates(10, 10, 20, 100, 1, 1);
+        expect(rect.x).to.be.equal(0);
+        expect(rect.y).to.be.equal(0);
+        expect(rect.size).to.be.equal(100);
+    });
 
+    it('dotter.viewRectangleCoordinates with zoom=2', () => {
+        let rect = viewRectangleCoordinates(10, 10, 20, 100, 1, 2);
+        expect(rect.x).to.be.equal(25);
+        expect(rect.y).to.be.equal(25);
+        expect(rect.size).to.be.equal(50);
+    });
+
+});
+
+
+describe('Global component helpers:', () => {
+
+    it ("zoom", () => {
+        let canvasSize = 400;
+        let windowSize = 10;
+        let L = 200;
+        let s1 = "A".repeat(99) + "B" + "A".repeat(100);
+        let s2 = "A".repeat(99) + "B" + "A".repeat(100);
+        let rect = viewRectangleCoordinates(100, 100, L, canvasSize, windowSize, 4);
+        //expect(rect.x).to.be.equal(150);
+        //expect(rect.y).to.be.equal(150);
+        expect(rect.size).to.be.equal(100);
+        let d = new Dotter(canvasSize, windowSize, s1, s2, "Whatever")
+        let xx = d.seqIndexFromCoordinate(rect.x);
+        let yy = d.seqIndexFromCoordinate(rect.y);
+        s1 = s1.slice(xx, Math.round(xx + L/4) + 1);
+        s2 = s2.slice(yy, Math.round(yy + L/4) + 1);
+        expect(s1).to.be.equal("A".repeat(24) + "B" + "A".repeat(26))
+    })
 
 });

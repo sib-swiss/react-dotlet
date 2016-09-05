@@ -13,11 +13,11 @@ function getSequenceAround(seq, index, ws) {
  * this `size`, so that it represents the current zooming view
  * while always remaining entirely inside the canvas.
  */
-function viewRectangleCoordinates(i, j, L, canvasSize, zoomLevel) {
+function viewRectangleCoordinates(i, j, L, canvasSize, windowSize, zoomLevel) {
     let size = canvasSize / zoomLevel;
     let hSize = size / 2;
     // Transform to pixel coordinates
-    let scale = (index) => ((canvasSize / L) * index);
+    let scale = (index) => ((canvasSize / (L - windowSize + 1)) * index);
     let x = scale(i) - hSize;
     let y = scale(j) - hSize;
     // Top and left borders must not go beyond the canvas borders

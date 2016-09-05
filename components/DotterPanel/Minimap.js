@@ -191,7 +191,7 @@ class MoveLayer extends React.Component {
      */
     isInRect(x,y) {
         let storeState = store.getState();
-        let rect = viewRectangleCoordinates(storeState.i, storeState.j, storeState.L, this.props.size, storeState.zoomLevel);
+        let rect = storeState.minimapView;
         return (x >= rect.x && x < rect.x + rect.size
              && y >= rect.y && y < rect.y + rect.size);
     }
@@ -211,7 +211,9 @@ class MoveLayer extends React.Component {
             this.initCoords = coords;
             this.initRect = storeState.minimapView;
             this.mouseDown = true;
-            this.cancelClickTimeout = setTimeout( () => {this.shortClick = false;}, 50 );
+            this.cancelClickTimeout = setTimeout( () => {
+                this.shortClick = false;
+            }, 50 );
         }
     }
     /**

@@ -54,5 +54,4 @@ describe('DotterPanel test suite', () => {
         expect(d.coordinateFromSeqIndex(10)).to.be.equal(300);
     });
 
-
 });
