@@ -215,7 +215,6 @@ class MoveLayer extends React.Component {
             this.cancelClickTimeout = setTimeout( () => {this.shortClick = false;}, 100 );
         }
     }
-
     /**
      * Release the dragging of the minimap square.
      */
@@ -229,7 +228,6 @@ class MoveLayer extends React.Component {
             clearTimeout( this.cancelClickTimeout );
         }
     }
-
     /**
      * Move the minimap square, but don't redraw yet (maybe in the future).
      */
@@ -243,7 +241,6 @@ class MoveLayer extends React.Component {
             store.dispatch(dragMinimap(x, y));
         }
     }
-
     /**
      * Prevent bugs when pointing outside of the canvas while dragging.
      */
@@ -255,7 +252,6 @@ class MoveLayer extends React.Component {
             this.viewPosition(e);
         }
     }
-
     /**
      * Move the minimap square to that position and redraw.
      */
