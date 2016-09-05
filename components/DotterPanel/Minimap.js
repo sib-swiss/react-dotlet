@@ -211,7 +211,6 @@ class MoveLayer extends React.Component {
             this.initCoords = coords;
             this.initRect = storeState.minimapView;
             this.mouseDown = true;
-            //
             this.cancelClickTimeout = setTimeout( () => {this.shortClick = false;}, 50 );
         }
     }
@@ -260,8 +259,8 @@ class MoveLayer extends React.Component {
     _onClick(e) {
         clearTimeout( this.cancelClickTimeout );
         if (this.shortClick) {
-            this.viewPosition(e);
             document.body.style.cursor = "default";
+            this.viewPosition(e);
         }
     }
 
