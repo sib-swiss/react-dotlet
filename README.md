@@ -80,6 +80,9 @@ Structure
 * `webpack.config.js`: build configuration.
 * Routing was implemented by default involving many files, 
   but currently only "/" is used (`/pages/home/index.js`).
+* `package.json`: Project config file. 
+  Lists JS dependencies to be installed with `npm install` in `/node_modules`.
+  Lists `npm run <action>` aliases, such as `npm run test:watch`.
 
 `/public`
 
@@ -104,7 +107,7 @@ Structure
 * `/DotterPanel`: The main dot plot canvas.
 * `/GreyScale`: All what concerns the scaling of grey shades.
 * `/InfoPanel`: The summary showing the currently inspected position and score.
-* `InputPanel`: The top menu with input fields.
-* `Layout`: MDL layout structure. Header and footer.
-* `TwoSeqsPanel`: The bottom part showing the currently inspected alignment.
-* `utils`: Helper components.
+* `/InputPanel`: The top menu with input fields.
+* `/Layout`: MDL layout structure. Header and footer.
+* `/TwoSeqsPanel`: The bottom part showing the currently inspected alignment.
+* `/utils`: Helper components.
