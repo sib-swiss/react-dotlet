@@ -75,11 +75,9 @@ Structure
 
 `/`
 
-* `run.js`: node tasks and some global config.
-* `main.js`: the main call to `ReactDOM.render` and binds the router.
-* `webpack.config.js`: build configuration.
-* Routing was implemented by default involving many files, 
-  but currently only "/" is used (`/pages/home/index.js`).
+* `run.js`: Node tasks and some global config.
+* `main.js`: The main call to `ReactDOM.render` and binds the router.
+* `webpack.config.js`: Build configuration.
 * `package.json`: Project config file. 
   Lists JS dependencies to be installed with `npm install` in `/node_modules`.
   Lists `npm run <action>` aliases, such as `npm run test:watch`.
