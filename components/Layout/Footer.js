@@ -16,6 +16,7 @@ class Footer extends React.Component {
 
                 <div className="mdl-mini-footer__left-section">
                     <div className={"mdl-logo "+s.footerItem +' '+ s.footerLeft}>© Vital-IT 2016</div>
+                    <div className={"mdl-logo "+s.footerItem}>v0.1</div>
                 </div>
 
                 <div className="mdl-mini-footer__right-section">

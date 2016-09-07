@@ -7,7 +7,9 @@ class Header extends React.Component {
         return (
             <header className={"mdl-layout__header "+s.header} ref="root">
                 <div className={"mdl-layout__header-row "+s.headerRow} {...this.props} >
-                    <span className="mdl-layout-title">Dotlet JS</span>
+                    <span className="mdl-layout-title">
+                        Dotlet JS <span className={s.beta}>beta</span>
+                    </span>
                     <div className="mdl-layout-spacer"></div>
                     <div className="mdl-logo">
                         <a href="http://www.sib.swiss/">
