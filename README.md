@@ -6,7 +6,12 @@ Dotlet is a web app that produces a dot plot representing the alignment of two p
 
 It is a pure client-side Javascript application written with React.
 
-History: The original app was written in Java by Marco Pagni and Thomas Junier (Vital-IT).
+![Dotlet screenshot](docs/images/dotlet-main.png)
+
+History
+-------
+
+The original app was written in Java by Marco Pagni and Thomas Junier (Vital-IT).
 Java applets are no more supported by modern web browsers, so it has to be rewritten
 with a more modern design, new technologies, and hopefully performance improvements.
 
@@ -17,8 +22,6 @@ Archive Java source files: ftp://ftp.isrec.isb-sib.ch/pub/software/java/dotlet/
 Publication: http://bioinformatics.oxfordjournals.org/cgi/content/abstract/16/2/178
 
 Vital-IT, 2016 - julien.delafontaine@sib.swiss
-
-![Dotlet screenshot](docs/images/dotlet-main.png)
 
 Technology
 ----------
