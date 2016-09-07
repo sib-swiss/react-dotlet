@@ -6,6 +6,8 @@ Dotlet is a web app that produces a dot plot representing the alignment of two p
 
 It is a pure client-side Javascript application written with React.
 
+<br>
+
 ![Dotlet screenshot](docs/images/dotlet-main.png)
 
 History
