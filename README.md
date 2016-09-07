@@ -18,6 +18,8 @@ Publication: http://bioinformatics.oxfordjournals.org/cgi/content/abstract/16/2/
 
 Vital-IT, 2016 - julien.delafontaine@sib.swiss
 
+![Dotlet screenshot](docs/images/dotlet-main.png)
+
 Technology
 ----------
 Started from [Kriasoft's react-static-boilerplate](https://github.com/kriasoft/react-static-boilerplate):
