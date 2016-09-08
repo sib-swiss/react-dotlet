@@ -39,7 +39,7 @@ class BarChart extends React.Component {
             width: 300,
             height: 70,
             chartId: 'v_chart',
-            colorLight: theme.lighterBlue, //'#B3D4FB', //'#8492DC',
+            colorLight: '#5F71CC',//theme.lighterBlue, //'#B3D4FB', //'#8492DC',
             colorDark: '#8492DC', //'#5E6EC7',
             logColor: theme.sibRed,
             margins: {top: 5, right: 20, bottom: 30, left: 40},
@@ -150,19 +150,19 @@ class BarChart extends React.Component {
         let greyScaleGradient = min < max ?
                 <defs>
                     <linearGradient id="greyscale-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="black" stopOpacity="100%" />
-                        <stop offset={min +"%"} stopColor="black" stopOpacity="100%" />
-                        <stop offset={max +"%"} stopColor="white" stopOpacity="100%" />
-                        <stop offset="100%" stopColor="white" stopOpacity="100%" />
+                        <stop offset="0%" stopColor="white" stopOpacity="100%" />
+                        <stop offset={min +"%"} stopColor="white" stopOpacity="100%" />
+                        <stop offset={max +"%"} stopColor="black" stopOpacity="100%" />
+                        <stop offset="100%" stopColor="black" stopOpacity="100%" />
                     </linearGradient>
                 </defs>
             :   // reverse colors
                 <defs>
                     <linearGradient id="greyscale-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="white" stopOpacity="100%" />
-                        <stop offset={max +"%"} stopColor="white" stopOpacity="100%" />
-                        <stop offset={min +"%"} stopColor="black" stopOpacity="100%" />
-                        <stop offset="100%" stopColor="black" stopOpacity="100%" />
+                        <stop offset="0%" stopColor="black" stopOpacity="100%" />
+                        <stop offset={max +"%"} stopColor="black" stopOpacity="100%" />
+                        <stop offset={min +"%"} stopColor="white" stopOpacity="100%" />
+                        <stop offset="100%" stopColor="white" stopOpacity="100%" />
                     </linearGradient>
                 </defs>
         ;
