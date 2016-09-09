@@ -56,13 +56,11 @@ let reducer = (state = defaultState, action) => {
     }) {
         //let commonType = commonSeqType(s1Type, s2Type);
         console.log("UPDATE_SCORES");
-        let L = Math.max(state.s1.length, state.s2.length);  // the constant ones
-        let d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrix);  // the possible zoomed ones
+        let d = new Dotter(canvasSize, windowSize, s1, s2, scoringMatrix);  // the possibly zoomed s1 and s2
         d.calculateScores();
         let density = d.densityFromScores();
         let alphas = d.alphasFromScores();
         let addToState = {
-            L: L,
             density: density,
             greyScale : {initialAlphas: alphas, minBound: greyScale.minBound, maxBound: greyScale.maxBound},
             toast: defaultState.toast,  // reset
@@ -95,6 +93,8 @@ let reducer = (state = defaultState, action) => {
         newState.i = 0; newState.j = 0;
         let ls1 = newState.s1.length;
         let ls2 = newState.s2.length;
+        let L = Math.max(ls1, ls2);
+        newState.L = L;
         let addToState = updateScores({s1: newState.s1, s2:newState.s2});
         Object.assign(newState, addToState);
         return newState;
