@@ -107,7 +107,7 @@ let reducer = (state = defaultState, action) => {
     case CHANGE_WINDOW_SIZE: {
         let winsize = action.windowSize || 1;
         let addToState = updateScores({windowSize: winsize});
-        return Object.assign({}, state, addToState, {windowSize: parseInt(winsize)});
+        return Object.assign({}, state, addToState, {windowSize: winsize});
     }
 
     /*
