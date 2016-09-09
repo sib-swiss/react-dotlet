@@ -26,8 +26,8 @@ describe('InputPanel test suite', () => {
     });
     it('formatSeq removes fasta headers', () => {
         expect(formatSeq(">seqname\nAAA\nAAA")).to.be.equal("AAAAAA");
-        expect(formatSeq(">seq1\nA\n>seq2\nB")).to.be.equal("A>SEQ2B");
-        // it does not work with headers inside (which makes sense)
+        expect(formatSeq(";seqname\nAAA\nAAA")).to.be.equal("AAAAAA");  // older form
+        expect(formatSeq(">seq1\nA\n>seq2\nB")).to.be.equal("A>SEQ2B"); // it does not work with headers inside (which makes sense)
     });
 
     it('isValidInputSequence complains if there are special chars', () => {
