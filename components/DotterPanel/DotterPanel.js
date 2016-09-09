@@ -80,14 +80,15 @@ class DotterPanel extends React.Component {
         return () => {
             let storeState = store.getState();
             let rect = storeState.view;
-            let l = rect.L;
+            let l = rect.L / 2;
             let L = storeState.L;
             let jDir = direction[0] === "n" ? -1 : 1;
             let iDir = direction[1] === "w" ? -1 : 1;
-            let i = rect.i + ((0.5 + iDir) * l);
-            let j = rect.j + ((0.5 + jDir) * l);
-            i = ~~ Math.max(l/2-1, Math.min(L-l/2+1, i));
-            j = ~~ Math.max(l/2-1, Math.min(L-l/2+1, j));
+            console.debug(l, iDir, jDir)
+            let i = rect.i + l + iDir * l;
+            let j = rect.j + l + jDir * l;
+            i = ~~ Math.max(l-1, Math.min(L-l+1, i));
+            j = ~~ Math.max(l-1, Math.min(L-l+1, j));
             store.dispatch(changeViewPosition(i, j));
         }
     }
