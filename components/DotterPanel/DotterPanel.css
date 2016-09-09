@@ -36,3 +36,15 @@
     width: 24px;
     height: 24px;
 }
+
+.se {
+    transform: rotate(90deg);
+}
+.nw {
+    transform: rotate(270deg);
+}
+.sw {
+}
+.ne {
+    transform: rotate(180deg);
+}

@@ -5,7 +5,7 @@ import s from './DotterPanel.css';
 import Dotter from './dotter';
 import store from '../../core/store';
 import { CANVAS_ID } from '../constants/constants';
-import { resizeCanvas, zoom } from '../actions/actionCreators';
+import { resizeCanvas, zoom, changeViewPosition } from '../actions/actionCreators';
 import PositionLinesLayer from './PositionLinesLayer';
 
 /* Material-UI */
@@ -76,6 +76,21 @@ class DotterPanel extends React.Component {
             store.dispatch(zoom( currentZoom / 2 , "out"));
         }
     }
+    move(direction) {
+        return () => {
+            let storeState = store.getState();
+            let rect = storeState.view;
+            let l = rect.L;
+            let L = storeState.L;
+            let jDir = direction[0] === "n" ? -1 : 1;
+            let iDir = direction[1] === "w" ? -1 : 1;
+            let i = rect.i + ((0.5 + iDir) * l);
+            let j = rect.j + ((0.5 + jDir) * l);
+            i = ~~ Math.max(l/2-1, Math.min(L-l/2+1, i));
+            j = ~~ Math.max(l/2-1, Math.min(L-l/2+1, j));
+            store.dispatch(changeViewPosition(i, j));
+        }
+    }
 
 
     render() {
@@ -89,7 +104,7 @@ class DotterPanel extends React.Component {
                 <div className={s.legendX}>{"Sequence 1"}</div>
                 <div>
                     <div className={s.legendY}>{"Sequence 2"}</div>
-                    <div style={{position: 'relative', minHeight: canvasSize, minWidth: canvasSize}}>
+                    <div style={{position: 'relative', minHeight: canvasSize, minWidth: canvasSize, transform: "none"}}>
 
                         {/* Bottom layer: the dot plot */}
 
@@ -109,15 +124,53 @@ class DotterPanel extends React.Component {
 
                         <PositionLinesLayer canvasSize={canvasSize} zoomLevel={zoomLevel} />
 
-                        {/* Zoom buttons */}
+                        {/* Vertical toolbar */}
 
                         <div className={s.verticalToolbar} >
-                            <IconButton className={s.verticalButton} style={verticalButtonStyle} onClick={this.zoomIn} >
+
+                            {/* Zoom buttons */}
+
+                            <IconButton className={s.verticalButton} style={verticalButtonStyle}
+                                        onClick={this.zoomIn} >
                                 <FontIcon className="material-icons">zoom_in</FontIcon>
                             </IconButton>
-                            <IconButton className={s.verticalButton} style={verticalButtonStyle} onClick={this.zoomOut} >
+                            <IconButton className={s.verticalButton} style={verticalButtonStyle}
+                                        onClick={this.zoomOut} >
                                 <FontIcon className="material-icons">zoom_out</FontIcon>
                             </IconButton>
+
+                            {/* Move along diagonal buttons */}
+
+                            {zoomLevel > 1 ? <div>
+
+                                <div className={s.se}>
+                                    <IconButton className={s.verticalButton +" "+ s.se}
+                                                style={verticalButtonStyle}
+                                                onClick={this.move("se")} >
+                                        <FontIcon className="material-icons">call_made</FontIcon>
+                                    </IconButton>
+                                </div>
+                                <div className={s.nw}>
+                                    <IconButton className={s.verticalButton +" "+ s.nw} style={verticalButtonStyle}
+                                                onClick={this.move("nw")} >
+                                        <FontIcon className="material-icons">call_made</FontIcon>
+                                    </IconButton>
+                                </div>
+                                <div className={s.sw}>
+                                    <IconButton className={s.verticalButton +" "+ s.sw} style={verticalButtonStyle}
+                                                onClick={this.move("ne")} >
+                                        <FontIcon className="material-icons">call_made</FontIcon>
+                                    </IconButton>
+                                </div>
+                                <div className={s.ne}>
+                                    <IconButton className={s.verticalButton +" "+ s.ne} style={verticalButtonStyle}
+                                                onClick={this.move("sw")} >
+                                        <FontIcon className="material-icons">call_made</FontIcon>
+                                    </IconButton>
+                                </div>
+
+                            </div> : <div></div>}
+
                         </div>
 
                     </div>
