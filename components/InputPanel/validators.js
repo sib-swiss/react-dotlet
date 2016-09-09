@@ -1,7 +1,4 @@
 
-import { AA_CHARS, DNA_CHARS } from '../constants/constants'
-import { DNA, PROTEIN } from '../constants/constants';
-
 
 function isIntegerString(s) {
     return (/^(0|[1-9][0-9]*)$/).test(s);
