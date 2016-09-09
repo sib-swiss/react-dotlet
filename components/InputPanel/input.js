@@ -1,6 +1,20 @@
 import { DNA, PROTEIN } from '../constants/constants';
 import geneticCode from '../constants/geneticCode';
 
+
+/**
+ * Format an input sequence to be ready for computation internally (in the store).
+ * Remove spaces and newlines, replace unknown AAs by "X"
+ */
+function formatSeq(s) {
+    s = s.toUpperCase();
+    s = s.replace(/^>.*\s/g, '');  // fasta header
+    s = s.replace(/\s/g, '');      // spaces and newlines
+    s = s.replace(/[OU]/g, 'X');   // unknown aminoacids
+    return s;
+}
+
+
 /**
  * Guess if a sequence is a protein or DNA.
  * @param nchars: number of chars to test before concluding.
@@ -39,4 +53,5 @@ function commonSeqType(s1Type, s2Type) {
 export {
     guessSequenceType,
     commonSeqType,
+    formatSeq,
 }

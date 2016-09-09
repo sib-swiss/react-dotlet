@@ -4,7 +4,7 @@ import store from '../../core/store';
 import s from './InputPanel.css';
 import { changeSequence, changeWindowSize, changeScoringMatrix, openToast } from '../actions/actionCreators';
 import { SCORING_MATRIX_NAMES, DNA, CANVAS_ID } from '../constants/constants';
-import { commonSeqType, guessSequenceType } from './input';
+import { commonSeqType, guessSequenceType, formatSeq } from './input';
 import { printCanvas } from './helpers';
 import setCaretToPos from '../utils/setCaretToPos';
 import * as validators from './validators';
@@ -24,23 +24,17 @@ class InputPanel extends React.Component {
     constructor() {
         super();
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-        this.state = this.getStoreState();
-        Object.assign(this.state, {
+        let storeState = store.getState();
+        this.state = {
             open: false,
             activeSequence: 1,
-        });
-        this._textArea = null;
-        this.caretPos = 0;
-    }
-
-    getStoreState() {
-        let storeState = store.getState();
-        return {
             s1: storeState.s1,
             s2: storeState.s2,
             windowSize: storeState.windowSize,
             scoringMatrix: storeState.scoringMatrix,
         };
+        this._textArea = null;
+        this.caretPos = 0;
     }
 
     componentDidMount() {
@@ -62,22 +56,24 @@ class InputPanel extends React.Component {
         });
     }
     onChangeSeq1 = (e) => {
-        let s1 = e.target.value.toUpperCase();
+        let s1 = e.target.value;
         let s1Type = guessSequenceType(s1, 200);
+        this.setState({ s1 });
+        s1 = formatSeq(s1);
         let isValid = validators.isValidInputSequence(s1, s1Type);
         if (isValid.valid) {
-            this.setState({ s1 });
             store.dispatch(changeSequence(1, s1, s1Type));
         } else {
             store.dispatch(openToast("Invalid "+ s1Type +" sequence character '"+ isValid.wrongChar +"'"));
         }
     };
     onChangeSeq2 = (e) => {
-        let s2 = e.target.value.toUpperCase();
+        let s2 = e.target.value;
         let s2Type = guessSequenceType(s2, 200);
+        this.setState({ s2 });
+        s2 = formatSeq(s2);
         let isValid = validators.isValidInputSequence(s2, s2Type);
         if (isValid.valid) {
-            this.setState({ s2 });
             store.dispatch(changeSequence(2, s2, s2Type));
         } else {
             store.dispatch(openToast("Invalid "+ s2Type +" sequence character '"+ isValid.wrongChar +"'"));
