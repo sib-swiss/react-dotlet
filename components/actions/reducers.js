@@ -60,6 +60,7 @@ let reducer = (state = defaultState, action) => {
             density: density,
             greyScale : {initialAlphas: alphas, minBound: greyScale.minBound, maxBound: greyScale.maxBound},
             toast: defaultState.toast,  // reset
+            scoresUpdated: !state.scoresUpdated,  // signal to all listening components that it was updated
         };
         return addToState;
     }

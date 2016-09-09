@@ -21,6 +21,7 @@ class BackgroundLayer extends React.Component {
         return {
             s1: storeState.s1,
             s2: storeState.s2,
+            scoresUpdated: storeState.scoresUpdated,
             canvasSize: storeState.canvasSize,
         }
     }

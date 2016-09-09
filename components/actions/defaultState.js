@@ -109,6 +109,7 @@ let defaultState = {
     minimapView: {
         x: 0, y: 0, size: MINIMAP_SIZE,
     },
+    scoresUpdated: true,
 };
 
 Object.assign(defaultState, orthologExample);
