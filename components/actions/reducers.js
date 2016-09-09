@@ -45,10 +45,8 @@ let reducer = (state = defaultState, action) => {
     function updateScores({
          s1 = state.s1,
          s2 = state.s2,
-         i = state.i,
-         j = state.j,
-         s1Type = state.s1Type,
-         s2Type = state.s2Type,
+         //s1Type = state.s1Type,
+         //s2Type = state.s2Type,
          windowSize = state.windowSize,
          scoringMatrix = state.scoringMatrix,
          greyScale = state.greyScale,

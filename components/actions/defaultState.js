@@ -110,12 +110,12 @@ let defaultState = {
         x: 0, y: 0, size: MINIMAP_SIZE,
     },
 };
+
+Object.assign(defaultState, orthologExample);
+
 defaultState.L = Math.max(defaultState.s1.length, defaultState.s2.length);
 defaultState.view.L = defaultState.L;
 defaultState.view.size = defaultState.canvasSize;
-
-
-Object.assign(defaultState, orthologExample);
 
 
 export default defaultState;
