@@ -85,6 +85,7 @@ class InputPanel extends React.Component {
             this.setState({ windowSize: value });
             store.dispatch(changeWindowSize(value));
         } else {
+            this.setState({ windowSize: this.state.windowSize });
             store.dispatch(openToast("Window size must be a positive integer"));
         }
     };
@@ -135,7 +136,7 @@ class InputPanel extends React.Component {
                            floatingLabelStyle={{marginTop: '-6px'}}
                            floatingLabelFixed={true}
                            onChange={this.onChangeWindowSize}
-                           defaultValue={this.state.windowSize}
+                           value={this.state.windowSize}
                 />
             </ToolbarGroup>
 
