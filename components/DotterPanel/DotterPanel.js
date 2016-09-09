@@ -135,41 +135,41 @@ class DotterPanel extends React.Component {
                                 <FontIcon className="material-icons">zoom_in</FontIcon>
                             </IconButton>
                             <IconButton className={s.verticalButton} style={verticalButtonStyle}
+                                        disabled={zoomLevel === 1}
                                         onClick={this.zoomOut} >
                                 <FontIcon className="material-icons">zoom_out</FontIcon>
                             </IconButton>
 
                             {/* Move along diagonal buttons */}
 
-                            {zoomLevel > 1 ? <div>
-
-                                <div className={s.se}>
-                                    <IconButton className={s.verticalButton +" "+ s.se}
-                                                style={verticalButtonStyle}
-                                                onClick={this.move("se")} >
-                                        <FontIcon className="material-icons">call_made</FontIcon>
-                                    </IconButton>
-                                </div>
-                                <div className={s.nw}>
-                                    <IconButton className={s.verticalButton +" "+ s.nw} style={verticalButtonStyle}
-                                                onClick={this.move("nw")} >
-                                        <FontIcon className="material-icons">call_made</FontIcon>
-                                    </IconButton>
-                                </div>
-                                <div className={s.sw}>
-                                    <IconButton className={s.verticalButton +" "+ s.sw} style={verticalButtonStyle}
-                                                onClick={this.move("ne")} >
-                                        <FontIcon className="material-icons">call_made</FontIcon>
-                                    </IconButton>
-                                </div>
-                                <div className={s.ne}>
-                                    <IconButton className={s.verticalButton +" "+ s.ne} style={verticalButtonStyle}
-                                                onClick={this.move("sw")} >
-                                        <FontIcon className="material-icons">call_made</FontIcon>
-                                    </IconButton>
-                                </div>
-
-                            </div> : <div></div>}
+                            <div className={s.se}>
+                                <IconButton className={s.verticalButton +" "+ s.se} style={verticalButtonStyle}
+                                            disabled={zoomLevel === 1}
+                                            onClick={this.move("se")} >
+                                    <FontIcon className="material-icons">call_made</FontIcon>
+                                </IconButton>
+                            </div>
+                            <div className={s.nw}>
+                                <IconButton className={s.verticalButton +" "+ s.nw} style={verticalButtonStyle}
+                                            disabled={zoomLevel === 1}
+                                            onClick={this.move("nw")} >
+                                    <FontIcon className="material-icons">call_made</FontIcon>
+                                </IconButton>
+                            </div>
+                            <div className={s.sw}>
+                                <IconButton className={s.verticalButton +" "+ s.sw} style={verticalButtonStyle}
+                                            disabled={zoomLevel === 1}
+                                            onClick={this.move("ne")} >
+                                    <FontIcon className="material-icons">call_made</FontIcon>
+                                </IconButton>
+                            </div>
+                            <div className={s.ne}>
+                                <IconButton className={s.verticalButton +" "+ s.ne} style={verticalButtonStyle}
+                                            disabled={zoomLevel === 1}
+                                            onClick={this.move("sw")} >
+                                    <FontIcon className="material-icons">call_made</FontIcon>
+                                </IconButton>
+                            </div>
 
                         </div>
 
