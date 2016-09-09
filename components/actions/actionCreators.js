@@ -12,16 +12,6 @@ import {
        } from './actionTypes';
 
 
-function init(s1, s2, windowSize, scoringMatrix) {
-    return {
-        type: INIT,
-        s1: s1,
-        s2: s2,
-        windowSize: windowSize,
-        scoringMatrix: scoringMatrix,
-    }
-}
-
 /**
  * Change one of the input sequences.
  * @param seqn: sequence nr, 1 or 2
