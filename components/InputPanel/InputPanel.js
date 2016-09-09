@@ -6,7 +6,6 @@ import { changeSequence, changeWindowSize, changeScoringMatrix, openToast } from
 import { SCORING_MATRIX_NAMES, DNA, CANVAS_ID } from '../constants/constants';
 import { commonSeqType, guessSequenceType, formatSeq } from './input';
 import { printCanvas } from './helpers';
-import setCaretToPos from '../utils/setCaretToPos';
 import * as validators from './validators';
 
 
@@ -34,7 +33,6 @@ class InputPanel extends React.Component {
             scoringMatrix: storeState.scoringMatrix,
         };
         this._textArea = null;
-        this.caretPos = 0;
     }
 
     componentDidMount() {
@@ -99,10 +97,6 @@ class InputPanel extends React.Component {
 
     focusTextArea() {
         this._textArea.focus();
-        setCaretToPos(this._textArea, this.caretPos);
-    }
-    onClickTextArea() {
-        this.caretPos = this._textArea.selectionEnd;
     }
 
 
@@ -195,7 +189,6 @@ class InputPanel extends React.Component {
                     value={this.state.activeSequence === 1 ? this.state.s1 : this.state.s2}
                     placeholder={this.state.activeSequence === 1 ? 'Sequence 1:' : 'Sequence 2:'}
                     onChange={this.state.activeSequence === 1 ? this.onChangeSeq1 : this.onChangeSeq2}
-                    onClick={this.onClickTextArea.bind(this)}
                 />
             </div>
         </div>);
