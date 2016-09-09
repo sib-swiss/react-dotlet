@@ -21,9 +21,7 @@ class BackgroundLayer extends React.Component {
         return {
             s1: storeState.s1,
             s2: storeState.s2,
-            minimapView: storeState.minimapView,
             canvasSize: storeState.canvasSize,
-            zoomLevel: storeState.zoomLevel,
         }
     }
     componentWillMount() {
@@ -37,11 +35,10 @@ class BackgroundLayer extends React.Component {
 
     draw() {
         let size = this.props.size;
-        let rect = this.state.minimapView;
+        let storeState = store.getState();
         let canvas = document.getElementById(CANVAS_ID_MINIMAP_BOTTOM);
         let ctx = canvas.getContext("2d");
-
-        if (this.state.zoomLevel === 1) {
+        if (storeState.zoomLevel === 1) {
             let mainCanvas = document.getElementById(CANVAS_ID);
             ctx.clearRect(0,0, size, size);
             ctx.drawImage(mainCanvas, 0,0);

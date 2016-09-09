@@ -1,4 +1,5 @@
-import { CHANGE_SEQUENCE,
+import {
+         CHANGE_SEQUENCE,
          CHANGE_WINDOW_SIZE,
          CHANGE_SCORING_MATRIX,
          INSPECT_COORDINATE,
@@ -9,6 +10,17 @@ import { CHANGE_SEQUENCE,
          DRAG_MINIMAP,
          CHANGE_VIEW_POSITION,
        } from './actionTypes';
+
+
+function init(s1, s2, windowSize, scoringMatrix) {
+    return {
+        type: INIT,
+        s1: s1,
+        s2: s2,
+        windowSize: windowSize,
+        scoringMatrix: scoringMatrix,
+    }
+}
 
 /**
  * Change one of the input sequences.
