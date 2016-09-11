@@ -22,7 +22,7 @@ let reducer = (state = defaultState, action) => {
         let s1 = state.s1, s2 = state.s2;
         let windowSize = state.windowSize;
         // Minimap view square
-        let miniRect = viewRectangleCoordinates(i, j, L, MINIMAP_SIZE, 1, zoomLevel);
+        let miniRect = viewRectangleCoordinates(i, j, L, MINIMAP_SIZE, windowSize, zoomLevel);
         let minimapView = {x: miniRect.x, y: miniRect.y, size: miniRect.size};
         // View square
         let d = new Dotter(state);
@@ -102,7 +102,7 @@ let reducer = (state = defaultState, action) => {
          * Expects `action.windowSize`.
          */
         case CHANGE_WINDOW_SIZE: {
-            let winsize = action.windowSize || 1;
+            let winsize = action.windowSize;
             let addToState = updateScores({windowSize: winsize});
             return Object.assign({}, state, addToState, {windowSize: winsize});
         }

@@ -82,6 +82,12 @@ const zoomExample = {
     windowSize: 11,
 };
 
+const thisExample = {
+    s1: "ATTCGAGCCATCAT",
+    s2: "ATTGCAGGCAG",
+    windowSize: 4,
+};
+
 
 let defaultState = {
     s1: '',
@@ -112,7 +118,7 @@ let defaultState = {
     scoresUpdated: true,
 };
 
-Object.assign(defaultState, orthologExample);
+Object.assign(defaultState, thisExample);
 
 defaultState.L = Math.max(defaultState.s1.length, defaultState.s2.length);
 defaultState.view.L = defaultState.L;

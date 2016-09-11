@@ -4,7 +4,7 @@ import store from '../../core/store';
 import s from './InputPanel.css';
 import { changeSequence, changeWindowSize, changeScoringMatrix, openToast } from '../actions/actionCreators';
 import { SCORING_MATRIX_NAMES, DNA, CANVAS_ID } from '../constants/constants';
-import { commonSeqType, guessSequenceType, formatSeq } from './input';
+import { commonSeqType, guessSequenceType, formatSeq, formatWindowSize } from './input';
 import { printCanvas } from './helpers';
 import * as validators from './validators';
 
@@ -80,8 +80,8 @@ class InputPanel extends React.Component {
     onChangeWindowSize = (e, value) => {
         let isValid = validators.validateWindowSize(value);
         if (isValid) {
-            value = parseInt(value);
             this.setState({ windowSize: value });
+            value = formatWindowSize(value);
             store.dispatch(changeWindowSize(value));
         } else {
             this.setState({ windowSize: this.state.windowSize });

@@ -223,6 +223,9 @@ class Dotter {
             for (let dj = j-hws+1, di = 1;  // di,dj: leftmost index of the sliding window
                      dj < hsize && di < vsize;
                      dj++, di++) {
+                //if (di < 10 && dj < 10) {
+                //    console.debug(j, di,dj)
+                //}
                 let score = this._oneDiagonalScore(prevScore, di, dj);
                 prevScore = score;
             }

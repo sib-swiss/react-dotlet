@@ -14,6 +14,17 @@ function formatSeq(s) {
     return s;
 }
 
+/**
+ * Internally, window size is a stricly positive int.
+ */
+function formatWindowSize(s) {
+    if (s === '') {
+        return 1;
+    } else {
+        return parseInt(s) || 1;
+    }
+}
+
 
 /**
  * Guess if a sequence is a protein or DNA.
@@ -54,4 +65,5 @@ export {
     guessSequenceType,
     commonSeqType,
     formatSeq,
-}
+    formatWindowSize,
+};

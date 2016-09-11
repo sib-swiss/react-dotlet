@@ -14,15 +14,18 @@ function isValidInputSequence(s, type) {
     return {valid, wrongChar};
 }
 
+/**
+ * The window size input can only be an empty string
+ * or a string representing a positive integer.
+ */
 function validateWindowSize(s) {
-    if (! isIntegerString(s)) {
+    if (s === '') {
+        return true;
+    } else if (! isIntegerString(s)) {
         return false;
     }
     let val = parseInt(s);
-    if (val <= 0) {
-        return false;
-    }
-    return true;
+    return val > 0;
 }
 
 
