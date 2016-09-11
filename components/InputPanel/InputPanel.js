@@ -39,11 +39,6 @@ class InputPanel extends React.Component {
         // Trigger any event to initialize the canvas with default parameters already in store.
         store.dispatch(changeWindowSize(this.state.windowSize));
     }
-    componentDidUpdate() {
-        if (this.state.open) {
-            this.focusTextArea();
-        }
-    }
 
     /* Callbacks */
 
@@ -94,10 +89,6 @@ class InputPanel extends React.Component {
     };
     onPrint() {
         printCanvas(CANVAS_ID);
-    }
-
-    focusTextArea() {
-        this._textArea.focus();
     }
 
 

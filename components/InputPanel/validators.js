@@ -1,14 +1,11 @@
 
-import { AA_CHARS, DNA_CHARS } from '../constants/constants'
-import { DNA, PROTEIN } from '../constants/constants';
-
 
 function isIntegerString(s) {
     return (/^(0|[1-9][0-9]*)$/).test(s);
 }
 
 function isValidInputSequence(s, type) {
-    let regex = /[^A-Z \n]/ ;
+    let regex = /[^A-Z* \n]/ ;
     let wrongChar = s.match(regex);
     let valid = wrongChar === null;
     return {valid, wrongChar};

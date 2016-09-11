@@ -8,7 +8,7 @@ import geneticCode from '../constants/geneticCode';
  */
 function formatSeq(s) {
     s = s.toUpperCase();
-    s = s.replace(/^>.*\s/g, '');  // fasta header
+    s = s.replace(/^[>;].*\s/g, '');  // fasta header
     s = s.replace(/\s/g, '');      // spaces and newlines
     s = s.replace(/[OU]/g, 'X');   // unknown aminoacids
     return s;
