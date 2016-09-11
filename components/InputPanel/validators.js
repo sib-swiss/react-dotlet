@@ -15,7 +15,7 @@ function isValidInputSequence(s, type) {
  * The window size input can only be an empty string
  * or a string representing a positive integer.
  */
-function validateWindowSize(s) {
+function isValidWindowSize(s) {
     if (s === '') {
         return true;
     } else if (! isIntegerString(s)) {
@@ -29,5 +29,5 @@ function validateWindowSize(s) {
 export {
     isIntegerString,
     isValidInputSequence,
-    validateWindowSize,
+    isValidWindowSize,
 };
