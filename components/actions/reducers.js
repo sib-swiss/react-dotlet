@@ -87,7 +87,7 @@ let reducer = (state = defaultState, action) => {
                 newState.s2Type = action.seqtype;
             }
             seq = undefined;  // free space
-            newState.i = 0; newState.j = 0;
+            newState.i = defaultState.i; newState.j = defaultState.j;
             let ls1 = newState.s1.length;
             let ls2 = newState.s2.length;
             let L = Math.max(ls1, ls2);
@@ -102,9 +102,11 @@ let reducer = (state = defaultState, action) => {
          * Expects `action.windowSize`.
          */
         case CHANGE_WINDOW_SIZE: {
+            let newState = Object.assign({}, state);
             let winsize = action.windowSize;
             let addToState = updateScores({windowSize: winsize});
-            return Object.assign({}, state, addToState, {windowSize: winsize});
+            newState.i = defaultState.i; newState.j = defaultState.j;
+            return Object.assign(newState, addToState, {windowSize: winsize});
         }
 
         /*

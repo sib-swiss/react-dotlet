@@ -40,6 +40,8 @@ class Dotter {
         /* Shorteners for window size bits */
         this.hws = ~~ (windowSize / 2);   // # of nucleotides on each side
         this.ws2 = windowSize - 1;
+        this.lws = (windowSize % 2 === 0) ? (windowSize/2 - 1) : ((windowSize-1)/2);
+        this.rws = (windowSize % 2 === 0) ? (windowSize/2) : ((windowSize-1)/2);
 
         /* What depends on input sequences */
         this.ls1 = s1.length;
@@ -48,8 +50,8 @@ class Dotter {
         this.smallSequence = this.L < canvasSize;
         this.scaleToPx = canvasSize / (this.L - windowSize + 1);
         this.scaleToSeq = (this.L - windowSize + 1) / canvasSize;
-        this.lastRowIndex = this.coordinateFromSeqIndex(this.ls2 - 2*this.hws);
-        this.lastColIndex = this.coordinateFromSeqIndex(this.ls1 - 2*this.hws);
+        this.lastRowIndex = ~~ (this.scaleToPx * this.ls2);
+        this.lastColIndex = ~~ (this.scaleToPx * this.ls1);
 
         /* Init scores array (depends only on canvas size) */
         this.CS2 = canvasSize * canvasSize;
@@ -70,16 +72,18 @@ class Dotter {
 
     /**
      * Returns the (approximate, integer) pixel coordinate corresponding to that sequence `index`.
+     * It is an affine transformation.
      */
     coordinateFromSeqIndex(index) {
-        return ~~ (this.scaleToPx * index);
+        return ~~ (this.scaleToPx * (index - this.lws));
     }
 
     /**
      * Returns the (approximate, integer) sequence index corresponding to that pixel coordinate `px`.
+     * It is an affine transformation.
      */
     seqIndexFromCoordinate(px) {
-        return ~~ (this.scaleToSeq * px);
+        return (this.lws) + ~~ (this.scaleToSeq * px);
     }
 
     /**
@@ -148,7 +152,7 @@ class Dotter {
      * @param index: zero-based index of the center char in `seq`.
      */
     getSequenceAround(seq, index) {
-        return seq.slice(Math.max(index - this.hws, 0), index + this.hws + 1);
+        return seq.slice(Math.max(index - this.lws, 0), index + this.rws + 1);
     }
 
     /**
@@ -174,8 +178,8 @@ class Dotter {
      * @returns {undefined}
      */
     pushPixel(i,j, score) {
-        let v = this.coordinateFromSeqIndex(i);
-        let h = this.coordinateFromSeqIndex(j);
+        let v = ~~ (this.scaleToPx * i);
+        let h = ~~ (this.scaleToPx * j);
         let idx = v * this.canvasSize + h;
         let maxScore = Math.max(score, this.scores[idx]);
         this.scores[idx] = maxScore;
@@ -212,20 +216,20 @@ class Dotter {
      */
     topDiagonals() {
         console.log("TopDiagonals");
-        let hws = this.hws, windowSize = this.windowSize;
+        let hws = this.hws;
+        let lws = this.lws;
+        let rws = this.rws;
+        let windowSize = this.windowSize;
         let ls1 = this.ls1, ls2 = this.ls2;
-        let hlimit = ls1 - hws;
+        let hlimit = ls1 - rws;
         let vsize = ls2 - this.ws2;
         let hsize = ls1 - this.ws2;
-        for (let j=hws; j<hlimit; j++) {
-            let prevScore = this.scoreAround(hws,j); // di,dj = 0
-            this.pushPixel(0, j-hws, prevScore);
-            for (let dj = j-hws+1, di = 1;  // di,dj: leftmost index of the sliding window
+        for (let j=lws; j<hlimit; j++) {
+            let prevScore = this.scoreAround(lws,j); // di,dj = 0
+            this.pushPixel(0, j-lws, prevScore);
+            for (let dj = j-lws+1, di = 1;  // di,dj: leftmost index of the sliding window
                      dj < hsize && di < vsize;
                      dj++, di++) {
-                //if (di < 10 && dj < 10) {
-                //    console.debug(j, di,dj)
-                //}
                 let score = this._oneDiagonalScore(prevScore, di, dj);
                 prevScore = score;
             }
@@ -238,16 +242,19 @@ class Dotter {
      */
     leftDiagonals() {
         console.log("LeftDiagonals");
-        let hws = this.hws, windowSize = this.windowSize;
+        let hws = this.hws;
+        let lws = this.lws;
+        let rws = this.rws;
+        let windowSize = this.windowSize;
         let ls1 = this.ls1, ls2 = this.ls2;
         let scoringFunction = this.scoringFunction;
-        let vlimit = ls2 - hws;
+        let vlimit = ls2 - rws;
         let vsize = ls2 - this.ws2;
         let hsize = ls1 - this.ws2;
-        for (let i=hws+1; i<vlimit; i++) {
-            let prevScore = this.scoreAround(i,hws); // di,dj = 0
-            this.pushPixel(i-hws, 0, prevScore);
-            for (let di = i-hws+1, dj = 1;  // di,dj: leftmost index of the sliding window
+        for (let i=lws+1; i<vlimit; i++) {
+            let prevScore = this.scoreAround(i,lws); // di,dj = 0
+            this.pushPixel(i-lws, 0, prevScore);
+            for (let di = i-lws+1, dj = 1;  // di,dj: leftmost index of the sliding window
                      dj < hsize && di < vsize;
                      dj++, di++) {
                 let score = this._oneDiagonalScore(prevScore, di, dj);

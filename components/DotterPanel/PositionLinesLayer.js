@@ -104,13 +104,12 @@ class PositionLinesLayer extends React.Component {
         let j = this.state.j,
             i = this.state.i;
         let state = store.getState();
-        let ls1 = state.s1.length,
-            ls2 = state.s2.length;
+        let d = new Dotter(state);
         switch (direction) {
-            case 'down':  if (j < ls2-1) j++; break;
-            case 'up':    if (j > 0)     j--; break;
-            case 'right': if (i < ls1-1) i++; break;
-            case 'left':  if (i > 0)     i--; break;
+            case 'down':  if (j < d.ls2 - d.rws - 1) j++; break;
+            case 'up':    if (j > d.lws)           j--; break;
+            case 'right': if (i < d.ls1 - d.rws - 1) i++; break;
+            case 'left':  if (i > d.lws)           i--; break;
         }
         store.dispatch(inspectCoordinate(i, j));
     }
@@ -130,10 +129,11 @@ class PositionLinesLayer extends React.Component {
         let d = new Dotter(state);
         let i = d.seqIndexFromCoordinate(view.x + coords.x / zoomLevel);
         let j = d.seqIndexFromCoordinate(view.y + coords.y / zoomLevel);
+        console.debug(i,j)
 
         // Make sure we don't get out of seq bounds while dragging
-        i = Math.min(Math.max(0, i), d.ls1-1);
-        j = Math.min(Math.max(0, j), d.ls2-1);
+        i = Math.min(Math.max(d.lws, i), d.ls1 - d.rws - 1);
+        j = Math.min(Math.max(d.lws, j), d.ls2 - d.rws - 1);
 
         store.dispatch(inspectCoordinate(i, j));
     }

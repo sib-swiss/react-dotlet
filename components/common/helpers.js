@@ -1,11 +1,12 @@
 
 
 /**
- * Get the slice of `seq` centered on `index` with `ws` elements on each side.
+ * Get the slice of `seq` centered on `index` with `lws` elements on the left side,
+ * and `rws` elements on the right side.
  * @param index: zero-based index of the center char in `seq`.
  */
-function getSequenceAround(seq, index, ws) {
-    return seq.slice(Math.max(index - ws, 0), index + ws + 1);
+function getSequenceAround(seq, index, lws, rws) {
+    return seq.slice(Math.max(index - lws, 0), index + rws + 1);
 }
 
 /**

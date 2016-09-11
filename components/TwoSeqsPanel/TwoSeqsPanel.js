@@ -99,8 +99,8 @@ class TwoSeqsPanel extends React.Component {
         let nchars = this.nchars;
         let half = this.half;
         let ws = Math.floor(windowSize / 2);
-        let w1 = helpers.getSequenceAround(s1, i, half);
-        let w2 = helpers.getSequenceAround(s2, j, half);
+        let w1 = helpers.getSequenceAround(s1, i, half, half);
+        let w2 = helpers.getSequenceAround(s2, j, half, half);
 
         /* Formatting */
         let fill = nbsp;
