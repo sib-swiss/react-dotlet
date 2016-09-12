@@ -73,7 +73,8 @@ class InputPanel extends React.Component {
         }
     };
     onChangeWindowSize = (e, value) => {
-        let isValid = validators.isValidWindowSize(value);
+        let state = store.getState();
+        let isValid = validators.isValidWindowSize(value, state.s1.length, state.s2.length);
         if (isValid) {
             this.setState({ windowSize: value });
             value = formatWindowSize(value);

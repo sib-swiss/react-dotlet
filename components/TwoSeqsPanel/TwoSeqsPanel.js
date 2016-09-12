@@ -127,14 +127,14 @@ class TwoSeqsPanel extends React.Component {
                 this.borderCharStyle(2, k, windowSize, d.hws),
             ].join(' ')} >{c}</span> );
 
-        console.debug([i,j], [d.lws, d.hws], [s1.length-d.hws-1, s2.length-d.hws-1])
+        console.debug([i,j], [d.lws, d.hws], [s1.length-d.rws-1, s2.length-d.rws-1])
         return (
             <div id="two-seqs-panel" className={s.root}>
                 <Slider
                     sliderStyle={{margin: 0}}
                     tabIndex="0" ref='slider1'
                     min={d.lws}
-                    max={Math.max(s1.length-d.rws-1, 1)}
+                    max={Math.max(s1.length-d.rws, 1)}
                     disabled={s1.length <= windowSize}
                     step={1}
                     value={i}
@@ -154,7 +154,7 @@ class TwoSeqsPanel extends React.Component {
                     sliderStyle={{margin: 0}}
                     tabIndex="0" ref='slider2'
                     min={d.lws}
-                    max={Math.max(s2.length-d.rws-1, 1)}
+                    max={Math.max(s2.length-d.rws, 1)}
                     disabled={s2.length <= windowSize}
                     step={1}
                     value={j}

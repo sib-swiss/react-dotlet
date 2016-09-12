@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { DNA, PROTEIN } from '../../constants/constants';
-import { isValidInputSequence } from '../validators';
+import { isValidInputSequence, isValidWindowSize } from '../validators';
 import { guessSequenceType, formatSeq,  } from '../input';
 
 
@@ -36,5 +36,11 @@ describe('InputPanel test suite', () => {
     });
     it('isValidInputSequence accepts unknown AAs, spaces, and fasta header', () => {
         expect(isValidInputSequence("AA  A").valid).to.be.equal(true);
+    });
+
+    it('isValidWindowSize returns false when window size is bigger than the sequence', () => {
+        expect(isValidWindowSize(32, 32, 32)).to.be.equal(true);
+        expect(isValidWindowSize(32, 31, 33)).to.be.equal(false);
+        expect(isValidWindowSize(32, 33, 31)).to.be.equal(false);
     });
 });
