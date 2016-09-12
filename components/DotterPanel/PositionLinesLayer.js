@@ -35,6 +35,7 @@ class PositionLinesLayer extends React.Component {
     }
     componentDidMount() {
         document.addEventListener('keydown', this._onKeyDown, true);
+        this.drawPositionLines();
     }
     componentWillUnmount() {
         document.removeEventListener('keydown', this._onKeyDown, true);
