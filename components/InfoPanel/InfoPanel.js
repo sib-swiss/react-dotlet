@@ -2,7 +2,7 @@ import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import store from '../../core/store';
 import s from './InfoPanel.css';
-import Dotter from '../common/dotter';
+import Dotter from '../common/Dotter';
 
 
 class InfoPanel extends React.Component {

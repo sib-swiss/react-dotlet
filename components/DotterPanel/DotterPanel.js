@@ -2,7 +2,7 @@ import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import s from './DotterPanel.css';
 
-import Dotter from '../common/dotter';
+import Dotter from '../common/Dotter';
 import store from '../../core/store';
 import { CANVAS_ID } from '../constants/constants';
 import { resizeCanvas, zoom, changeViewPosition } from '../actions/actionCreators';
