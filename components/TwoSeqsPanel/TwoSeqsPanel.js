@@ -134,7 +134,7 @@ class TwoSeqsPanel extends React.Component {
                     sliderStyle={{margin: 0}}
                     tabIndex="0" ref='slider1'
                     min={d.lws}
-                    max={Math.max(s1.length-d.rws, 1)}
+                    max={Math.max(s1.length-d.rws-1, d.lws)}
                     disabled={s1.length <= windowSize}
                     step={1}
                     value={i}
@@ -154,7 +154,7 @@ class TwoSeqsPanel extends React.Component {
                     sliderStyle={{margin: 0}}
                     tabIndex="0" ref='slider2'
                     min={d.lws}
-                    max={Math.max(s2.length-d.rws, 1)}
+                    max={Math.max(s2.length-d.rws-1, d.lws)}
                     disabled={s2.length <= windowSize}
                     step={1}
                     value={j}

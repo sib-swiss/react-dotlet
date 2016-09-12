@@ -81,7 +81,7 @@ class InputPanel extends React.Component {
             store.dispatch(changeWindowSize(value));
         } else {
             this.setState({ windowSize: this.state.windowSize });
-            store.dispatch(openToast("Window size must be a positive integer"));
+            store.dispatch(openToast("Window size must be an integer bigger than the smallest sequence."));
         }
     };
     onChangeScoringMatrix = (e, index, value) => {

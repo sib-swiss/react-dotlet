@@ -23,7 +23,6 @@ function isValidWindowSize(s, ls1, ls2) {
         return false;
     }
     let val = parseInt(s);
-    console.debug(ls1, ls2, val)
     return val > 0 && val <= ls1 && val <= ls2;
 }
 
