@@ -42,7 +42,7 @@ class BackgroundLayer extends React.Component {
         if (storeState.zoomLevel === 1) {
             let mainCanvas = document.getElementById(CANVAS_ID);
             ctx.clearRect(0,0, size, size);
-            ctx.drawImage(mainCanvas, 0,0);
+            ctx.drawImage(mainCanvas, 0,0, size, size);
         }
     }
 

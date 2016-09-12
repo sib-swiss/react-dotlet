@@ -38,9 +38,11 @@ class SquareLayer extends React.Component {
         let ctx = canvas.getContext("2d");
         ctx.clearRect(0,0, size, size);
         ctx.strokeStyle = "black";
-        ctx.fillStyle = "white";
-        ctx.strokeRect(rect.x, rect.y, rect.size, rect.size);
-        ctx.fillRect(rect.x, rect.y, rect.size, rect.size);
+        if (rect.size !== size) {
+            ctx.fillStyle = "white";
+            ctx.fillRect(rect.x, rect.y, rect.size, rect.size);
+            ctx.strokeRect(rect.x, rect.y, rect.size, rect.size);
+        }
     }
 
     render() {
