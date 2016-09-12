@@ -130,13 +130,10 @@ class PositionLinesLayer extends React.Component {
         let d = new Dotter(state);
         let i = d.seqIndexFromCoordinate(view.x + coords.x / zoomLevel);
         let j = d.seqIndexFromCoordinate(view.y + coords.y / zoomLevel);
-        console.debug(i,j)
 
         // Make sure we don't get out of seq bounds while dragging
-        i = Math.min(Math.max(d.lws, i), d.ls1 - d.rws - 1);
-        j = Math.min(Math.max(d.lws, j), d.ls2 - d.rws - 1);
-
-        store.dispatch(inspectCoordinate(i, j));
+        let c = d.boundCoordinates(i,j);
+        store.dispatch(inspectCoordinate(c.i, c.j));
     }
 
 

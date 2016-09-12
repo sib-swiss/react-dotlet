@@ -92,8 +92,8 @@ class Dotter {
      * one half-window size of each end of the sequence.
      */
     boundCoordinates(i, j) {
-        let ci = Math.min(Math.max(this.lws, i), this.ls2 - this.rws - 1);
-        let cj = Math.min(Math.max(this.lws, j), this.ls1 - this.rws - 1);
+        let ci = Math.min(Math.max(this.lws, i), this.ls1 - this.rws - 1);
+        let cj = Math.min(Math.max(this.lws, j), this.ls2 - this.rws - 1);
         return {i: ci, j: cj};
     }
 
