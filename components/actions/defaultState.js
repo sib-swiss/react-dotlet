@@ -123,9 +123,9 @@ Object.assign(defaultState, thisExample);
 defaultState.L = Math.max(defaultState.s1.length, defaultState.s2.length);
 defaultState.view.L = defaultState.L;
 defaultState.view.size = defaultState.canvasSize;
-let hws = ~~ (defaultState.windowSize / 2);
-defaultState.i = hws;
-defaultState.j = hws;
+let lws = ~~ ((defaultState.windowSize-1) / 2);
+defaultState.i = lws;
+defaultState.j = lws;
 
 
 export default defaultState;

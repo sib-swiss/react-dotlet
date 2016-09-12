@@ -105,7 +105,12 @@ let reducer = (state = defaultState, action) => {
             let newState = Object.assign({}, state);
             let winsize = action.windowSize;
             let addToState = updateScores({windowSize: winsize});
-            newState.i = defaultState.i; newState.j = defaultState.j;
+            let ls1 = state.s1.length;
+            let ls2 = state.s2.length;
+            let lws = ~~ ((winsize - 1) / 2);
+            let rws = ~~ (winsize / 2)
+            newState.i = Math.min(ls2 - rws, Math.max(lws, state.i));
+            newState.j = Math.min(ls2 - rws, Math.max(lws, state.j));
             return Object.assign(newState, addToState, {windowSize: winsize});
         }
 

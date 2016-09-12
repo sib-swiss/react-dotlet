@@ -18,24 +18,24 @@ import Dotter from '../components/DotterPanel/dotter';
 describe('Global component helpers:', () => {
 
     it('getSequenceAround', () => {
-        expect(getSequenceAround("ATGC", 0, 0)).to.be.equal("A");
-        expect(getSequenceAround("ATGC", 2, 0)).to.be.equal("G");
-        expect(getSequenceAround("AATTCCGGCCTT", 5, 3)).to.be.equal("TTCCGGC");
-        expect(getSequenceAround("AATTCCGGCCTT", 3, 2)).to.be.equal("ATTCC");
-        expect(getSequenceAround("A".repeat(100), 50, 8).length).to.be.equal(2*8+1);
-        expect(getSequenceAround("A".repeat(100), 50, 7).length).to.be.equal(2*7+1);
+        expect(getSequenceAround("ATGC", 0, 0,0)).to.be.equal("A");
+        expect(getSequenceAround("ATGC", 2, 0,0)).to.be.equal("G");
+        expect(getSequenceAround("AATTCCGGCCTT", 5, 3,3)).to.be.equal("TTCCGGC");
+        expect(getSequenceAround("AATTCCGGCCTT", 3, 2,2)).to.be.equal("ATTCC");
+        expect(getSequenceAround("A".repeat(100), 50, 8,8).length).to.be.equal(2*8+1);
+        expect(getSequenceAround("A".repeat(100), 50, 7,7).length).to.be.equal(2*7+1);
     });
     it('getSequenceAround close from the start of the sequence', () => {
         let ws = 10;
-        expect(getSequenceAround("A".repeat(100), 5, ws).length).to.be.equal((5+1)+ws);
-        expect(getSequenceAround("A".repeat(100), 1, ws).length).to.be.equal((1+1)+ws);
-        expect(getSequenceAround("A".repeat(100), 0, ws).length).to.be.equal((0+1)+ws);
+        expect(getSequenceAround("A".repeat(100), 5, ws,ws).length).to.be.equal((5+1)+ws);
+        expect(getSequenceAround("A".repeat(100), 1, ws,ws).length).to.be.equal((1+1)+ws);
+        expect(getSequenceAround("A".repeat(100), 0, ws,ws).length).to.be.equal((0+1)+ws);
     });
     it('getSequenceAround close from the end of the sequence', () => {
         let ws = 10;
-        expect(getSequenceAround("A".repeat(100), 95, ws).length).to.be.equal(5+ws);
-        expect(getSequenceAround("A".repeat(100), 99, ws).length).to.be.equal(1+ws);
-        expect(getSequenceAround("A".repeat(100), 100, ws).length).to.be.equal(0+ws);
+        expect(getSequenceAround("A".repeat(100), 95, ws,ws).length).to.be.equal(5+ws);
+        expect(getSequenceAround("A".repeat(100), 99, ws,ws).length).to.be.equal(1+ws);
+        expect(getSequenceAround("A".repeat(100), 100, ws,ws).length).to.be.equal(0+ws);
     });
     it('getSequenceAround with index bigger than sequence length', () => {
         expect(getSequenceAround("ATGC", 100, 10)).to.be.equal("");
@@ -78,18 +78,19 @@ describe('Global component helpers:', () => {
     it ("zoom", () => {
         let canvasSize = 400;
         let windowSize = 10;
+        let zoomLevel = 4;
         let L = 200;
         let s1 = "A".repeat(99) + "B" + "A".repeat(100);
         let s2 = "A".repeat(99) + "B" + "A".repeat(100);
-        let rect = viewRectangleCoordinates(100, 100, L, canvasSize, windowSize, 4);
+        let rect = viewRectangleCoordinates(100, 100, L, canvasSize, windowSize, zoomLevel);
         //expect(rect.x).to.be.equal(150);
         //expect(rect.y).to.be.equal(150);
         expect(rect.size).to.be.equal(100);
         let d = new Dotter(canvasSize, windowSize, s1, s2, "Whatever")
         let xx = d.seqIndexFromCoordinate(rect.x);
         let yy = d.seqIndexFromCoordinate(rect.y);
-        s1 = s1.slice(xx, Math.round(xx + L/4) + 1);
-        s2 = s2.slice(yy, Math.round(yy + L/4) + 1);
+        s1 = s1.slice(xx, Math.round(xx + L/zoomLevel) + 1);
+        s2 = s2.slice(yy, Math.round(yy + L/zoomLevel) + 1);
         expect(s1).to.be.equal("A".repeat(24) + "B" + "A".repeat(26))
     })
 

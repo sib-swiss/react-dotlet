@@ -86,6 +86,17 @@ class Dotter {
         return (this.lws) + ~~ (this.scaleToSeq * px);
     }
 
+
+    /**
+     * Inspected sequence coordinates i,j must remain within
+     * one half-window size of each end of the sequence.
+     */
+    boundCoordinates(i, j) {
+        let ci = Math.min(Math.max(this.lws, i), this.ls2 - this.rws - 1);
+        let cj = Math.min(Math.max(this.lws, j), this.ls1 - this.rws - 1);
+        return {i: ci, j: cj};
+    }
+
     /**
      * Check that the canvas exists, and if so clear it.
      * @param canvasId

@@ -2,6 +2,8 @@ import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import s from './TwoSeqsPanel.css';
 import store from '../../core/store';
+
+import Dotter from '../DotterPanel/dotter';
 import * as helpers from '../common/helpers';
 import { formatSeq } from './helpers';
 import { inspectCoordinate } from '../actions/actionCreators';
@@ -96,9 +98,11 @@ class TwoSeqsPanel extends React.Component {
             s1 = this.state.s1,
             s2 = this.state.s2,
             windowSize = this.state.windowSize;
+        let state = store.getState();
+        let d = new Dotter(state.canvasSize, windowSize, s1,s2, state.scoringMatrix);
+
         let nchars = this.nchars;
         let half = this.half;
-        let ws = Math.floor(windowSize / 2);
         let w1 = helpers.getSequenceAround(s1, i, half, half);
         let w2 = helpers.getSequenceAround(s2, j, half, half);
 
@@ -113,24 +117,25 @@ class TwoSeqsPanel extends React.Component {
             <span key={k} className={[
                 s.seq1,
                 this.sameCharStyle(k, w1, w2, fill),
-                this.borderCharStyle(1, k, windowSize, ws),
+                this.borderCharStyle(1, k, windowSize, d.hws),
             ].join(' ')} >{c}</span> );
 
         let spans2 = w2.split('').map((c,k) =>
             <span key={k} className={[
                 s.seq2,
                 this.sameCharStyle(k, w1, w2, fill),
-                this.borderCharStyle(2, k, windowSize, ws),
+                this.borderCharStyle(2, k, windowSize, d.hws),
             ].join(' ')} >{c}</span> );
 
+        console.debug([i,j], [d.lws, d.hws], [s1.length-d.hws-1, s2.length-d.hws-1])
         return (
             <div id="two-seqs-panel" className={s.root}>
                 <Slider
                     sliderStyle={{margin: 0}}
                     tabIndex="0" ref='slider1'
-                    min={0}
-                    max={Math.max(s1.length-1, 1)}
-                    disabled={s1.length < 1}
+                    min={d.lws}
+                    max={Math.max(s1.length-d.rws-1, 1)}
+                    disabled={s1.length <= windowSize}
                     step={1}
                     value={i}
                     onChange={this.onSliderChange.bind(null, 1)}
@@ -148,9 +153,9 @@ class TwoSeqsPanel extends React.Component {
                 <Slider
                     sliderStyle={{margin: 0}}
                     tabIndex="0" ref='slider2'
-                    min={0}
-                    max={Math.max(s2.length-1, 1)}
-                    disabled={s2.length < 1}
+                    min={d.lws}
+                    max={Math.max(s2.length-d.rws-1, 1)}
+                    disabled={s2.length <= windowSize}
                     step={1}
                     value={j}
                     onChange={this.onSliderChange.bind(null, 2)}
