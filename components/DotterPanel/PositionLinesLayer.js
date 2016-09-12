@@ -1,6 +1,6 @@
 import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import Dotter from './dotter';
+import Dotter from '../common/dotter';
 import store from '../../core/store';
 import { CANVAS_ID_LINES } from '../constants/constants';
 import { inspectCoordinate } from '../actions/actionCreators';

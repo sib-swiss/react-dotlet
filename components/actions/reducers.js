@@ -1,7 +1,7 @@
 import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
          INSPECT_COORDINATE, CHANGE_GREY_SCALE, RESIZE_CANVAS, OPEN_TOAST,
          ZOOM, DRAG_MINIMAP, CHANGE_VIEW_POSITION } from './actionTypes';
-import Dotter from '../DotterPanel/dotter';
+import Dotter from '../common/dotter';
 import defaultState from './defaultState';
 import { commonSeqType } from '../InputPanel/input';
 import { viewRectangleCoordinates } from '../common/helpers';

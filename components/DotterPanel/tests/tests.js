@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { mount, shallow } from 'enzyme';
 
-import Dotter from '../dotter';
+import Dotter from '../../common/dotter';
 import { SCORING_MATRIX_NAMES, MATCH, MISMATCH } from '../../constants/constants';
 import { SCORING_MATRICES } from '../../constants/scoring_matrices/scoring_matrices';
 

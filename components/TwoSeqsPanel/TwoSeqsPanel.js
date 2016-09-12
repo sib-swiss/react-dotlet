@@ -3,7 +3,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import s from './TwoSeqsPanel.css';
 import store from '../../core/store';
 
-import Dotter from '../DotterPanel/dotter';
+import Dotter from '../common/dotter';
 import * as helpers from '../common/helpers';
 import { formatSeq } from './helpers';
 import { inspectCoordinate } from '../actions/actionCreators';

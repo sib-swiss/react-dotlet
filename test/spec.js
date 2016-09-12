@@ -12,7 +12,7 @@ import { expect } from 'chai';
 
 import { getSequenceAround, viewRectangleCoordinates } from '../components/common/helpers';
 import { translateProtein } from '../components/common/genetics';
-import Dotter from '../components/DotterPanel/dotter';
+import Dotter from '../components/common/dotter';
 
 
 describe('Global component helpers:', () => {
