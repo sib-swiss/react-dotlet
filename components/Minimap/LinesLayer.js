@@ -2,6 +2,7 @@ import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import s from './Minimap.css';
 import store from '../../core/store';
+
 import { CANVAS_ID_MINIMAP_LINES } from '../constants/constants';
 
 

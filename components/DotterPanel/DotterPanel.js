@@ -2,7 +2,7 @@ import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import s from './DotterPanel.css';
 
-import Dotter from '../common/Dotter';
+import { DotterFromState } from '../common/dotterFactory';
 import store from '../../core/store';
 import { CANVAS_ID } from '../constants/constants';
 import { resizeCanvas, zoom, changeViewPosition } from '../actions/actionCreators';
@@ -49,7 +49,7 @@ class DotterPanel extends React.Component {
     }
     componentDidUpdate(prevProps, prevState) {
         let state = store.getState();
-        let d = new Dotter(state);
+        let d = DotterFromState(state);
         let greyScale = state.greyScale;
         let scaledAlphas = d.rescaleAlphas(greyScale.initialAlphas, greyScale.minBound, greyScale.maxBound);
         d.fillCanvas(scaledAlphas);
@@ -76,6 +76,9 @@ class DotterPanel extends React.Component {
             store.dispatch(zoom( currentZoom / 2 , "out"));
         }
     }
+    /**
+     * Move the zoomed area with the arrows.
+     */
     move(direction) {
         return () => {
             let storeState = store.getState();

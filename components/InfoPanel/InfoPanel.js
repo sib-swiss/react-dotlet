@@ -2,7 +2,7 @@ import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import store from '../../core/store';
 import s from './InfoPanel.css';
-import Dotter from '../common/Dotter';
+import { DotterFromState } from '../common/dotterFactory';
 
 
 class InfoPanel extends React.Component {
@@ -23,8 +23,7 @@ class InfoPanel extends React.Component {
     }
 
     render() {
-        let state = store.getState();
-        let d = new Dotter(state.canvasSize, state.windowSize, state.s1, state.s2, state.scoringMatrix);
+        let d = DotterFromState(store.getState());
         let i = this.state.i, j = this.state.j;
         let score = d.scoreAround(j, i);
 

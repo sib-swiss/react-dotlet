@@ -2,6 +2,7 @@ import { CHANGE_SEQUENCE, CHANGE_WINDOW_SIZE, CHANGE_SCORING_MATRIX,
          INSPECT_COORDINATE, CHANGE_GREY_SCALE, RESIZE_CANVAS, OPEN_TOAST,
          ZOOM, DRAG_MINIMAP, CHANGE_VIEW_POSITION } from './actionTypes';
 import Dotter from '../common/Dotter';
+import { DotterFromState } from '../common/dotterFactory';
 import defaultState from './defaultState';
 import { commonSeqType } from '../InputPanel/input';
 import { viewRectangleCoordinates } from '../common/helpers';
@@ -25,7 +26,7 @@ let reducer = (state = defaultState, action) => {
         let miniRect = viewRectangleCoordinates(i, j, L, MINIMAP_SIZE, windowSize, zoomLevel);
         let minimapView = {x: miniRect.x, y: miniRect.y, size: miniRect.size};
         // View square
-        let d = new Dotter(state);
+        let d = DotterFromState(state);
         var rect = viewRectangleCoordinates(i, j, L, state.canvasSize, windowSize, zoomLevel);
         var xx = d.seqIndexFromCoordinate(rect.x);
         var yy = d.seqIndexFromCoordinate(rect.y);
@@ -108,7 +109,7 @@ let reducer = (state = defaultState, action) => {
             let ls1 = state.s1.length;
             let ls2 = state.s2.length;
             let lws = ~~ ((winsize - 1) / 2);
-            let rws = ~~ (winsize / 2)
+            let rws = ~~ (winsize / 2);
             newState.i = Math.min(ls2 - rws, Math.max(lws, state.i));
             newState.j = Math.min(ls2 - rws, Math.max(lws, state.j));
             return Object.assign(newState, addToState, {windowSize: winsize});

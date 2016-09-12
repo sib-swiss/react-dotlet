@@ -1,7 +1,8 @@
 import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import Dotter from '../common/Dotter';
 import store from '../../core/store';
+
+import { DotterFromState } from '../common/dotterFactory';
 import { CANVAS_ID_LINES } from '../constants/constants';
 import { inspectCoordinate } from '../actions/actionCreators';
 import { getCanvasMouseCoordinates } from '../common/helpers';
@@ -53,7 +54,7 @@ class PositionLinesLayer extends React.Component {
 
         /* Compute the pixel coordinates in the square view that correspond
            to the currenly looked-up sequence indices. */
-        var d = new Dotter(state);
+        var d = DotterFromState(state);
         let x = d.coordinateFromSeqIndex(this.state.i);
         let y = d.coordinateFromSeqIndex(this.state.j);
         let view = state.view;
@@ -104,8 +105,7 @@ class PositionLinesLayer extends React.Component {
         }
         let j = this.state.j,
             i = this.state.i;
-        let state = store.getState();
-        let d = new Dotter(state);
+        let d = DotterFromState(store.getState());
         switch (direction) {
             case 'down':  if (j < d.ls2 - d.rws - 1) j++; break;
             case 'up':    if (j > d.lws)           j--; break;
@@ -121,13 +121,13 @@ class PositionLinesLayer extends React.Component {
      * and fire an action.
      */
     inspect(event) {
-        let state = store.getState();
+        let storeState = store.getState();
         let zoomLevel = this.props.zoomLevel;
         let coords = getCanvasMouseCoordinates(event);
 
         // Return corresponding char indices
-        let view = state.view;
-        let d = new Dotter(state);
+        let view = storeState.view;
+        let d = DotterFromState(storeState);
         let i = d.seqIndexFromCoordinate(view.x + coords.x / zoomLevel);
         let j = d.seqIndexFromCoordinate(view.y + coords.y / zoomLevel);
 
