@@ -38,10 +38,10 @@ class Dotter {
         this.maxScore = -Infinity;
 
         /* Shorteners for window size bits */
-        this.hws = ~~ (windowSize / 2);   // # of nucleotides on each side
         this.ws2 = windowSize - 1;
-        this.lws = (windowSize % 2 === 0) ? (windowSize/2 - 1) : ((windowSize-1)/2);
-        this.rws = (windowSize % 2 === 0) ? (windowSize/2) : ((windowSize-1)/2);
+        this.hws = ~~ (windowSize / 2);   // # of nucleotides on each side
+        this.lws = ~~ ((windowSize - 1) / 2);
+        this.rws = this.hws;
 
         /* What depends on input sequences */
         this.ls1 = s1.length;
