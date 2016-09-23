@@ -118,7 +118,7 @@ let defaultState = {
     scoresUpdated: true,
 };
 
-Object.assign(defaultState, thisExample);
+Object.assign(defaultState, orthologExample);  // thisExample
 
 defaultState.L = Math.max(defaultState.s1.length, defaultState.s2.length);
 defaultState.view.L = defaultState.L;

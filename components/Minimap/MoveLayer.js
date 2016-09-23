@@ -6,6 +6,7 @@ import store from '../../core/store';
 import { CANVAS_ID_MINIMAP_TOP } from '../constants/constants';
 import { getCanvasMouseCoordinates } from '../common/helpers';
 import { dragMinimap, changeViewPosition } from '../actions/actionCreators';
+import { DotterForMinimap } from '../common/dotterFactory';
 
 
 /**
@@ -41,13 +42,6 @@ class MoveLayer extends React.Component {
     }
 
     /**
-     * Return the sequence index corresponding to that sequence pixel
-     */
-    scale(px) {
-        let L = Math.max(this.state.s1.length, this.state.s2.length);
-        return ~~ ((L / this.props.size) * px);
-    }
-    /**
      * Return the sequence indices (i,j) at the center of the minmap square `minimapView`.
      */
     seqCoordsFromMinimapView(minimapView) {
@@ -62,8 +56,10 @@ class MoveLayer extends React.Component {
      */
     viewPosition(mouseEvent) {
         let coords = getCanvasMouseCoordinates(mouseEvent);
-        let i = this.scale(coords.x);
-        let j = this.scale(coords.y);
+        let d = DotterForMinimap();
+        let i = d.seqIndexFromCoordinate(coords.x);
+        let j = d.seqIndexFromCoordinate(coords.y);
+        console.debug("viewPosition:", [i,j])
         store.dispatch(changeViewPosition(i, j));
     }
     /**
