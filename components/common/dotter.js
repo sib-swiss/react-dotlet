@@ -33,12 +33,14 @@ class Dotter {
         this.ls1 = s1.length;
         this.ls2 = s2.length;
         this.L = Math.max(this.ls1, this.ls2);     // The max sequence length
-        this.LL = this.L - windowSize + 1;         // The number of squares on the map
+        this.nsquares = this.L - this.lws - this.rws;         // The number of squares on the map
+        this.nsquares1 = this.ls1 - this.lws - this.rws;
+        this.nsquares2 = this.ls2 - this.lws - this.rws;
         this.smallSequence = this.L < canvasSize;
-        this.scaleToPx = canvasSize / (this.LL);
-        this.scaleToSeq = (this.LL) / canvasSize;
-        this.lastRowIndex = ~~ (this.scaleToPx * (this.ls2 - windowSize + 1));
-        this.lastColIndex = ~~ (this.scaleToPx * (this.ls1 - windowSize + 1));
+        this.scaleToPx = canvasSize / this.nsquares;
+        this.scaleToSeq = this.nsquares / canvasSize;
+        this.lastRowIndex = ~~ (this.scaleToPx * this.nsquares2);
+        this.lastColIndex = ~~ (this.scaleToPx * this.nsquares1);
 
         /* Init scores array (depends only on canvas size) */
         this.CS2 = canvasSize * canvasSize;
@@ -59,10 +61,11 @@ class Dotter {
 
     /**
      * Returns the (approximate, integer) pixel coordinate corresponding to that sequence `index`.
+     * Not the real sequence index, but the window size number.
      * It is an affine transformation.
      */
     coordinateFromSeqIndex(index) {
-        return ~~ (this.scaleToPx * (index - this.lws));
+        return ~~ (this.scaleToPx * index);
     }
 
     /**
@@ -70,17 +73,17 @@ class Dotter {
      * It is an affine transformation.
      */
     seqIndexFromCoordinate(px) {
-        return (this.lws) + ~~ (this.scaleToSeq * px);
+        return ~~ (this.scaleToSeq * px);
     }
 
 
     /**
-     * Inspected sequence coordinates i,j must remain within
-     * one half-window size of each end of the sequence.
+     * Inspected sequence coordinates i,j must remain between 0 and the number of squares-1.
      */
     boundCoordinates(i, j) {
-        let ci = Math.min(Math.max(this.lws, i), this.ls1 - this.rws - 1);
-        let cj = Math.min(Math.max(this.lws, j), this.ls2 - this.rws - 1);
+        let ci = Math.min(Math.max(0, i), this.nsquares1-1);
+        let cj = Math.min(Math.max(0, j), this.nsquares2-1);
+        console.debug(j, this.nsquares2, cj)
         return {i: ci, j: cj};
     }
 
@@ -148,9 +151,10 @@ class Dotter {
      * Get the slice of `seq` centered on `index` with `hws` elements on each side.
      * @param seq: full sequence.
      * @param index: zero-based index of the center char in `seq`.
+     *   It should never be out of bounds.
      */
     getSequenceAround(seq, index) {
-        return seq.slice(Math.max(index - this.lws, 0), index + this.rws + 1);
+        return seq.slice(index - this.lws, index + this.rws + 1);
     }
 
     /**

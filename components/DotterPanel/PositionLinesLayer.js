@@ -107,10 +107,10 @@ class PositionLinesLayer extends React.Component {
             i = this.state.i;
         let d = DotterFromState(store.getState());
         switch (direction) {
-            case 'down':  if (j < d.ls2 - d.rws - 1) j++; break;
-            case 'up':    if (j > d.lws)           j--; break;
-            case 'right': if (i < d.ls1 - d.rws - 1) i++; break;
-            case 'left':  if (i > d.lws)           i--; break;
+            case 'down':  if (j < d.nsquares2 - 1) j++; break;
+            case 'up':    if (j > 0)               j--; break;
+            case 'right': if (i < d.nsquares1 - 1) i++; break;
+            case 'left':  if (i > 0)               i--; break;
         }
         store.dispatch(inspectCoordinate(i, j));
     }
@@ -133,6 +133,7 @@ class PositionLinesLayer extends React.Component {
 
         // Make sure we don't get out of seq bounds while dragging
         let c = d.boundCoordinates(i,j);
+        console.debug(coords, c.i, c.j)
         store.dispatch(inspectCoordinate(c.i, c.j));
     }
 

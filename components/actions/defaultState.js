@@ -83,8 +83,8 @@ const zoomExample = {
 };
 
 const thisExample = {
-    s1: "ATTCGAGCCATCAT",
-    s2: "ATTGCAGGCAG",
+    s1: "ATTCGAGCCAT",
+    s2: "ATTGCAG",
     windowSize: 4,
 };
 
@@ -123,9 +123,6 @@ Object.assign(defaultState, thisExample);  // thisExample
 defaultState.L = Math.max(defaultState.s1.length, defaultState.s2.length);
 defaultState.view.L = defaultState.L;
 defaultState.view.size = defaultState.canvasSize;
-let lws = ~~ ((defaultState.windowSize-1) / 2);
-defaultState.i = lws;
-defaultState.j = lws;
 
 
 export default defaultState;

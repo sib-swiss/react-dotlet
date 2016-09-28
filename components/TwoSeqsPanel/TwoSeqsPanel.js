@@ -103,8 +103,8 @@ class TwoSeqsPanel extends React.Component {
 
         let nchars = this.nchars;
         let half = this.half;
-        let w1 = helpers.getSequenceAround(s1, i, half, half);
-        let w2 = helpers.getSequenceAround(s2, j, half, half);
+        let w1 = helpers.getSequenceAround(s1, i+d.lws, half, half);
+        let w2 = helpers.getSequenceAround(s2, j+d.lws, half, half);
 
         /* Formatting */
         let fill = nbsp;
@@ -127,15 +127,14 @@ class TwoSeqsPanel extends React.Component {
                 this.borderCharStyle(2, k, windowSize, d.hws),
             ].join(' ')} >{c}</span> );
 
-        console.debug([i,j], [d.lws, d.hws], [s1.length-d.rws-1, s2.length-d.rws-1])
         return (
             <div id="two-seqs-panel" className={s.root}>
                 <Slider
                     sliderStyle={{margin: 0}}
                     tabIndex="0" ref='slider1'
-                    min={d.lws}
-                    max={Math.max(s1.length-d.rws-1, d.lws)}
-                    disabled={s1.length <= windowSize}
+                    min={0}
+                    max={d.nsquares1}
+                    disabled={s1.length < windowSize}
                     step={1}
                     value={i}
                     onChange={this.onSliderChange.bind(null, 1)}
@@ -153,9 +152,9 @@ class TwoSeqsPanel extends React.Component {
                 <Slider
                     sliderStyle={{margin: 0}}
                     tabIndex="0" ref='slider2'
-                    min={d.lws}
-                    max={Math.max(s2.length-d.rws-1, d.lws)}
-                    disabled={s2.length <= windowSize}
+                    min={0}
+                    max={d.nsquares2}
+                    disabled={s2.length < windowSize}
                     step={1}
                     value={j}
                     onChange={this.onSliderChange.bind(null, 2)}
