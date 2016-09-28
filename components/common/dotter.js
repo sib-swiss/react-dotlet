@@ -15,8 +15,6 @@ import * as d3scale from 'd3-scale';
 class Dotter {
     constructor(canvasSize, windowSize, s1,s2, scoringMatrixName) {
         /* Pure input */
-        this.canvasId = CANVAS_ID;
-        this.topCanvasId = CANVAS_ID +'-topLayer';
         this.canvasSize = canvasSize;
         this.windowSize = windowSize;
         this.scoringMatrixName = scoringMatrixName;
@@ -34,10 +32,11 @@ class Dotter {
         /* What depends on input sequences */
         this.ls1 = s1.length;
         this.ls2 = s2.length;
-        this.L = Math.max(this.ls1, this.ls2);
+        this.L = Math.max(this.ls1, this.ls2);     // The max sequence length
+        this.LL = this.L - windowSize + 1;         // The number of squares on the map
         this.smallSequence = this.L < canvasSize;
-        this.scaleToPx = canvasSize / (this.L - windowSize + 1);
-        this.scaleToSeq = (this.L - windowSize + 1) / canvasSize;
+        this.scaleToPx = canvasSize / (this.LL);
+        this.scaleToSeq = (this.LL) / canvasSize;
         this.lastRowIndex = ~~ (this.scaleToPx * (this.ls2 - windowSize + 1));
         this.lastColIndex = ~~ (this.scaleToPx * (this.ls1 - windowSize + 1));
 
@@ -218,7 +217,6 @@ class Dotter {
         let hws = this.hws;
         let lws = this.lws;
         let rws = this.rws;
-        let windowSize = this.windowSize;
         let ls1 = this.ls1, ls2 = this.ls2;
         let hlimit = ls1 - rws;
         let vsize = ls2 - this.ws2;
@@ -244,7 +242,6 @@ class Dotter {
         let hws = this.hws;
         let lws = this.lws;
         let rws = this.rws;
-        let windowSize = this.windowSize;
         let ls1 = this.ls1, ls2 = this.ls2;
         let scoringFunction = this.scoringFunction;
         let vlimit = ls2 - rws;
@@ -346,7 +343,7 @@ class Dotter {
      * @returns {undefined}
      */
     fillCanvas(alphas) {
-        let canvas = this.clearCanvas(this.canvasId);
+        let canvas = this.clearCanvas(CANVAS_ID);
         let ctx = canvas.getContext('2d');
         let imageData = ctx.getImageData(0,0, canvas.width, canvas.height);
         let N = 4 * alphas.length;
@@ -410,7 +407,7 @@ class Dotter {
      * @returns {undefined}
      */
     greyScale(initialAlphas, minBound, maxBound) {
-        let canvas = document.getElementById(this.canvasId);
+        let canvas = document.getElementById(CANVAS_ID);
         let ctx = canvas.getContext('2d');
         let imageData = ctx.getImageData(0,0, canvas.width, canvas.height);
         let data = imageData.data;
