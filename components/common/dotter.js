@@ -38,8 +38,8 @@ class Dotter {
         this.smallSequence = this.L < canvasSize;
         this.scaleToPx = canvasSize / (this.L - windowSize + 1);
         this.scaleToSeq = (this.L - windowSize + 1) / canvasSize;
-        this.lastRowIndex = ~~ (this.scaleToPx * this.ls2);
-        this.lastColIndex = ~~ (this.scaleToPx * this.ls1);
+        this.lastRowIndex = ~~ (this.scaleToPx * (this.ls2 - windowSize + 1));
+        this.lastColIndex = ~~ (this.scaleToPx * (this.ls1 - windowSize + 1));
 
         /* Init scores array (depends only on canvas size) */
         this.CS2 = canvasSize * canvasSize;
