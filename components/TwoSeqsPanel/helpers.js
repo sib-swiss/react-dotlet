@@ -9,8 +9,9 @@
  *  This 'center' could very well not be in the middle, if the sub-sequence was
  *  extracted from a border of the original one.
  * @param size: the total number of chars.
+ * @param lws: the left side of the sliding window (e.g. windowSize=5, lws=2 (and rws=2, too)).
  */
-function formatSeq(subseq, i, size, fill='_') {
+function formatSeq(subseq, i, size, lws, fill='_') {
     let half = Math.floor(size/2);
     if (subseq.length > size) {
         throw new RangeError("Cannot format a sequence bigger than its expected size");
@@ -18,7 +19,7 @@ function formatSeq(subseq, i, size, fill='_') {
     let w = subseq;
     // Mark start of the sequence
     if (i < half) {
-        w = fill.repeat(half-i) + w;
+        w = fill.repeat(half-i-lws) + w;
     }
     // Mark end of the sequence
     if (w.length < size) {

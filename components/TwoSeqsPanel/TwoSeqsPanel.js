@@ -101,17 +101,15 @@ class TwoSeqsPanel extends React.Component {
         let state = store.getState();
         let d = new Dotter(state.canvasSize, windowSize, s1,s2, state.scoringMatrix);
 
-        let nchars = this.nchars;
-        let half = this.half;
-        let w1 = helpers.getSequenceAround(s1, i+d.lws, half, half);
-        let w2 = helpers.getSequenceAround(s2, j+d.lws, half, half);
+        let w1 = helpers.getSequenceAround(s1, i+d.lws, this.half, this.half);
+        let w2 = helpers.getSequenceAround(s2, j+d.lws, this.half, this.half);
 
         /* Formatting */
         let fill = nbsp;
-        w1 = formatSeq(w1, i, nchars, fill);
-        w2 = formatSeq(w2, j, nchars, fill);
-        let seqinfo1 = formatSeq("Seq1:"+(i+1), 4, nchars, nbsp);
-        let seqinfo2 = formatSeq("Seq2:"+(j+1), 4, nchars, nbsp);
+        w1 = formatSeq(w1, i, this.nchars, d.lws, fill);
+        w2 = formatSeq(w2, j, this.nchars, d.lws, fill);
+        let seqinfo1 = formatSeq("Seq1:"+(i+1), 4, this.nchars, d.lws, nbsp);
+        let seqinfo2 = formatSeq("Seq2:"+(j+1), 4, this.nchars, d.lws, nbsp);
 
         let spans1 = w1.split('').map((c,k) =>
             <span key={k} className={[
@@ -133,8 +131,8 @@ class TwoSeqsPanel extends React.Component {
                     sliderStyle={{margin: 0}}
                     tabIndex="0" ref='slider1'
                     min={0}
-                    max={d.nsquares1}
-                    disabled={s1.length < windowSize}
+                    max={d.nsquares1-1}
+                    disabled={s1.length <= windowSize}
                     step={1}
                     value={i}
                     onChange={this.onSliderChange.bind(null, 1)}
@@ -153,8 +151,8 @@ class TwoSeqsPanel extends React.Component {
                     sliderStyle={{margin: 0}}
                     tabIndex="0" ref='slider2'
                     min={0}
-                    max={d.nsquares2}
-                    disabled={s2.length < windowSize}
+                    max={d.nsquares2-1}
+                    disabled={s2.length <= windowSize}
                     step={1}
                     value={j}
                     onChange={this.onSliderChange.bind(null, 2)}
