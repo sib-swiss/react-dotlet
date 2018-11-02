@@ -12,7 +12,7 @@ class Header extends React.Component {
                     </span>
                     <div className="mdl-layout-spacer"></div>
                     <div className="mdl-logo">
-                        <a href="http://www.sib.swiss/">
+                        <a href="https://www.sib.swiss/">
                             <img src={require("../../public/images/sib_logo_small.png")} height="36"/></a></div>
                     <div className="mdl-logo">
                         <a href="https://www.vital-it.ch/">

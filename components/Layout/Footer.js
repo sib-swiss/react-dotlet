@@ -15,7 +15,7 @@ class Footer extends React.Component {
                     style={{background: theme.primaryColor}} >
 
                 <div className="mdl-mini-footer__left-section">
-                    <div className={"mdl-logo "+s.footerItem +' '+ s.footerLeft}>© Vital-IT 2016</div>
+                    <div className={"mdl-logo "+s.footerItem +' '+ s.footerLeft}>© Vital-IT 2016-{(new Date()).getFullYear()}</div>
                     <div className={"mdl-logo "+s.footerItem}>v{require("../../package.json").version}</div>
                 </div>
 
@@ -24,7 +24,7 @@ class Footer extends React.Component {
 
                         <li className="mdl-mini-footer--social-btn" style={{ backgroundColor: 'transparent' }}>
                             <div>
-                                <a href="https://gitlab.isb-sib.ch/jdelafon/react-dotlet" target="_blank">
+                                <a href="https://github.com/sib-swiss/react-dotlet" target="_blank">
                                     <IconButton iconStyle={{color:'white', fontSize: '35px'}}
                                                 style={{padding:'8px'}}
                                                 tooltip="Source code"
@@ -38,7 +38,7 @@ class Footer extends React.Component {
 
                         <li className="mdl-mini-footer--social-btn" style={{ backgroundColor: 'transparent' }}>
                             <div>
-                                <a href="http://myhits.isb-sib.ch/util/dotlet/doc/dotlet_help.html" target="_blank">
+                                <a href="https://myhits.isb-sib.ch/util/dotlet/doc/dotlet_help.html" target="_blank">
                                     <IconButton iconStyle={{color:'white', fontSize: '35px'}}
                                                 style={{padding:'8px'}}
                                                 tooltip="Documentation"

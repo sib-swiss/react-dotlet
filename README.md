@@ -17,7 +17,7 @@ The original app was written in Java by Marco Pagni and Thomas Junier (Vital-IT)
 Java applets are no more supported by modern web browsers, so it has to be rewritten
 with a more modern design, new technologies, and hopefully performance improvements.
 
-Original app: http://myhits.isb-sib.ch/cgi-bin/dotlet
+Original app: https://myhits.isb-sib.ch/cgi-bin/dotlet
 
 Archive Java source files: ftp://ftp.isrec.isb-sib.ch/pub/software/java/dotlet/
 
