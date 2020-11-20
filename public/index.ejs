@@ -19,7 +19,7 @@
     <%_ if (!debug && config.trackingID) { _%>
     <script>
       window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
-      ga('create','<%= config.trackingID %>','auto');ga('set', 'anonymizeIp', true);ga('send','pageview')
+      ga('create','<%= config.trackingID %>','auto', {cookieFlags: 'max-age=7200;secure;samesite=none'});ga('set', 'anonymizeIp', true);ga('send','pageview')
     </script>
     <script src="https://www.google-analytics.com/analytics.js" async defer></script>
     <%_ } _%>
