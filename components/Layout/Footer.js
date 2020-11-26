@@ -24,7 +24,7 @@ class Footer extends React.Component {
 
                         <li className="mdl-mini-footer--social-btn" style={{ backgroundColor: 'transparent' }}>
                             <div>
-                                <a href="https://github.com/sib-swiss/react-dotlet" target="_blank">
+                                <a href="https://github.com/sib-swiss/react-dotlet" target="_blank" rel="noopener">
                                     <IconButton iconStyle={{color:'white', fontSize: '35px'}}
                                                 style={{padding:'8px'}}
                                                 tooltip="Source code"
@@ -38,7 +38,7 @@ class Footer extends React.Component {
 
                         <li className="mdl-mini-footer--social-btn" style={{ backgroundColor: 'transparent' }}>
                             <div>
-                                <a href="https://myhits.isb-sib.ch/util/dotlet/doc/dotlet_help.html" target="_blank">
+                                <a href="https://myhits.sib.swiss/util/dotlet/doc/dotlet_help.html" target="_blank" rel="noopener">
                                     <IconButton iconStyle={{color:'white', fontSize: '35px'}}
                                                 style={{padding:'8px'}}
                                                 tooltip="Documentation"
