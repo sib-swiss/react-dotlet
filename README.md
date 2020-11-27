@@ -17,13 +17,13 @@ The original app was written in Java by Marco Pagni and Thomas Junier (Vital-IT)
 Java applets are no more supported by modern web browsers, so it has to be rewritten
 with a more modern design, new technologies, and hopefully performance improvements.
 
-Original app: https://myhits.isb-sib.ch/cgi-bin/dotlet
+Original app: https://myhits.sib.swiss/cgi-bin/dotlet
 
-Archive Java source files: ftp://ftp.isrec.isb-sib.ch/pub/software/java/dotlet/
+Archive Java source files: https://github.com/sib-swiss/dotlet
 
-Publication: http://bioinformatics.oxfordjournals.org/cgi/content/abstract/16/2/178
+Publication: [Bioinformatics, 2000 16(2):178-179](https://doi.org/10.1093/bioinformatics/16.2.178)
 
-Vital-IT, 2016 - julien.delafontaine@sib.swiss
+Vital-IT, 2016 - Julien Delafontaine (https://github.com/jdelafon)
 
 Technology
 ----------
@@ -40,8 +40,8 @@ Build from source
 Install node.js and npm, then from the root directory, run
 
 ```
-npm install     
-node run build [--release] 
+npm install
+node run build [--release]
 ```
 
 Start the test server
@@ -78,13 +78,13 @@ Structure
 * `run.js`: Node tasks and some global config.
 * `main.js`: The main call to `ReactDOM.render` and binds the router.
 * `webpack.config.js`: Build configuration.
-* `package.json`: Project config file. 
+* `package.json`: Project config file.
   Lists JS dependencies to be installed with `npm install` in `/node_modules`.
   Lists `npm run <action>` aliases, such as `npm run test:watch`.
 
 `/public`
 
-* Everything that is to be copied for distribution. 
+* Everything that is to be copied for distribution.
   `.ejs` files get compiled to html/xml. In particular, don't try to edit
   the classic `index.html`, but `index.ejs` instead.
 * `/dist`: bundled JS with all dependencies and inlined assets.
