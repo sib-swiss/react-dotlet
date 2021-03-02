@@ -42,3 +42,14 @@
 .twoSeqsPanelContainer {
     clear: both;
 }
+
+@media (min-width: 1609px) {
+    .midPanel {
+        flex-wrap: nowrap;
+    }
+    .densityPanelContainer {
+        margin-left: 2%;
+        width: 50%;
+    }
+}
+

@@ -81,7 +81,7 @@ class DotterPanel extends React.Component {
     render() {
         let canvasSize = this.state.canvasSize;
         let zoomLevel = this.state.zoomLevel;
-        // Set style here because Material-UI doesn't give a shit about my class name.
+        // Set style here because Material-UI doesn't care about my class name.
         let verticalButtonStyle = {margin: "5px 1px 5px 5px", padding: "0", height: "24px", width: "24px"};
 
         return (

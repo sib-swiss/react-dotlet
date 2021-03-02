@@ -13,6 +13,7 @@
     height: 25px;
     text-align: center;
 }
+
 .legendY {
     transform: rotate(90deg);
     transform-origin: left top 0;
@@ -30,6 +31,7 @@
     height: 100%;
     border: 1px solid grey;
 }
+
 .verticalButton {
     padding: 0;
     margin: 5px 1px 5px 5px;
