@@ -9,6 +9,7 @@
     background-color: #3F51B5;
     background-size: cover;
 }
+
 .headerRow {
     height: 52px;
     min-height: 52px;
@@ -17,4 +18,10 @@
 .beta {
     color: red;
     font: italic 20px Comic Sans MS;
+}
+
+@media screen and (max-width: 1024px) {
+    .header {
+        display: block !important;
+    }
 }

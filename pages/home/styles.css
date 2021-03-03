@@ -43,7 +43,7 @@
     clear: both;
 }
 
-@media (min-width: 1609px) {
+@media screen and (min-width: 1609px) {
     .midPanel {
         flex-wrap: nowrap;
     }
