@@ -20,20 +20,24 @@
 }
 
 .innerContainer {
-    min-height: 100%;
     height: auto !important;
-    height: 100%;
+    min-height: 100%;
     margin-bottom: -50px;
+}
+
+.mainLayout{
+    background-color: #f8f8f8;
 }
 
 .content {
     width: 75%;
-    max-width: 900px;
     margin: 0 auto;
     padding-bottom: 30px;
+    background-color: white;
 }
+
 .filler {
     height: 50px;
     z-index: -1;
+    background-color: #f8f8f8;
 }
-
