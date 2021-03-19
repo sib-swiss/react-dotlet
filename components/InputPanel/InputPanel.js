@@ -111,7 +111,7 @@ class InputPanel extends React.Component {
 
             {/* Window size selection */}
 
-            <ToolbarGroup style={{marginTop: '-3px'}}>
+            <ToolbarGroup style={{marginTop: '10px'}}>
                 <TextField floatingLabelText="Window size" id="windowSize_input"
                            type="number"
                            style={{width: '110px', marginTop: 0}}
@@ -127,11 +127,11 @@ class InputPanel extends React.Component {
 
             {/* Scoring matrix selection */}
 
-            <ToolbarGroup  style={{marginTop: '-3px'}}>
+            <ToolbarGroup  style={{marginTop: '10px'}}>
                 <SelectField floatingLabelText="Scoring matrix"
                              floatingLabelFixed={true}
                              style={{width: '150px', marginTop: 0}}
-                             inputStyle={{marginTop: '5px'}}
+                             inputStyle={{marginTop: '5px', paddingBottom: '1px'}}
                              underlineShow={false}
                              floatingLabelStyle={{marginTop: '-6px'}}
                              onChange={this.onChangeScoringMatrix}
