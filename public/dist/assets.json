@@ -1,0 +1,12 @@
+{
+  "main": {
+    "js": "/dist/main.js?51c9ffcce8b90b0e04e6"
+  },
+  "": {
+    "png": [
+      "/dist/48587636fcad83fc34a0ab61cc86757a.png",
+      "/dist/ebad4d9a1412d39527fdbb1119bfc32b.png"
+    ],
+    "js": "/dist/1.js?6b4787f7385b7dbd0b8a"
+  }
+}
