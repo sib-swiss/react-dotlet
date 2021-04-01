@@ -4,51 +4,51 @@ webpackJsonp([1],{
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
-  
+
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  
+
   var _getPrototypeOf = __webpack_require__(5);
-  
+
   var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-  
+
   var _classCallCheck2 = __webpack_require__(3);
-  
+
   var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-  
+
   var _createClass2 = __webpack_require__(4);
-  
+
   var _createClass3 = _interopRequireDefault(_createClass2);
-  
+
   var _possibleConstructorReturn2 = __webpack_require__(7);
-  
+
   var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-  
+
   var _inherits2 = __webpack_require__(6);
-  
+
   var _inherits3 = _interopRequireDefault(_inherits2);
-  
+
   var _react = __webpack_require__(2);
-  
+
   var _react2 = _interopRequireDefault(_react);
-  
+
   var _Layout = __webpack_require__(243);
-  
+
   var _Layout2 = _interopRequireDefault(_Layout);
-  
+
   var _index = __webpack_require__(948);
-  
+
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-  
+
   var AboutPage = function (_React$Component) {
     (0, _inherits3.default)(AboutPage, _React$Component);
-  
+
     function AboutPage() {
       (0, _classCallCheck3.default)(this, AboutPage);
       return (0, _possibleConstructorReturn3.default)(this, (AboutPage.__proto__ || (0, _getPrototypeOf2.default)(AboutPage)).apply(this, arguments));
     }
-  
+
     (0, _createClass3.default)(AboutPage, [{
       key: 'componentDidMount',
       value: function componentDidMount() {
@@ -79,7 +79,7 @@ webpackJsonp([1],{
                                  * This source code is licensed under the MIT license found in the
                                  * LICENSE.txt file in the root directory of this source tree.
                                  */
-  
+
   exports.default = AboutPage;
 
 /***/ }),
