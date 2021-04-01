@@ -13,10 +13,10 @@ class Header extends React.Component {
                     <div className="mdl-layout-spacer"></div>
                     <div className="mdl-logo">
                         <a href="https://www.sib.swiss/">
-                            <img src={require("../../public/images/sib_logo_small.png")} height="36"/></a></div>
+                            <img src={require("../../public/images/sib_logo_small.png")} height="36" alt="SIB logo"/></a></div>
                     <div className="mdl-logo">
                         <a href="https://www.vital-it.ch/">
-                            <img src={require("../../public/images/vital-it_small.png")} height="36"/></a></div>
+                            <img src={require("../../public/images/vital-it_small.png")} height="36" alt="Vital-IT logo"/></a></div>
                 </div>
             </header>
         );
