@@ -1,14 +1,9 @@
 archive/
 tests.html
 
-*.jpg
-*.png
-
 .idea
 .DS_Store
 *.iml
-
-# Compiled output
 
 # Node.js and NPM
 node_modules
