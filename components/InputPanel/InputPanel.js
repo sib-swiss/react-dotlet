@@ -7,7 +7,7 @@ import { SCORING_MATRIX_NAMES, DNA, CANVAS_ID } from '../constants/constants';
 import { commonSeqType, guessSequenceType, formatSeq } from './input';
 import { printCanvas } from './helpers';
 import * as validators from './validators';
-
+import { validateFasta, validURL } from './fastaValidator';
 
 /* Material-UI */
 import TextField from 'material-ui/TextField';
@@ -41,6 +41,23 @@ class InputPanel extends React.Component {
     }
 
     /* Callbacks */
+    async fetchFasta(url) {
+        // GET request using fetch with async/await
+        try {
+            if (validURL(url) == true) {
+                const response = await fetch(url);
+                const data = await response.text();
+                const data2 = validateFasta(data);
+                return data2;
+            }
+        } 
+        catch (err) {
+            throw err;
+        }
+        finally {
+            store.dispatch(openToast("Invalid URL"));
+        }
+    }
 
     openTextarea(seqn) {
         this.setState({
@@ -50,25 +67,47 @@ class InputPanel extends React.Component {
     }
     onChangeSeq1 = (e) => {
         let s1 = e.target.value;
+        if (validURL(s1) == true) {
+            const getData = async () => {
+                const sequence = await this.fetchFasta(e.target.value);
+                s1 = sequence;
+                s1Type = guessSequenceType(s1, 200);
+                this.setState({ s1 });
+                store.dispatch(changeSequence(1, s1, s1Type));
+            };
+            getData();
+        }
         let s1Type = guessSequenceType(s1, 200);
         this.setState({ s1 });
         s1 = formatSeq(s1);
         let isValid = validators.isValidInputSequence(s1, s1Type);
         if (isValid.valid) {
             store.dispatch(changeSequence(1, s1, s1Type));
-        } else {
-            store.dispatch(openToast("Invalid "+ s1Type +" sequence character '"+ isValid.wrongChar +"'"));
         }
+        if (!isValid.valid && !validURL(s1)){
+            store.dispatch(openToast("Invalid "+ s1Type +" sequence character '"+ isValid.wrongChar +"'"));
+        };
     };
     onChangeSeq2 = (e) => {
         let s2 = e.target.value;
+        if (validURL(s2) == true) {
+            const getData = async () => {
+                const sequence = await this.fetchFasta(e.target.value);
+                s2 = sequence;
+                s2Type = guessSequenceType(s2, 200);
+                this.setState({ s2 });
+                store.dispatch(changeSequence(2, s2, s2Type));
+            };
+            getData();
+        }
         let s2Type = guessSequenceType(s2, 200);
         this.setState({ s2 });
         s2 = formatSeq(s2);
         let isValid = validators.isValidInputSequence(s2, s2Type);
         if (isValid.valid) {
             store.dispatch(changeSequence(2, s2, s2Type));
-        } else {
+        } 
+        if (!isValid.valid && !validURL(s2)){
             store.dispatch(openToast("Invalid "+ s2Type +" sequence character '"+ isValid.wrongChar +"'"));
         }
     };
