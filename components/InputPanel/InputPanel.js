@@ -157,7 +157,7 @@ class InputPanel extends React.Component {
                            inputStyle={{marginTop: '2px'}}
                            underlineStyle={{margin: '0.75em 0'}}
                            underlineFocusStyle={{margin: '0.75em 0'}}
-                           floatingLabelStyle={{marginTop: '-6px'}}
+                           floatingLabelStyle={{marginTop: '-5px', color: '#555555'}}
                            floatingLabelFixed={true}
                            onChange={this.onChangeWindowSize}
                            value={this.state.windowSize}
@@ -172,7 +172,7 @@ class InputPanel extends React.Component {
                              style={{width: '150px', marginTop: 0}}
                              inputStyle={{marginTop: '5px', paddingBottom: '1px'}}
                              underlineShow={false}
-                             floatingLabelStyle={{marginTop: '-6px'}}
+                             floatingLabelStyle={{marginTop: '-6px', color: '#555555'}}
                              onChange={this.onChangeScoringMatrix}
                              value={this.state.scoringMatrix}
                              >
@@ -219,6 +219,7 @@ class InputPanel extends React.Component {
                     value={this.state.activeSequence === 1 ? this.state.s1 : this.state.s2}
                     placeholder={this.state.activeSequence === 1 ? 'Sequence 1:' : 'Sequence 2:'}
                     onChange={this.state.activeSequence === 1 ? this.onChangeSeq1 : this.onChangeSeq2}
+                    style={{fontFamily: 'Consolas'}}
                 />
             </div>
         </div>);
