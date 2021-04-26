@@ -54,9 +54,6 @@ class InputPanel extends React.Component {
         catch (err) {
             throw err;
         }
-        finally {
-            store.dispatch(openToast("Invalid URL"));
-        }
     }
 
     openTextarea(seqn) {
@@ -219,7 +216,7 @@ class InputPanel extends React.Component {
                     value={this.state.activeSequence === 1 ? this.state.s1 : this.state.s2}
                     placeholder={this.state.activeSequence === 1 ? 'Sequence 1:' : 'Sequence 2:'}
                     onChange={this.state.activeSequence === 1 ? this.onChangeSeq1 : this.onChangeSeq2}
-                    style={{fontFamily: 'Consolas'}}
+                    style={{fontFamily: 'Courier New'}}
                 />
             </div>
         </div>);

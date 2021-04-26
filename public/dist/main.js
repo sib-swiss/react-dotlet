@@ -27924,17 +27924,11 @@
                                   throw _context3.t0;
   
                               case 15:
-                                  _context3.prev = 15;
-  
-                                  _store2.default.dispatch((0, _actionCreators.openToast)("Invalid URL"));
-                                  return _context3.finish(15);
-  
-                              case 18:
                               case 'end':
                                   return _context3.stop();
                           }
                       }
-                  }, _callee3, this, [[0, 12, 15, 18]]);
+                  }, _callee3, this, [[0, 12]]);
               }));
   
               function fetchFasta(_x) {
@@ -28056,7 +28050,7 @@
                           value: this.state.activeSequence === 1 ? this.state.s1 : this.state.s2,
                           placeholder: this.state.activeSequence === 1 ? 'Sequence 1:' : 'Sequence 2:',
                           onChange: this.state.activeSequence === 1 ? this.onChangeSeq1 : this.onChangeSeq2,
-                          style: { fontFamily: 'Consolas' }
+                          style: { fontFamily: 'Courier New' }
                       })
                   )
               );
@@ -74865,4 +74859,4 @@
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=main.js.map?c5d13901b924d37bb464
+//# sourceMappingURL=main.js.map?763456a02be562fa72cc
