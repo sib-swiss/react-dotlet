@@ -7,7 +7,7 @@ import { SCORING_MATRIX_NAMES, DNA, CANVAS_ID } from '../constants/constants';
 import { commonSeqType, guessSequenceType, formatSeq } from './input';
 import { printCanvas } from './helpers';
 import * as validators from './validators';
-
+import { validateFasta, validURL } from './fastaValidator';
 
 /* Material-UI */
 import TextField from 'material-ui/TextField';
@@ -41,6 +41,20 @@ class InputPanel extends React.Component {
     }
 
     /* Callbacks */
+    async fetchFasta(url) {
+        // GET request using fetch with async/await
+        try {
+            if (validURL(url) == true) {
+                const response = await fetch(url);
+                const data = await response.text();
+                const data2 = validateFasta(data);
+                return data2;
+            }
+        } 
+        catch (err) {
+            throw err;
+        }
+    }
 
     openTextarea(seqn) {
         this.setState({
@@ -50,25 +64,47 @@ class InputPanel extends React.Component {
     }
     onChangeSeq1 = (e) => {
         let s1 = e.target.value;
+        if (validURL(s1) == true) {
+            const getData = async () => {
+                const sequence = await this.fetchFasta(e.target.value);
+                s1 = sequence;
+                s1Type = guessSequenceType(s1, 200);
+                this.setState({ s1 });
+                store.dispatch(changeSequence(1, s1, s1Type));
+            };
+            getData();
+        }
         let s1Type = guessSequenceType(s1, 200);
         this.setState({ s1 });
         s1 = formatSeq(s1);
         let isValid = validators.isValidInputSequence(s1, s1Type);
         if (isValid.valid) {
             store.dispatch(changeSequence(1, s1, s1Type));
-        } else {
-            store.dispatch(openToast("Invalid "+ s1Type +" sequence character '"+ isValid.wrongChar +"'"));
         }
+        if (!isValid.valid && !validURL(s1)){
+            store.dispatch(openToast("Invalid "+ s1Type +" sequence character '"+ isValid.wrongChar +"'"));
+        };
     };
     onChangeSeq2 = (e) => {
         let s2 = e.target.value;
+        if (validURL(s2) == true) {
+            const getData = async () => {
+                const sequence = await this.fetchFasta(e.target.value);
+                s2 = sequence;
+                s2Type = guessSequenceType(s2, 200);
+                this.setState({ s2 });
+                store.dispatch(changeSequence(2, s2, s2Type));
+            };
+            getData();
+        }
         let s2Type = guessSequenceType(s2, 200);
         this.setState({ s2 });
         s2 = formatSeq(s2);
         let isValid = validators.isValidInputSequence(s2, s2Type);
         if (isValid.valid) {
             store.dispatch(changeSequence(2, s2, s2Type));
-        } else {
+        } 
+        if (!isValid.valid && !validURL(s2)){
             store.dispatch(openToast("Invalid "+ s2Type +" sequence character '"+ isValid.wrongChar +"'"));
         }
     };
@@ -118,7 +154,7 @@ class InputPanel extends React.Component {
                            inputStyle={{marginTop: '2px'}}
                            underlineStyle={{margin: '0.75em 0'}}
                            underlineFocusStyle={{margin: '0.75em 0'}}
-                           floatingLabelStyle={{marginTop: '-6px'}}
+                           floatingLabelStyle={{marginTop: '-5px', color: '#555555'}}
                            floatingLabelFixed={true}
                            onChange={this.onChangeWindowSize}
                            value={this.state.windowSize}
@@ -133,7 +169,7 @@ class InputPanel extends React.Component {
                              style={{width: '150px', marginTop: 0}}
                              inputStyle={{marginTop: '5px', paddingBottom: '1px'}}
                              underlineShow={false}
-                             floatingLabelStyle={{marginTop: '-6px'}}
+                             floatingLabelStyle={{marginTop: '-6px', color: '#555555'}}
                              onChange={this.onChangeScoringMatrix}
                              value={this.state.scoringMatrix}
                              >
@@ -180,6 +216,7 @@ class InputPanel extends React.Component {
                     value={this.state.activeSequence === 1 ? this.state.s1 : this.state.s2}
                     placeholder={this.state.activeSequence === 1 ? 'Sequence 1:' : 'Sequence 2:'}
                     onChange={this.state.activeSequence === 1 ? this.onChangeSeq1 : this.onChangeSeq2}
+                    style={{fontFamily: 'Courier New'}}
                 />
             </div>
         </div>);
