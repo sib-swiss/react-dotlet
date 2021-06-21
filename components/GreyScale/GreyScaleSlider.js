@@ -2,6 +2,7 @@ import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import store from '../../core/store';
 import Slider from 'material-ui/Slider';
+import TextField from 'material-ui/TextField';
 import { changeGreyScale } from '../actions/actionCreators';
 import s from './GreyScaleSlider.css';
 
@@ -88,6 +89,9 @@ class GreyScaleSlider extends React.Component {
         //console.debug('-', min, max, w1, w2)
         //console.debug('-', [0, max], min)
         //console.debug('-', [min, 255], 255-max)
+        let minPercentage = Math.round(this.state.minBound * (100/255))+'%';
+        let maxPercentage = Math.round(this.state.maxBound * (100/255))+'%';
+        
         return <div style={{paddingLeft: margins.left, paddingRight: margins.right}}>
             <Slider
                 style={{width: w1+'%', float: 'left'}}
@@ -98,7 +102,7 @@ class GreyScaleSlider extends React.Component {
                 step={1}
                 value={min}
                 onChange={this.onChangeMinBound}
-            />
+            /><textarea className={s.sliderPercentage} value={minPercentage} onChange={this.onChangeMinBound} disabled/>
             <Slider
                 style={{width: w2+'%', float: 'right'}}
                 id='greyscale-slider-max'
@@ -109,7 +113,7 @@ class GreyScaleSlider extends React.Component {
                 step={1}
                 value={(255 - max)}
                 onChange={this.onChangeMaxBound}
-            />
+            /><textarea className={s.sliderMaxPercentage} value={maxPercentage} onChange={this.onChangeMaxBound} disabled/>
         </div>;
     }
 }
