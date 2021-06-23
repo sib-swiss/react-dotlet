@@ -88,6 +88,9 @@ class GreyScaleSlider extends React.Component {
         //console.debug('-', min, max, w1, w2)
         //console.debug('-', [0, max], min)
         //console.debug('-', [min, 255], 255-max)
+        let minPercentage = Math.round(this.state.minBound * (100/255))+'%';
+        let maxPercentage = Math.round(this.state.maxBound * (100/255))+'%';
+        
         return <div style={{paddingLeft: margins.left, paddingRight: margins.right}}>
             <Slider
                 style={{width: w1+'%', float: 'left'}}
@@ -99,6 +102,7 @@ class GreyScaleSlider extends React.Component {
                 value={min}
                 onChange={this.onChangeMinBound}
             />
+            <textarea className={s.sliderPercentage} value={minPercentage} onChange={this.onChangeMinBound} disabled/>
             <Slider
                 style={{width: w2+'%', float: 'right'}}
                 id='greyscale-slider-max'
@@ -110,6 +114,7 @@ class GreyScaleSlider extends React.Component {
                 value={(255 - max)}
                 onChange={this.onChangeMaxBound}
             />
+            <textarea className={s.sliderMaxPercentage} value={maxPercentage} onChange={this.onChangeMaxBound} disabled/>
         </div>;
     }
 }
