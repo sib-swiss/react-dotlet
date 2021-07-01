@@ -6,6 +6,7 @@
     position: relative;
     top: 0;
     left: 0;
+    border-bottom: 1px solid #e8e8e8;
 }
 
 .textarea {
@@ -15,6 +16,9 @@
     line-height: inherit;
     border-color: #e8e8e8;
     border-top: none;
+    border-left: none;
+    border-right: none;
+    margin-top: 2px;
     padding: 8px;
     resize: none;
     cursor: auto;
@@ -37,14 +41,37 @@
     border: 1px solid #000;
 }
 
+.divtextarea {
+    border-bottom: 1px solid #e8e8e8;
+    overflow: auto; 
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    font: inherit;
+    line-height: inherit;
+    color:#000;
+    cursor: auto;
+}
+
+.divtextarea:empty:before{
+    content: attr(placeholder);
+    color: #ccc;
+}
+
 .savedSequences{
     overflow: hidden;
     border-bottom: 1px solid #e8e8e8;
-    width: 99.5%;
+    width: 96.9%;
+}
+
+.saveSequences{
+    height: 18px;
+    margin-right: 5px;
+    margin: 0 5px 0 1px;
 }
 
 .storageButton{
-    margin-left: 7px;
+    margin: 2px 0 8px 7px;
     cursor: pointer;
     border-radius: 2px;
     border: 1px solid;
@@ -79,6 +106,10 @@
     margin-left: 0;
 }
 
+.sequencesDisplayContainer {
+    border-bottom: 1px solid #e8e8e8;
+}
+
 .removeSequence{
     margin: 12px 12px 0 5px;
     height: 25px;
@@ -86,16 +117,8 @@
 }
 
 .removeAllSequences{
-    height: 22px;
-    margin-left: 8px;
-    cursor: pointer;
-}
-
-#anchor2[data-title]:after{
-    height: 10px;
-    padding: 5px 8px 15px 8px;
-    font-size: 13px;
-    margin: 0 0 12px 130px;
+    height: 18px;
+    margin: 0 5px 0 1px;
 }
 
 [data-title]:hover:after {
@@ -104,6 +127,7 @@
     visibility: visible;
     transform: translate(-65%, 65%);
 }
+
 [data-title]:after {
     content: attr(data-title);
     position: absolute;
@@ -119,6 +143,7 @@
     z-index: 99999;
     visibility: hidden;
 }
+
 [data-title] {
     position: relative;
 }
@@ -137,7 +162,7 @@ a{
     height: 42px;
 }
 
-.ulSpace {
+.sequencesDisplay {
     font-family: 'Courier New';
     max-height: 13em;
     overflow: scroll;
@@ -145,20 +170,24 @@ a{
     overflow-x: hidden;
     padding-left: 5px !important;
     margin: 2px 0 6px 0;
-    
+    border-bottom: 1px solid #e8e8e8;
 }
 
-.ulSpace::-webkit-scrollbar-track {
+.storageDiv:last-child .savedSequences {
+    border-bottom: none;
+}
+
+.sequencesDisplay::-webkit-scrollbar-track {
     border-radius: 10px;
     border: 1px solid #000;
     background-color: #404040;
 }
   
-.ulSpace::-webkit-scrollbar {
+.sequencesDisplay::-webkit-scrollbar {
     width: 10px;
 }
   
-.ulSpace::-webkit-scrollbar-thumb {
+.sequencesDisplay::-webkit-scrollbar-thumb {
     border-radius: 10px;
     box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     background-color: rgb(189, 189, 189);

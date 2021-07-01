@@ -58,16 +58,53 @@ class InputPanel extends React.Component {
         }
     }
 
-    setDatastorage() {
-        //localStorage.setItem(this.state.seqName, store.getState().s1)
-        console.log(this.state.seqName)
-        console.log(store.getState().s1)
+    getSeq1Name() {
+        var archive = [],
+        keys = Object.keys(localStorage),
+        i = 0, key;
 
-        // Add default sequences to localstorage
-        if (Object.keys(localStorage).length === 0) {
-            localStorage.setItem("Homo sapiens", store.getState().s1)
-            localStorage.setItem("Drosophila melanogaster", store.getState().s2)
+        for (; key = keys[i]; i++) {
+            archive.push( 'Sequence Name: ' + key + ' \n ' + localStorage.getItem(key) + '\n');
         }
+
+        var mappedArchive = archive.map((item, i) => {
+            var values = Object.values(localStorage)[i]
+            for (; values.includes(store.getState().s1); i++) {
+                return Object.keys(localStorage).find(key => localStorage[key] === values);
+            }
+        });
+
+        if (!Object.values(localStorage).includes(this.state.activeSequence === 1 ? store.getState().s1 : store.getState().s1)) {
+            return "Sequence 1"
+        }
+        
+        return mappedArchive;
+    }
+
+    getSeq2Name() {
+        var archive = [],
+        keys = Object.keys(localStorage),
+        i = 0, key;
+
+        for (; key = keys[i]; i++) {
+            archive.push( 'Sequence Name: ' + key + ' \n ' + localStorage.getItem(key) + '\n');
+        }
+        
+        var mappedArchive = archive.map((item, i) => {
+            var values = Object.values(localStorage)[i]
+            for (; values.includes(store.getState().s2); i++) {
+                return Object.keys(localStorage).find(key => localStorage[key] === values);
+                }
+        });
+
+        if (!Object.values(localStorage).includes(this.state.activeSequence === 2 ? store.getState().s2 : store.getState().s2)) {
+            return "Sequence 2"
+        }
+
+        return mappedArchive;
+    }
+
+    setDatastorage() {
         if (Object.keys(localStorage).includes(this.state.seqName)) {
             alert("Sequence name already taken.")
         }
@@ -76,6 +113,8 @@ class InputPanel extends React.Component {
         }
         else {
             localStorage.setItem(this.state.seqName, this.state.activeSequence === 1 ? store.getState().s1 : store.getState().s2)
+            this.forceUpdate()
+            alert("The sequence " + this.state.seqName + " has been added.")
         }
     }
 
@@ -87,8 +126,8 @@ class InputPanel extends React.Component {
         for (; key = keys[i]; i++) {
             archive.push( 'Sequence name: ' + key + ' \n ' + localStorage.getItem(key) + '\n');
         }
+
         var mappedArchive = archive.map((item, i) => {
-            console.log(item + "\n");
             var values = Object.values(localStorage)[i]
             return (
             <div className={s.storageDiv}>
@@ -106,13 +145,15 @@ class InputPanel extends React.Component {
     }
 
     removeDatastorage(key) {
+        localStorage.removeItem(key)
+        this.forceUpdate()
         alert('Sequence removed!')
-        return localStorage.removeItem(key)
     }
 
     removeAlldatastorage() {
-        alert('Saved sequences deleted!')
-        return localStorage.clear()
+        localStorage.clear()
+        this.forceUpdate()
+        alert('Saved sequences deleted!')       
     }
 
     openSeqarea() {
@@ -129,7 +170,7 @@ class InputPanel extends React.Component {
     }
 
     onChangeSeqName = (e) => {
-        let seqName = e.target.value;
+        let seqName = e.target.innerText;
         this.setState({ seqName });
     };
     
@@ -250,9 +291,9 @@ class InputPanel extends React.Component {
         let seq1type = store.getState().s1Type;
         let seq2type = store.getState().s2Type;
         let commonType = commonSeqType(seq1type, seq2type);  // to know which scoring matrices are available
-        if (Object.keys(localStorage).length === 0) {
-            localStorage.setItem("Homo sapiens", store.getState().s1)
-            localStorage.setItem("Drosophila melanogaster", store.getState().s2)
+        if (Object.keys(localStorage).length <= 1) {
+            localStorage.setItem("Homo sapiens", "MRGVGWQMLSLSLGLVLAILNKVAPQACPAQCSCSGSTVDCHGLALRSVPRNIPRNTERLDLNGNNITRITKTDFAGLRHLRVLQLMENKISTIERGAFQDLKELERLRLNRNHLQLFPELLFLGTAKLYRLDLSENQIQAIPRKAFRGAVDIKNLQLDYNQISCIEDGAFRALRDLEVLTLNNNNITRLSVASFNHMPKLRTFRLHSNNLYCDCHLAWLSDWLRQRPRVGLYTQCMGPSHLRGHNVAEVQKREFVCSGHQSFMAPSCSVLHCPAACTCSNNIVDCRGKGLTEIPTNLPETITEIRLEQNTIKVIPPGAFSPYKKLRRIDLSNNQISELAPDAFQGLRSLNSLVLYGNKITELPKSLFEGLFSLQLLLLNANKINCLRVDAFQDLHNLNLLSLYDNKLQTIAKGTFSPLRAIQTMHLAQNPFICDCHLKWLADYLHTNPIETSGARCTSPRRLANKRIGQIKSKKFRCSAKEQYFIPGTEDYRSKLSGDCFADLACPEKCRCEGTTVDCSNQKLNKIPEHIPQYTAELRLNNNEFTVLEATGIFKKLPQLRKINFSNNKITDIEEGAFEGASGVNEILLTSNRLENVQHKMFKGLESLKTLMLRSNRITCVGNDSFIGLSSVRLLSLYDNQITTVAPGAFDTLHSLSTLNLLANPFNCNCYLAWLGEWLRKKRIVTGNPRCQKPYFLKEIPIQDVAIQDFTCDDGNDDNSCSPLSRCPTECTCLDTVVRCSNKGLKVLPKGIPRDVTELYLDGNQFTLVPKELSNYKHLTLIDLSNNRISTLSNQSFSNMTQLLTLILSYNRLRCIPPRTFDGLKSLRLLSLHGNDISVVPEGAFNDLSALSHLAIGANPLYCDCNMQWLSDWVKSEYKEPGIARCAGPGEMADKLLLTTPSKKFTCQGPVDVNILAKCNPCLSNPCKNDGTCNSDPVDFYRCTCPYGFKGQDCDVPIHACISNPCKHGGTCHLKEGEEDGFWCICADGFEGENCEVNVDDCEDNDCENNSTCVDGINNYTCLCPPEYTGELCEEKLDFCAQDLNPCQHDSKCILTPKGFKCDCTPGYVGEHCDIDFDDCQDNKCKNGAHCTDAVNGYTCICPEGYSGLFCEFSPPMVLPRTSPCDNFDCQNGAQCIVRINEPICQCLPGYQGEKCEKLVSVNFINKESYLQIPSAKVRPQTNITLQIATDEDSGILLYKGDKDHIAVELYRGRVRASYDTGSHPASAIYSVETINDGNFHIVELLALDQSLSLSVDGGNPKIITNLSKQSTLNFDSPLYVGGMPGKSNVASLRQAPGQNGTSFHGCIRNLYINSELQDFQKVPMQTGILPGCEPCHKKVCAHGTCQPSSQAGFTCECQEGWMGPLCDQRTNDPCLGNKCVHGTCLPINAFSYSCKCLEGHGGVLCDEEEDLFNPCQAIKCKHGKCRLSGLGQPYCECSSGYTGDSCDREISCRGERIRDYYQKQQGYAACQTTKKVSRLECRGGCAGGQCCGPLRSKRRKYSFECTDGSSFVDEVEKVVKCGCTRCVS")
+            localStorage.setItem("Drosophila melanogaster", "MAAPSRTTLMPPPFRLQLRLLILPILLLLRHDAVHAEPYSGGFGSSAVSSGGLGSVGIHIPGGGVGVITEARCPRVCSCTGLNVDCSHRGLTSVPRKISADVERLELQGNNLTVIYETDFQRLTKLRMLQLTDNQIHTIERNSFQDLVSLERLRLNNNRLKAIPENFVTSSASLLRLDISNNVITTVGRRVFKGAQSLRSLQLDNNQITCLDEHAFKGLVELEILTLNNNNLTSLPHNIFGGLGRLRALRLSDNPFACDCHLSWLSRFLRSATRLAPYTRCQSPSQLKGQNVADLHDQEFKCSGLTEHAPMECGAENSCPHPCRCADGIVDCREKSLTSVPVTLPDDTTELRLEQNFITELPPKSFSSFRRLRRIDLSNNNISRIAHDALSGLKQLTTLVLYGNKIKDLPSGVFKGLGSLQLLLLNANEISCIRKDAFRDLHSLSLLSLYDNNIQSLANGTFDAMKSIKTVHLAKNPFICDCNLRWLADYLHKNPIETSGARCESPKRMHRRRIESLREEKFKCSWDELRMKLSGECRMDSDCPAMCHCEGTTVDCTGRGLKEIPRDIPLHTTELLLNDNELGRISSDGLFGRLPHLVKLELKRNQLTGIEPNAFEGASHIQELQLGENKIKEISNKMFLGLHQLKTLNLYDNQISCVMPGSFEHLNSLTSLNLASNPFNCNCHLAWFAEWLRKKSLNGGAARCGAPSKVRDVQIKDLPHSEFKCSSENSEGCLGDGYCPPSCTCTGTVVRCSRNQLKEIPRGIPAETSELYLESNEIEQIHYERIRHLRSLTRLDLSNNQITILSNYTFANLTKLSTLIISYNKLQCLQRHALSGLNNLRVLSLHGNRISMLPEGSFEDLKSLTHIALGSNPLYCDCGLKWFSDWIKLDYVEPGIARCAEPEQMKDKLILSTPSSSFVCRGRVRNDILAKCNACFEQPCQNQAQCVALPQREYQCLCQPGYHGKHCEFMIDACYGNPCRNNATCTVLEEGRFSCQCAPGYTGARCETNIDDCLGEIKCQNNATCIDGVESYKCECQPGFSGEFCDTKIQFCSPEFNPCANGAKCMDHFTHYSCDCQAGFHGTNCTDNIDDCQNHMCQNGGTCVDGINDYQCRCPDDYTGKYCEGHNMISMMYPQTSPCQNHECKHGVCFQPNAQGSDYLCRCHPGYTGKWCEYLTSISFVHNNSFVELEPLRTRPEANVTIVFSSAEQNGILMYDGQDAHLAVELFNGRIRVSYDVGNHPVSTMYSFEMVADGKYHAVELLAIKKNFTLRVDRGLARSIINEGSNDYLKLTTPMFLGGLPVDPAQQAYKNWQIRNLTSFKGCMKEVWINHKLVDFGNAQRQQKITPGCALLEGEQQEEEDDEQDFMDETPHIKEEPVDPCLENKCRRGSRCVPNSNARDGYQCKCKHGQRGRYCDQGEGSTEPPTVTAASTCRKEQVREYYTENDCRSRQPLKYAKCVGGCGNQCCAAKIVRRRKVRMVCSNNRKYIKNLDIVRKCGCTKKCY")
         }
 
         return (
@@ -340,24 +381,31 @@ class InputPanel extends React.Component {
             {/* Where we enter the sequence */}
 
             <div className={s.textareaContainer} style={{display: this.state.open ? 'block' : 'none'}}>
-                <textarea className={s.textarea} rows={1}  ref={(c) => this._textArea = c}
-                    placeholder={'Sequence name:'}
-                    onChange={this.onChangeSeqName}
-                    style={{fontFamily: 'Courier New'}}
-                />
+                <div contentEditable='true' className={s.divtextarea}
+                    placeholder={"Sequence name: "}
+                    onInput={this.onChangeSeqName}
+                    style={{fontFamily: 'Courier New'}}>
+                        {this.state.activeSequence === 1 ? this.getSeq1Name() : this.getSeq2Name()}
+                </div>
                 <textarea className={s.textarea} rows={3} ref={(c) => this._textArea = c}
                     value={this.state.activeSequence === 1 ? this.state.s1 : this.state.s2}
                     placeholder={this.state.activeSequence === 1 ? 'Sequence 1:' : 'Sequence 2:'}
                     onChange={this.state.activeSequence === 1 ? this.onChangeSeq1 : this.onChangeSeq2}
                     style={{fontFamily: 'Courier New'}}
                 />
-                <button className={s.storageButton} onClick={ () => this.setDatastorage() }>Save Sequence</button>
+                <button className={s.storageButton} 
+                    onClick={() => this.setDatastorage()}
+                    ><img className={s.saveSequences} src={require("../../public/images/save_icon.svg")}/>
+                        Save Sequence
+                </button>
             </div>
-            <div style={{display: this.state.openStorage ? 'block' : 'none'}}>
-                <ul className={s.ulSpace}>{this.getDatastorage()}</ul>
-                <a data-title="Remove all saved sequences" id={s.anchor2}>
-                    <img className={s.removeAllSequences} onClick={() => this.removeAlldatastorage()} src={require("../../public/images/trash_icon.svg")}/>
-                </a>
+            <div style={{display: this.state.openStorage ? 'block' : 'none'}} className={s.sequencesDisplayContainer}>
+                <ul className={s.sequencesDisplay}>{this.getDatastorage()}</ul>
+                <button className={s.storageButton} 
+                    onClick={() => this.removeAlldatastorage()}
+                    ><img className={s.removeAllSequences} src={require("../../public/images/trash_icon.svg")}/>
+                        Remove all sequences
+                </button>
             </div>
         </div>);
     }
