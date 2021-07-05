@@ -8,6 +8,7 @@ import { commonSeqType, guessSequenceType, formatSeq } from './input';
 import { printCanvas } from './helpers';
 import * as validators from './validators';
 import { validateFasta, validURL } from './fastaValidator';
+import DotterPanel from '../DotterPanel/DotterPanel';
 
 /* Material-UI */
 import TextField from 'material-ui/TextField';
@@ -58,52 +59,6 @@ class InputPanel extends React.Component {
         }
     }
 
-    getSeq1Name() {
-        var archive = [],
-        keys = Object.keys(localStorage),
-        i = 0, key;
-
-        for (; key = keys[i]; i++) {
-            archive.push( 'Sequence Name: ' + key + ' \n ' + localStorage.getItem(key) + '\n');
-        }
-
-        var mappedArchive = archive.map((item, i) => {
-            var values = Object.values(localStorage)[i]
-            for (; values.includes(store.getState().s1); i++) {
-                return Object.keys(localStorage).find(key => localStorage[key] === values);
-            }
-        });
-
-        if (!Object.values(localStorage).includes(this.state.activeSequence === 1 ? store.getState().s1 : store.getState().s1)) {
-            return "Sequence 1"
-        }
-        
-        return mappedArchive;
-    }
-
-    getSeq2Name() {
-        var archive = [],
-        keys = Object.keys(localStorage),
-        i = 0, key;
-
-        for (; key = keys[i]; i++) {
-            archive.push( 'Sequence Name: ' + key + ' \n ' + localStorage.getItem(key) + '\n');
-        }
-        
-        var mappedArchive = archive.map((item, i) => {
-            var values = Object.values(localStorage)[i]
-            for (; values.includes(store.getState().s2); i++) {
-                return Object.keys(localStorage).find(key => localStorage[key] === values);
-                }
-        });
-
-        if (!Object.values(localStorage).includes(this.state.activeSequence === 2 ? store.getState().s2 : store.getState().s2)) {
-            return "Sequence 2"
-        }
-
-        return mappedArchive;
-    }
-
     setDatastorage() {
         if (Object.keys(localStorage).includes(this.state.seqName)) {
             alert("Sequence name already taken.")
@@ -113,8 +68,8 @@ class InputPanel extends React.Component {
         }
         else {
             localStorage.setItem(this.state.seqName, this.state.activeSequence === 1 ? store.getState().s1 : store.getState().s2)
-            this.forceUpdate()
             alert("The sequence " + this.state.seqName + " has been added.")
+            this.forceUpdate()
         }
     }
 
@@ -146,14 +101,14 @@ class InputPanel extends React.Component {
 
     removeDatastorage(key) {
         localStorage.removeItem(key)
-        this.forceUpdate()
         alert('Sequence removed!')
+        this.forceUpdate()
     }
 
     removeAlldatastorage() {
         localStorage.clear()
+        alert('Saved sequences deleted!')
         this.forceUpdate()
-        alert('Saved sequences deleted!')       
     }
 
     openSeqarea() {
@@ -295,6 +250,7 @@ class InputPanel extends React.Component {
             localStorage.setItem("Homo sapiens", "MRGVGWQMLSLSLGLVLAILNKVAPQACPAQCSCSGSTVDCHGLALRSVPRNIPRNTERLDLNGNNITRITKTDFAGLRHLRVLQLMENKISTIERGAFQDLKELERLRLNRNHLQLFPELLFLGTAKLYRLDLSENQIQAIPRKAFRGAVDIKNLQLDYNQISCIEDGAFRALRDLEVLTLNNNNITRLSVASFNHMPKLRTFRLHSNNLYCDCHLAWLSDWLRQRPRVGLYTQCMGPSHLRGHNVAEVQKREFVCSGHQSFMAPSCSVLHCPAACTCSNNIVDCRGKGLTEIPTNLPETITEIRLEQNTIKVIPPGAFSPYKKLRRIDLSNNQISELAPDAFQGLRSLNSLVLYGNKITELPKSLFEGLFSLQLLLLNANKINCLRVDAFQDLHNLNLLSLYDNKLQTIAKGTFSPLRAIQTMHLAQNPFICDCHLKWLADYLHTNPIETSGARCTSPRRLANKRIGQIKSKKFRCSAKEQYFIPGTEDYRSKLSGDCFADLACPEKCRCEGTTVDCSNQKLNKIPEHIPQYTAELRLNNNEFTVLEATGIFKKLPQLRKINFSNNKITDIEEGAFEGASGVNEILLTSNRLENVQHKMFKGLESLKTLMLRSNRITCVGNDSFIGLSSVRLLSLYDNQITTVAPGAFDTLHSLSTLNLLANPFNCNCYLAWLGEWLRKKRIVTGNPRCQKPYFLKEIPIQDVAIQDFTCDDGNDDNSCSPLSRCPTECTCLDTVVRCSNKGLKVLPKGIPRDVTELYLDGNQFTLVPKELSNYKHLTLIDLSNNRISTLSNQSFSNMTQLLTLILSYNRLRCIPPRTFDGLKSLRLLSLHGNDISVVPEGAFNDLSALSHLAIGANPLYCDCNMQWLSDWVKSEYKEPGIARCAGPGEMADKLLLTTPSKKFTCQGPVDVNILAKCNPCLSNPCKNDGTCNSDPVDFYRCTCPYGFKGQDCDVPIHACISNPCKHGGTCHLKEGEEDGFWCICADGFEGENCEVNVDDCEDNDCENNSTCVDGINNYTCLCPPEYTGELCEEKLDFCAQDLNPCQHDSKCILTPKGFKCDCTPGYVGEHCDIDFDDCQDNKCKNGAHCTDAVNGYTCICPEGYSGLFCEFSPPMVLPRTSPCDNFDCQNGAQCIVRINEPICQCLPGYQGEKCEKLVSVNFINKESYLQIPSAKVRPQTNITLQIATDEDSGILLYKGDKDHIAVELYRGRVRASYDTGSHPASAIYSVETINDGNFHIVELLALDQSLSLSVDGGNPKIITNLSKQSTLNFDSPLYVGGMPGKSNVASLRQAPGQNGTSFHGCIRNLYINSELQDFQKVPMQTGILPGCEPCHKKVCAHGTCQPSSQAGFTCECQEGWMGPLCDQRTNDPCLGNKCVHGTCLPINAFSYSCKCLEGHGGVLCDEEEDLFNPCQAIKCKHGKCRLSGLGQPYCECSSGYTGDSCDREISCRGERIRDYYQKQQGYAACQTTKKVSRLECRGGCAGGQCCGPLRSKRRKYSFECTDGSSFVDEVEKVVKCGCTRCVS")
             localStorage.setItem("Drosophila melanogaster", "MAAPSRTTLMPPPFRLQLRLLILPILLLLRHDAVHAEPYSGGFGSSAVSSGGLGSVGIHIPGGGVGVITEARCPRVCSCTGLNVDCSHRGLTSVPRKISADVERLELQGNNLTVIYETDFQRLTKLRMLQLTDNQIHTIERNSFQDLVSLERLRLNNNRLKAIPENFVTSSASLLRLDISNNVITTVGRRVFKGAQSLRSLQLDNNQITCLDEHAFKGLVELEILTLNNNNLTSLPHNIFGGLGRLRALRLSDNPFACDCHLSWLSRFLRSATRLAPYTRCQSPSQLKGQNVADLHDQEFKCSGLTEHAPMECGAENSCPHPCRCADGIVDCREKSLTSVPVTLPDDTTELRLEQNFITELPPKSFSSFRRLRRIDLSNNNISRIAHDALSGLKQLTTLVLYGNKIKDLPSGVFKGLGSLQLLLLNANEISCIRKDAFRDLHSLSLLSLYDNNIQSLANGTFDAMKSIKTVHLAKNPFICDCNLRWLADYLHKNPIETSGARCESPKRMHRRRIESLREEKFKCSWDELRMKLSGECRMDSDCPAMCHCEGTTVDCTGRGLKEIPRDIPLHTTELLLNDNELGRISSDGLFGRLPHLVKLELKRNQLTGIEPNAFEGASHIQELQLGENKIKEISNKMFLGLHQLKTLNLYDNQISCVMPGSFEHLNSLTSLNLASNPFNCNCHLAWFAEWLRKKSLNGGAARCGAPSKVRDVQIKDLPHSEFKCSSENSEGCLGDGYCPPSCTCTGTVVRCSRNQLKEIPRGIPAETSELYLESNEIEQIHYERIRHLRSLTRLDLSNNQITILSNYTFANLTKLSTLIISYNKLQCLQRHALSGLNNLRVLSLHGNRISMLPEGSFEDLKSLTHIALGSNPLYCDCGLKWFSDWIKLDYVEPGIARCAEPEQMKDKLILSTPSSSFVCRGRVRNDILAKCNACFEQPCQNQAQCVALPQREYQCLCQPGYHGKHCEFMIDACYGNPCRNNATCTVLEEGRFSCQCAPGYTGARCETNIDDCLGEIKCQNNATCIDGVESYKCECQPGFSGEFCDTKIQFCSPEFNPCANGAKCMDHFTHYSCDCQAGFHGTNCTDNIDDCQNHMCQNGGTCVDGINDYQCRCPDDYTGKYCEGHNMISMMYPQTSPCQNHECKHGVCFQPNAQGSDYLCRCHPGYTGKWCEYLTSISFVHNNSFVELEPLRTRPEANVTIVFSSAEQNGILMYDGQDAHLAVELFNGRIRVSYDVGNHPVSTMYSFEMVADGKYHAVELLAIKKNFTLRVDRGLARSIINEGSNDYLKLTTPMFLGGLPVDPAQQAYKNWQIRNLTSFKGCMKEVWINHKLVDFGNAQRQQKITPGCALLEGEQQEEEDDEQDFMDETPHIKEEPVDPCLENKCRRGSRCVPNSNARDGYQCKCKHGQRGRYCDQGEGSTEPPTVTAASTCRKEQVREYYTENDCRSRQPLKYAKCVGGCGNQCCAAKIVRRRKVRMVCSNNRKYIKNLDIVRKCGCTKKCY")
         }
+        const sequenceNames = new DotterPanel()
 
         return (
         <div className={s.root}>
@@ -385,7 +341,7 @@ class InputPanel extends React.Component {
                     placeholder={"Sequence name: "}
                     onInput={this.onChangeSeqName}
                     style={{fontFamily: 'Courier New'}}>
-                        {this.state.activeSequence === 1 ? this.getSeq1Name() : this.getSeq2Name()}
+                        {this.state.activeSequence === 1 ? sequenceNames.getSeq1Name() : sequenceNames.getSeq2Name()}
                 </div>
                 <textarea className={s.textarea} rows={3} ref={(c) => this._textArea = c}
                     value={this.state.activeSequence === 1 ? this.state.s1 : this.state.s2}
