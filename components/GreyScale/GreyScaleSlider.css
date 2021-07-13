@@ -13,7 +13,6 @@
     resize: none;
 
     position: absolute;
-    width: 30px;
     margin-left: 13px;
     background-color: transparent;
 }
@@ -29,7 +28,6 @@
     resize: none;
 
     position: absolute;
-    width: 30px;
     margin: 17px 0 0 13px;
     background-color: transparent;
 }

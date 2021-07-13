@@ -98,10 +98,6 @@ class DotterPanel extends React.Component {
             return "Sequence 1"
         }
 
-        /*if (Object.keys(localStorage).length === 0) {
-            return "Sequence 1"
-        }*/
-
         return mappedArchive;
     }
 
@@ -124,10 +120,6 @@ class DotterPanel extends React.Component {
         if (!Object.values(localStorage).includes(this.state.activeSequence === 2 ? store.getState().s2 : store.getState().s2)) {
             return "Sequence 2"
         }
-
-        /*if (Object.keys(localStorage).length === 0) {
-            return "Sequence 2"
-        }*/
 
         return mappedArchive;
     }
