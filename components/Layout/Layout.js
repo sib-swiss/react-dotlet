@@ -35,7 +35,7 @@ class Layout extends React.Component {
 
                         <Header />
 
-                        <main className="mdl-layout__content ">
+                        <main className={"mdl-layout__content "+s.mainLayout}>
                             <div className={s.content} {...this.props} />
                         </main>
                         <div className={s.filler}/>

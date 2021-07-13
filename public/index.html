@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title><%= config.title %></title>
+    <title>Dotlet JS</title>
     <meta name="description" content="Dotlet JS">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400italic,500,500italic,700,700italic">
@@ -15,13 +15,6 @@
   <body>
     <div id="container"></div>
     <script src="https://cdn.rawgit.com/tleunen/react-mdl/master/extra/material.min.js"></script>
-    <script src="<%= bundle %>"></script>
-    <%_ if (!debug && config.trackingID) { _%>
-    <script>
-      window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
-      ga('create','<%= config.trackingID %>','auto', {cookieFlags: 'max-age=7200;secure;samesite=none'});ga('set', 'anonymizeIp', true);ga('send','pageview')
-    </script>
-    <script src="https://www.google-analytics.com/analytics.js" async defer></script>
-    <%_ } _%>
+    <script src="/dist/main.js?2fb99adde99c42fa7e0e"></script>
   </body>
 </html>

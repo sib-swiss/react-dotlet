@@ -11,6 +11,7 @@ import PositionLinesLayer from './PositionLinesLayer';
 /* Material-UI */
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
+import { filter } from 'd3-array';
 
 
 class DotterPanel extends React.Component {
@@ -77,18 +78,63 @@ class DotterPanel extends React.Component {
         }
     }
 
+    getSeq1Name() {
+        var archive = [],
+        keys = Object.keys(localStorage),
+        i = 0, key;
+
+        for (; key = keys[i]; i++) {
+            archive.push( 'Sequence Name: ' + key + ' \n ' + localStorage.getItem(key) + '\n');
+        }
+
+        var mappedArchive = archive.map((item, i) => {
+            var values = Object.values(localStorage)[i]
+            for (; values.includes(store.getState().s1); i++) {
+                return Object.keys(localStorage).find(key => localStorage[key] === values);
+            }
+        });
+
+        if (!Object.values(localStorage).includes(this.state.activeSequence === 1 ? store.getState().s1 : store.getState().s1)) {
+            return "Sequence 1"
+        }
+
+        return mappedArchive;
+    }
+
+    getSeq2Name() {
+        var archive = [],
+        keys = Object.keys(localStorage),
+        i = 0, key;
+
+        for (; key = keys[i]; i++) {
+            archive.push( 'Sequence Name: ' + key + ' \n ' + localStorage.getItem(key) + '\n');
+        }
+        
+        var mappedArchive = archive.map((item, i) => {
+            var values = Object.values(localStorage)[i]
+            for (; values.includes(store.getState().s2); i++) {
+                return Object.keys(localStorage).find(key => localStorage[key] === values);
+                }
+        });
+
+        if (!Object.values(localStorage).includes(this.state.activeSequence === 2 ? store.getState().s2 : store.getState().s2)) {
+            return "Sequence 2"
+        }
+
+        return mappedArchive;
+    }
 
     render() {
         let canvasSize = this.state.canvasSize;
         let zoomLevel = this.state.zoomLevel;
-        // Set style here because Material-UI doesn't give a shit about my class name.
+        // Set style here because Material-UI doesn't care about my class name.
         let verticalButtonStyle = {margin: "5px 1px 5px 5px", padding: "0", height: "24px", width: "24px"};
 
         return (
             <div className={s.root}>
-                <div className={s.legendX}>{"Sequence 1"}</div>
+                <div className={s.legendX}>{this.getSeq1Name()}</div>
                 <div>
-                    <div className={s.legendY}>{"Sequence 2"}</div>
+                    <div className={s.legendY}><div style={{transform: "rotate(180deg)"}}>{this.getSeq2Name()}</div></div>
                     <div style={{position: 'relative', minHeight: canvasSize, minWidth: canvasSize}}>
 
                         {/* Bottom layer: the dot plot */}

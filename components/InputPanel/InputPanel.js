@@ -7,7 +7,8 @@ import { SCORING_MATRIX_NAMES, DNA, CANVAS_ID } from '../constants/constants';
 import { commonSeqType, guessSequenceType, formatSeq } from './input';
 import { printCanvas } from './helpers';
 import * as validators from './validators';
-
+import { validateFasta, validURL } from './fastaValidator';
+import DotterPanel from '../DotterPanel/DotterPanel';
 
 /* Material-UI */
 import TextField from 'material-ui/TextField';
@@ -26,6 +27,8 @@ class InputPanel extends React.Component {
         let storeState = store.getState();
         this.state = {
             open: false,
+            openStorage: false,
+            seqName: 'Undefined name',
             activeSequence: 1,
             s1: storeState.s1,
             s2: storeState.s2,
@@ -41,6 +44,78 @@ class InputPanel extends React.Component {
     }
 
     /* Callbacks */
+    async fetchFasta(url) {
+        // GET request using fetch with async/await
+        try {
+            if (validURL(url) == true) {
+                const response = await fetch(url);
+                const data = await response.text();
+                const data2 = validateFasta(data);
+                return data2;
+            }
+        } 
+        catch (err) {
+            throw err;
+        }
+    }
+
+    setDatastorage() {
+        if (Object.keys(localStorage).includes(this.state.seqName)) {
+            alert("Sequence name already taken.")
+        }
+        if (Object.values(localStorage).includes(this.state.activeSequence === 1 ? store.getState().s1 : store.getState().s2)) {
+            alert("The sequence you're trying to save already exists.")
+        }
+        else {
+            localStorage.setItem(this.state.seqName, this.state.activeSequence === 1 ? store.getState().s1 : store.getState().s2)
+            alert("The sequence " + this.state.seqName + " has been added.")
+            this.forceUpdate()
+        }
+    }
+
+    getDatastorage() {
+        var archive = [],
+        keys = Object.keys(localStorage),
+        i = 0, key;
+
+        for (; key = keys[i]; i++) {
+            archive.push( 'Sequence name: ' + key + ' \n ' + localStorage.getItem(key) + '\n');
+        }
+
+        var mappedArchive = archive.map((item, i) => {
+            var values = Object.values(localStorage)[i]
+            return (
+            <div className={s.storageDiv}>
+                <button className={s.changeSequencesButton} onClick={() => this.onChangeSeq1custom(values)} data-title={"Set sequence 1"}>Sequence 1</button>
+                <button className={s.changeSequencesButton} onClick={() => this.onChangeSeq2custom(values)} data-title={"Set sequence 2"}>Sequence 2</button>
+                <a data-title="Remove sequence">
+                    <img className={s.removeSequence} onClick={() => this.removeDatastorage(keys[i])} src={require("../../public/images/remove_icon.svg")}/>
+                </a>
+                <li className={s.savedSequences}>{item}</li>
+            </div>
+            )
+        });
+        
+        return mappedArchive;
+    }
+
+    removeDatastorage(key) {
+        localStorage.removeItem(key)
+        alert('Sequence removed!')
+        this.forceUpdate()
+    }
+
+    removeAlldatastorage() {
+        localStorage.clear()
+        alert('Saved sequences deleted!')
+        this.forceUpdate()
+    }
+
+    openSeqarea() {
+        this.setState({
+            openStorage: ! (this.state.openStorage),
+        });
+    }
 
     openTextarea(seqn) {
         this.setState({
@@ -48,27 +123,103 @@ class InputPanel extends React.Component {
             activeSequence: seqn,
         });
     }
-    onChangeSeq1 = (e) => {
-        let s1 = e.target.value;
+
+    onChangeSeqName = (e) => {
+        let seqName = e.target.innerText;
+        this.setState({ seqName });
+    };
+    
+    onChangeSeq1custom(values) {
+        let s1 = values;
+        if (validURL(s1) == true) {
+            const getData = async () => {
+                const sequence = await this.fetchFasta(values);
+                s1 = sequence;
+                s1Type = guessSequenceType(s1, 200);
+                this.setState({ s1 });
+                store.dispatch(changeSequence(1, s1, s1Type));
+            };
+            getData();
+        }
         let s1Type = guessSequenceType(s1, 200);
         this.setState({ s1 });
         s1 = formatSeq(s1);
         let isValid = validators.isValidInputSequence(s1, s1Type);
         if (isValid.valid) {
             store.dispatch(changeSequence(1, s1, s1Type));
-        } else {
-            store.dispatch(openToast("Invalid "+ s1Type +" sequence character '"+ isValid.wrongChar +"'"));
         }
+        if (!isValid.valid && !validURL(s1)){
+            store.dispatch(openToast("Invalid "+ s1Type +" sequence character '"+ isValid.wrongChar +"'"));
+        };
     };
-    onChangeSeq2 = (e) => {
-        let s2 = e.target.value;
+
+    onChangeSeq2custom(values) {
+        let s2 = values;
+        if (validURL(s2) == true) {
+            const getData = async () => {
+                const sequence = await this.fetchFasta(values);
+                s2 = sequence;
+                s2Type = guessSequenceType(s2, 200);
+                this.setState({ s2 });
+                store.dispatch(changeSequence(2, s2, s2Type));
+            };
+            getData();
+        }
         let s2Type = guessSequenceType(s2, 200);
         this.setState({ s2 });
         s2 = formatSeq(s2);
         let isValid = validators.isValidInputSequence(s2, s2Type);
         if (isValid.valid) {
             store.dispatch(changeSequence(2, s2, s2Type));
-        } else {
+        } 
+        if (!isValid.valid && !validURL(s2)){
+            store.dispatch(openToast("Invalid "+ s2Type +" sequence character '"+ isValid.wrongChar +"'"));
+        }
+    };
+
+    onChangeSeq1 = (e) => {
+        let s1 = e.target.value;
+        if (validURL(s1) == true) {
+            const getData = async () => {
+                const sequence = await this.fetchFasta(e.target.value);
+                s1 = sequence;
+                s1Type = guessSequenceType(s1, 200);
+                this.setState({ s1 });
+                store.dispatch(changeSequence(1, s1, s1Type));
+            };
+            getData();
+        }
+        let s1Type = guessSequenceType(s1, 200);
+        this.setState({ s1 });
+        s1 = formatSeq(s1);
+        let isValid = validators.isValidInputSequence(s1, s1Type);
+        if (isValid.valid) {
+            store.dispatch(changeSequence(1, s1, s1Type));
+        }
+        if (!isValid.valid && !validURL(s1)){
+            store.dispatch(openToast("Invalid "+ s1Type +" sequence character '"+ isValid.wrongChar +"'"));
+        };
+    };
+    onChangeSeq2 = (e) => {
+        let s2 = e.target.value;
+        if (validURL(s2) == true) {
+            const getData = async () => {
+                const sequence = await this.fetchFasta(e.target.value);
+                s2 = sequence;
+                s2Type = guessSequenceType(s2, 200);
+                this.setState({ s2 });
+                store.dispatch(changeSequence(2, s2, s2Type));
+            };
+            getData();
+        }
+        let s2Type = guessSequenceType(s2, 200);
+        this.setState({ s2 });
+        s2 = formatSeq(s2);
+        let isValid = validators.isValidInputSequence(s2, s2Type);
+        if (isValid.valid) {
+            store.dispatch(changeSequence(2, s2, s2Type));
+        } 
+        if (!isValid.valid && !validURL(s2)){
             store.dispatch(openToast("Invalid "+ s2Type +" sequence character '"+ isValid.wrongChar +"'"));
         }
     };
@@ -95,6 +246,11 @@ class InputPanel extends React.Component {
         let seq1type = store.getState().s1Type;
         let seq2type = store.getState().s2Type;
         let commonType = commonSeqType(seq1type, seq2type);  // to know which scoring matrices are available
+        if (Object.keys(localStorage).length <= 1) {
+            localStorage.setItem("Homo sapiens", "MRGVGWQMLSLSLGLVLAILNKVAPQACPAQCSCSGSTVDCHGLALRSVPRNIPRNTERLDLNGNNITRITKTDFAGLRHLRVLQLMENKISTIERGAFQDLKELERLRLNRNHLQLFPELLFLGTAKLYRLDLSENQIQAIPRKAFRGAVDIKNLQLDYNQISCIEDGAFRALRDLEVLTLNNNNITRLSVASFNHMPKLRTFRLHSNNLYCDCHLAWLSDWLRQRPRVGLYTQCMGPSHLRGHNVAEVQKREFVCSGHQSFMAPSCSVLHCPAACTCSNNIVDCRGKGLTEIPTNLPETITEIRLEQNTIKVIPPGAFSPYKKLRRIDLSNNQISELAPDAFQGLRSLNSLVLYGNKITELPKSLFEGLFSLQLLLLNANKINCLRVDAFQDLHNLNLLSLYDNKLQTIAKGTFSPLRAIQTMHLAQNPFICDCHLKWLADYLHTNPIETSGARCTSPRRLANKRIGQIKSKKFRCSAKEQYFIPGTEDYRSKLSGDCFADLACPEKCRCEGTTVDCSNQKLNKIPEHIPQYTAELRLNNNEFTVLEATGIFKKLPQLRKINFSNNKITDIEEGAFEGASGVNEILLTSNRLENVQHKMFKGLESLKTLMLRSNRITCVGNDSFIGLSSVRLLSLYDNQITTVAPGAFDTLHSLSTLNLLANPFNCNCYLAWLGEWLRKKRIVTGNPRCQKPYFLKEIPIQDVAIQDFTCDDGNDDNSCSPLSRCPTECTCLDTVVRCSNKGLKVLPKGIPRDVTELYLDGNQFTLVPKELSNYKHLTLIDLSNNRISTLSNQSFSNMTQLLTLILSYNRLRCIPPRTFDGLKSLRLLSLHGNDISVVPEGAFNDLSALSHLAIGANPLYCDCNMQWLSDWVKSEYKEPGIARCAGPGEMADKLLLTTPSKKFTCQGPVDVNILAKCNPCLSNPCKNDGTCNSDPVDFYRCTCPYGFKGQDCDVPIHACISNPCKHGGTCHLKEGEEDGFWCICADGFEGENCEVNVDDCEDNDCENNSTCVDGINNYTCLCPPEYTGELCEEKLDFCAQDLNPCQHDSKCILTPKGFKCDCTPGYVGEHCDIDFDDCQDNKCKNGAHCTDAVNGYTCICPEGYSGLFCEFSPPMVLPRTSPCDNFDCQNGAQCIVRINEPICQCLPGYQGEKCEKLVSVNFINKESYLQIPSAKVRPQTNITLQIATDEDSGILLYKGDKDHIAVELYRGRVRASYDTGSHPASAIYSVETINDGNFHIVELLALDQSLSLSVDGGNPKIITNLSKQSTLNFDSPLYVGGMPGKSNVASLRQAPGQNGTSFHGCIRNLYINSELQDFQKVPMQTGILPGCEPCHKKVCAHGTCQPSSQAGFTCECQEGWMGPLCDQRTNDPCLGNKCVHGTCLPINAFSYSCKCLEGHGGVLCDEEEDLFNPCQAIKCKHGKCRLSGLGQPYCECSSGYTGDSCDREISCRGERIRDYYQKQQGYAACQTTKKVSRLECRGGCAGGQCCGPLRSKRRKYSFECTDGSSFVDEVEKVVKCGCTRCVS")
+            localStorage.setItem("Drosophila melanogaster", "MAAPSRTTLMPPPFRLQLRLLILPILLLLRHDAVHAEPYSGGFGSSAVSSGGLGSVGIHIPGGGVGVITEARCPRVCSCTGLNVDCSHRGLTSVPRKISADVERLELQGNNLTVIYETDFQRLTKLRMLQLTDNQIHTIERNSFQDLVSLERLRLNNNRLKAIPENFVTSSASLLRLDISNNVITTVGRRVFKGAQSLRSLQLDNNQITCLDEHAFKGLVELEILTLNNNNLTSLPHNIFGGLGRLRALRLSDNPFACDCHLSWLSRFLRSATRLAPYTRCQSPSQLKGQNVADLHDQEFKCSGLTEHAPMECGAENSCPHPCRCADGIVDCREKSLTSVPVTLPDDTTELRLEQNFITELPPKSFSSFRRLRRIDLSNNNISRIAHDALSGLKQLTTLVLYGNKIKDLPSGVFKGLGSLQLLLLNANEISCIRKDAFRDLHSLSLLSLYDNNIQSLANGTFDAMKSIKTVHLAKNPFICDCNLRWLADYLHKNPIETSGARCESPKRMHRRRIESLREEKFKCSWDELRMKLSGECRMDSDCPAMCHCEGTTVDCTGRGLKEIPRDIPLHTTELLLNDNELGRISSDGLFGRLPHLVKLELKRNQLTGIEPNAFEGASHIQELQLGENKIKEISNKMFLGLHQLKTLNLYDNQISCVMPGSFEHLNSLTSLNLASNPFNCNCHLAWFAEWLRKKSLNGGAARCGAPSKVRDVQIKDLPHSEFKCSSENSEGCLGDGYCPPSCTCTGTVVRCSRNQLKEIPRGIPAETSELYLESNEIEQIHYERIRHLRSLTRLDLSNNQITILSNYTFANLTKLSTLIISYNKLQCLQRHALSGLNNLRVLSLHGNRISMLPEGSFEDLKSLTHIALGSNPLYCDCGLKWFSDWIKLDYVEPGIARCAEPEQMKDKLILSTPSSSFVCRGRVRNDILAKCNACFEQPCQNQAQCVALPQREYQCLCQPGYHGKHCEFMIDACYGNPCRNNATCTVLEEGRFSCQCAPGYTGARCETNIDDCLGEIKCQNNATCIDGVESYKCECQPGFSGEFCDTKIQFCSPEFNPCANGAKCMDHFTHYSCDCQAGFHGTNCTDNIDDCQNHMCQNGGTCVDGINDYQCRCPDDYTGKYCEGHNMISMMYPQTSPCQNHECKHGVCFQPNAQGSDYLCRCHPGYTGKWCEYLTSISFVHNNSFVELEPLRTRPEANVTIVFSSAEQNGILMYDGQDAHLAVELFNGRIRVSYDVGNHPVSTMYSFEMVADGKYHAVELLAIKKNFTLRVDRGLARSIINEGSNDYLKLTTPMFLGGLPVDPAQQAYKNWQIRNLTSFKGCMKEVWINHKLVDFGNAQRQQKITPGCALLEGEQQEEEDDEQDFMDETPHIKEEPVDPCLENKCRRGSRCVPNSNARDGYQCKCKHGQRGRYCDQGEGSTEPPTVTAASTCRKEQVREYYTENDCRSRQPLKYAKCVGGCGNQCCAAKIVRRRKVRMVCSNNRKYIKNLDIVRKCGCTKKCY")
+        }
+        const sequenceNames = new DotterPanel()
 
         return (
         <div className={s.root}>
@@ -109,16 +265,21 @@ class InputPanel extends React.Component {
                     secondary={this.state.open && this.state.activeSequence === 2} label="Sequence&nbsp;2" />
             </ToolbarGroup>
 
+            <ToolbarGroup>
+                <RaisedButton onClick={this.openSeqarea.bind(this)}
+                    secondary={this.state.openStorage} label="Saved&nbsp;Sequences"/>
+            </ToolbarGroup>
+
             {/* Window size selection */}
 
-            <ToolbarGroup style={{marginTop: '-3px'}}>
+            <ToolbarGroup style={{marginTop: '10px'}}>
                 <TextField floatingLabelText="Window size" id="windowSize_input"
                            type="number"
                            style={{width: '110px', marginTop: 0}}
                            inputStyle={{marginTop: '2px'}}
                            underlineStyle={{margin: '0.75em 0'}}
                            underlineFocusStyle={{margin: '0.75em 0'}}
-                           floatingLabelStyle={{marginTop: '-6px'}}
+                           floatingLabelStyle={{marginTop: '-5px', color: '#555555'}}
                            floatingLabelFixed={true}
                            onChange={this.onChangeWindowSize}
                            value={this.state.windowSize}
@@ -127,13 +288,13 @@ class InputPanel extends React.Component {
 
             {/* Scoring matrix selection */}
 
-            <ToolbarGroup  style={{marginTop: '-3px'}}>
+            <ToolbarGroup  style={{marginTop: '10px'}}>
                 <SelectField floatingLabelText="Scoring matrix"
                              floatingLabelFixed={true}
                              style={{width: '150px', marginTop: 0}}
-                             inputStyle={{marginTop: '5px'}}
+                             inputStyle={{marginTop: '5px', paddingBottom: '1px'}}
                              underlineShow={false}
-                             floatingLabelStyle={{marginTop: '-6px'}}
+                             floatingLabelStyle={{marginTop: '-6px', color: '#555555'}}
                              onChange={this.onChangeScoringMatrix}
                              value={this.state.scoringMatrix}
                              >
@@ -176,11 +337,31 @@ class InputPanel extends React.Component {
             {/* Where we enter the sequence */}
 
             <div className={s.textareaContainer} style={{display: this.state.open ? 'block' : 'none'}}>
+                <div contentEditable='true' className={s.divtextarea}
+                    placeholder={"Sequence name: "}
+                    onInput={this.onChangeSeqName}
+                    style={{fontFamily: 'Courier New'}}>
+                        {this.state.activeSequence === 1 ? sequenceNames.getSeq1Name() : sequenceNames.getSeq2Name()}
+                </div>
                 <textarea className={s.textarea} rows={3} ref={(c) => this._textArea = c}
                     value={this.state.activeSequence === 1 ? this.state.s1 : this.state.s2}
                     placeholder={this.state.activeSequence === 1 ? 'Sequence 1:' : 'Sequence 2:'}
                     onChange={this.state.activeSequence === 1 ? this.onChangeSeq1 : this.onChangeSeq2}
+                    style={{fontFamily: 'Courier New'}}
                 />
+                <button className={s.storageButton} 
+                    onClick={() => this.setDatastorage()}
+                    ><img className={s.saveSequences} src={require("../../public/images/save_icon.svg")}/>
+                        Save Sequence
+                </button>
+            </div>
+            <div style={{display: this.state.openStorage ? 'block' : 'none'}} className={s.sequencesDisplayContainer}>
+                <ul className={s.sequencesDisplay}>{this.getDatastorage()}</ul>
+                <button className={s.storageButton} 
+                    onClick={() => this.removeAlldatastorage()}
+                    ><img className={s.removeAllSequences} src={require("../../public/images/trash_icon.svg")}/>
+                        Remove all sequences
+                </button>
             </div>
         </div>);
     }

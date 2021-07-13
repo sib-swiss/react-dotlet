@@ -1,17 +1,9 @@
 archive/
 tests.html
 
-*.jpg
-*.png
-
 .idea
 .DS_Store
 *.iml
-
-# Compiled output
-public/dist
-public/index.html
-public/sitemap.xml
 
 # Node.js and NPM
 node_modules

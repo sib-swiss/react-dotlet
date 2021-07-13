@@ -6,6 +6,7 @@
     position: relative;
     top: 0;
     left: 0;
+    border-bottom: 1px solid #e8e8e8;
 }
 
 .textarea {
@@ -15,6 +16,180 @@
     line-height: inherit;
     border-color: #e8e8e8;
     border-top: none;
+    border-left: none;
+    border-right: none;
+    margin-top: 2px;
     padding: 8px;
+    resize: none;
+    cursor: auto;
 }
 
+.textarea::-webkit-scrollbar-track {
+    border-radius: 10px;
+    border: 1px solid #000;
+    background-color: #404040;
+}
+  
+.textarea::-webkit-scrollbar {
+    width: 10px;
+}
+  
+.textarea::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: rgb(189, 189, 189);
+    border: 1px solid #000;
+}
+
+.divtextarea {
+    border-bottom: 1px solid #e8e8e8;
+    overflow: auto; 
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    font: inherit;
+    line-height: inherit;
+    color:#000;
+    cursor: auto;
+}
+
+.divtextarea:empty:before{
+    content: attr(placeholder);
+    color: #ccc;
+}
+
+.savedSequences{
+    overflow: hidden;
+    border-bottom: 1px solid #e8e8e8;
+    width: 96.9%;
+}
+
+.saveSequences{
+    height: 18px;
+    margin-right: 5px;
+    margin: 0 5px 0 1px;
+}
+
+.storageButton{
+    margin: 2px 0 8px 7px;
+    cursor: pointer;
+    border-radius: 2px;
+    border: 1px solid;
+    background-color: rgb(255, 255, 255);
+}
+
+.storageButton:hover{
+    background-color: rgba(0, 0, 0, 0.08);
+    transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+}
+
+.storageDiv{
+    display: flex;
+}
+
+.changeSequencesButton{
+    margin: 8px 10px 0 2px;
+    height: 35px;
+    width: 106px;
+    cursor: pointer;
+    border-radius: 2px;
+    border: 1px solid;
+    background-color: rgb(255, 255, 255);
+}
+
+.changeSequencesButton:hover{
+    background-color: rgba(0, 0, 0, 0.08);
+    transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+}
+
+.changeSequencesButton[data-title]:after{
+    margin-left: 0;
+}
+
+.sequencesDisplayContainer {
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.removeSequence{
+    margin: 12px 12px 0 5px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.removeAllSequences{
+    height: 18px;
+    margin: 0 5px 0 1px;
+}
+
+[data-title]:hover:after {
+    opacity: 1;
+    transition: all 0.1s ease 0.5s;
+    visibility: visible;
+    transform: translate(-65%, 65%);
+}
+
+[data-title]:after {
+    content: attr(data-title);
+    position: absolute;
+    bottom: 0;
+    left: 86%;
+    padding: 4px 8px 4px 8px;
+    color: rgb(255, 255, 255);
+    white-space: nowrap;
+    border-radius: 5px;
+    box-shadow: 0px 0px 4px #222;
+    background-color:#222;
+    opacity: 0;
+    z-index: 99999;
+    visibility: hidden;
+}
+
+[data-title] {
+    position: relative;
+}
+
+button, a {
+    font-family: 'Arial', sans-serif;
+}
+
+a[data-title]:after{
+    height: 10px;
+    padding: 0px 8px 15px 8px;
+    font-size: 13px;
+    margin-left: 10px;
+}
+a{
+    height: 42px;
+}
+
+.sequencesDisplay {
+    font-family: 'Courier New';
+    max-height: 13em;
+    overflow: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-left: 5px !important;
+    margin: 2px 0 6px 0;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.storageDiv:last-child .savedSequences {
+    border-bottom: none;
+}
+
+.sequencesDisplay::-webkit-scrollbar-track {
+    border-radius: 10px;
+    border: 1px solid #000;
+    background-color: #404040;
+}
+  
+.sequencesDisplay::-webkit-scrollbar {
+    width: 10px;
+}
+  
+.sequencesDisplay::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: rgb(189, 189, 189);
+    border: 1px solid #000;
+}

@@ -2,7 +2,7 @@
 const MATCH = 'match';
 const MISMATCH = 'mismatch';
 const CANVAS_SIZE = 400;
-const MINIMAP_SIZE = 150;
+const MINIMAP_SIZE = 180;
 
 const CANVAS_ID = "dotter-canvas";
 const CANVAS_ID_LINES = "dotter-canvas-topLayer";
