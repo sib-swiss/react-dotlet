@@ -21,13 +21,20 @@ class ErrorPage extends React.Component {
 
   componentDidMount() {
     document.title = this.props.error && this.props.error.status === 404 ?
-      'Page Not Found' : 'Error';
+      'Dotlet JS' : 'Error';
   }
 
   goBack = event => {
     event.preventDefault();
     history.goBack();
   };
+
+  // Function called as a work around, to make electronjs work as intended
+  autoClick() {
+    window.onload = function(){
+      document.getElementById('homePage').click();
+    }
+  }
 
   render() {
     if (this.props.error) console.error(this.props.error); // eslint-disable-line no-console
@@ -48,7 +55,7 @@ class ErrorPage extends React.Component {
           }
           <p className={s.text}>
             <a href="/" onClick={this.goBack}>Go back</a>, or head over to the&nbsp;
-            <Link to="/">home page</Link> to choose a new direction.
+            <Link to="/" id={'homePage'} onClick={this.autoClick()}>home page</Link> to choose a new direction.
           </p>
         </main>
       </div>

@@ -1,7 +1,12 @@
 {
-  "name": "app",
-  "version": "0.1.1",
+  "name": "dotlet",
+  "productName": "dotlet",
+  "version": "0.2.0",
   "private": true,
+  "main": "public/electron-starter.js",
+  "output": {
+    "homepage": "./"
+  },
   "engines": {
     "node": ">=6",
     "npm": ">=3.8"
@@ -9,6 +14,7 @@
   "dependencies": {
     "babel-polyfill": "^6.9.1",
     "d3": "^4.1.1",
+    "electron-is-dev": "^2.0.0",
     "fastclick": "^1.0.6",
     "gulp-sass": "^4.1.0",
     "history": "^3.0.0",
@@ -37,9 +43,13 @@
     "babel-runtime": "^6.9.2",
     "browser-sync": "^2.13.0",
     "chai": "^3.5.0",
+    "concurrently": "^6.2.0",
     "css-loader": "^0.23.1",
     "del": "^2.2.1",
     "ejs": "^2.4.2",
+    "electron": "^13.1.7",
+    "electron-builder": "^22.11.7",
+    "electron-packager": "^15.3.0",
     "enzyme": "^2.4.1",
     "eslint": "^2.13.1",
     "eslint-config-airbnb": "^9.0.1",
@@ -81,6 +91,7 @@
     "stylelint": "^6.9.0",
     "stylelint-config-standard": "^10.0.0",
     "url-loader": "^0.5.7",
+    "wait-on": "^6.0.0",
     "webpack": "^1.13.1",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.12.1"
@@ -118,6 +129,54 @@
     "build:debug": "node run build --debug",
     "publish": "node run publish",
     "publish:debug": "node run publish --debug",
-    "start": "node run"
+    "start": "node run",
+    "electron": "electron .",
+    "electron-dev": "concurrently \"BROWSER=none npm run start\" \"wait-on http://localhost:3000 && electron .\"",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=build/icon.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . dotlet --overwrite --asar=true --platform=win32 --arch=ia32 --icon=build/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"dotlet\"",
+    "package-linux": "electron-packager . dotlet --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds",
+    "package-all": "electron-packager . --overwrite --all --icon=build/icon.icns --prune=true --out=release-builds"
+  },
+  "build": {
+    "extends": null,
+    "appId": "com.example.app",
+    "directories": {
+      "buildResources": "build"
+    },
+    "files": [
+      "node_modules/**/*",
+      "public/**/*"
+    ],
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "NSIS",
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "installerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "deleteAppDataOnUninstall": true
+    }
   }
 }

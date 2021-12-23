@@ -25,6 +25,8 @@ Publication: [Bioinformatics, 2000 16(2):178-179](https://doi.org/10.1093/bioinf
 
 Vital-IT, 2016 - Julien Delafontaine (https://github.com/jdelafon)
 
+University of Minho, 2021 - Gil Afonso (https://github.com/gilafonso)
+
 Technology
 ----------
 Started from [Kriasoft's react-static-boilerplate](https://github.com/kriasoft/react-static-boilerplate):
@@ -69,6 +71,30 @@ scp -r public/* <DESTINATION>
 
 where `<DESTINATION>` is the DocumentRoot in your server configuration.
 
+Build the desktop application version
+-------------------------------------
+
+To build for the OS currently being used, run
+
+```
+npm run dist
+```
+
+For each OS with the specified system architecture:
+
+```
+npm run package-mac
+npm run package-win
+npm run package-linux
+```
+
+If building for a macOS from Windows, make sure to run the console with admin privileges.
+
+To build for every OS and every arch, run
+
+```
+npm run package-all
+```
 
 Structure
 ---------

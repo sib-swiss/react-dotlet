@@ -1,8 +1,9 @@
 {
   "main": {
-    "js": "/dist/main.js?2fb99adde99c42fa7e0e"
+    "js": "/dist/main.js?4369b437330007357b3b"
   },
   "": {
-    "js": "/dist/1.js?86b6bb92e273c6079cc6"
+    "js": "/dist/1.js?e345077b6c8e6bde7067",
+    "json": "/dist/d50ac00d13ec9c296174.hot-update.json"
   }
 }

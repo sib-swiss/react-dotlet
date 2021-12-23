@@ -6,7 +6,7 @@
     position: relative;
     top: 0;
     left: 0;
-    border-bottom: 1px solid #e8e8e8;
+    border-bottom: 1px solid #9e9e9e;
 }
 
 .textarea {
@@ -88,9 +88,8 @@
 }
 
 .changeSequencesButton{
-    margin: 8px 10px 0 2px;
-    height: 35px;
-    width: 106px;
+    margin: 8px 10px 4px 2px;
+    width: 8rem;
     cursor: pointer;
     border-radius: 2px;
     border: 1px solid;
@@ -107,7 +106,7 @@
 }
 
 .sequencesDisplayContainer {
-    border-bottom: 1px solid #e8e8e8;
+    border-bottom: 1px solid #9e9e9e;
 }
 
 .removeSequence{
