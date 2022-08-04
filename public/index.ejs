@@ -14,8 +14,8 @@
   </head>
   <body>
     <div id="container"></div>
-    <script src="https://cdn.rawgit.com/tleunen/react-mdl/master/extra/material.min.js"></script>
-    <script src="<%= bundle %>"></script>
+    <script src="https://cdn.rawgit.com/tleunen/react-mdl/master/extra/material.min.js" defer></script>
+    <script src="<%= bundle %>" defer></script>
     <%_ if (!debug && config.trackingID) { _%>
     <script>
       window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
