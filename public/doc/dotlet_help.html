@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<meta charset="utf-8">
+	<meta name="dcterms.rights" content="MyHits copyright 2003-2018 SIB Swiss Institute of Bioinformatics">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Dotlet Help</title>
+</head>
+
+<body>
+	<h1>Dotlet Help</h1>
+	<em>This page explains how to use the
+	<code>dotlet</code> program. For a quick summary of
+	<code>dotlet</code>'s less obvious commands, see the <a
+	href="dotlet_comsum.html">command summary</a> page. There is
+	also an <a
+	href="dotlet_examples.html">examples</a> page that
+	shows you the kind of features that can be discovered
+	with this program.<br>
+	Since this program runs on many platforms, your screen
+	may be a bit different from the screenshots shown below
+	(which implements the Java look-and-feel). Don't worry,
+	the program works in the same way everywhere (well,
+	at least it should :-). </em>
+	<hr>
+	<h2>The basic procedure</h2>
+	First of all, here's a presentation of <code>dotlet</code>'s menu bar:<br><br>
+	<table style="margin-left:auto; margin-right:auto">
+		<caption>
+			<strong>Figure 1</strong>: The <code>dotlet</code> menu bar
+		</caption>
+		<tr>
+			<td>
+				<img src="help_menubar_mod.gif" alt="fig1" width="676" height="122">
+			</td>
+		</tr>
+	</table>
+	<br>
+	The basic procedure has the following steps:
+	<ol>
+		<li> Click on the <strong>Input</strong>
+		button. This opens the <strong>Sequence Input
+		Dialog</strong>:<br><br>
+		<table style="margin-left:auto; margin-right:auto">
+			<caption>
+				<strong>Figure 2</strong>: The Sequence Input Dialog
+			</caption>
+			<tr>
+				<td>
+					<img src="help_sequindi.gif" alt="fig2" width="508" height="306">
+				</td>
+			</tr>
+		</table>
+		<br>
+		Now type or paste a sequence in the dialog's
+		main text area. You can give your sequence a
+		name if you wish (use the <strong>Name</strong>
+		textfield for this); if you don't, <code>dotlet</code>
+		will create one for you. When you're done,
+		click the <strong>Ok</strong> button. Characters
+		other than letters are ignored, so it is ok
+		to cut-and-paste a sequence that has spaces
+		or position numbers in it. Case is not
+		important. <!-- If you made a mistake, you can clear
+		the dialog with the <strong>Reset</strong>
+		button. --> <br> Once the sequence has been input,
+		there is no way to modify it. If you need to
+		enter a second sequence, repeat this step. Notice how the
+		<strong>sequence menus</strong> reflect the
+		name(s) of the sequence(s) you entered, or the
+		automatically attributed name(s) if you didn't
+		name your sequence(s).<br><br></li>
+
+		<li> Select the horizontal sequence from the
+		first sequence menu, and the vertical sequence
+		(which can be the same as the horizontal one)
+		from the second sequence menu. If you want to use
+		another matrix than the default, you may do so
+		from the matrices menu. The program automatically
+		determines if a sequence is protein or nucleic
+		acid, and offers  a choice of adequate
+		matrices. Similarly, you can select a zoom
+		factor and the sliding window's size from the
+		corresponding menus.<br><br></li>
+
+		<li> Click the <strong>Compute</strong>
+		button. After a while (this depends on the
+		speed and load of your computer, as well as on
+		the lengths of the sequences), the <strong>dots
+		window</strong> will display the diagonal plot. It
+		looks like this:<br><br>
+		<table style="margin-left:auto; margin-right:auto">
+			<caption>
+				<strong>Figure 3</strong>: The Dots window, with no grayscale adjustments
+			</caption>
+			<tr>
+				<td>
+					<img src="help_dotwin_1.gif" alt="fig3" width="350" height="355">
+				</td>
+			</tr>
+		</table>
+		<br>
+		Each pixel corresponds to a residue in the
+		horizontal sequence, and another residue in the
+		vertical sequence. The pixel's color depends on
+		how similar the two sequences are around these
+		two positions: each pixel represents a score,
+		with high scores meaning good matches (in
+		this case, the darker the pixel, the lower the
+		score). Obviously there will be a large number of pixels with low
+		scores and only a few ones with high scores.
+		It is likely that you will have to tune the
+		grayscale in order to make the background noise (low scores)
+		disappear and the similar regions stand out
+		more clearly (the image shown in Fig. 3  has quite a bit of
+		background). To do this, use the <strong>histogram
+		window</strong> (Fig. 4):<br><br>
+		<table style="margin-left:auto; margin-right:auto">
+			<tr>
+				<td>
+					<table>
+						<caption>
+							<strong>Figure 4</strong>: The Histogram window, unadjusted
+						</caption>
+						<tr>
+							<td>
+								<img src="help_histo_1.gif" alt="fig4" width="260" height="250">
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<table>
+						<caption>
+							<strong>Figure 5</strong>: The Histogram window, after adjusting the grayscale
+						</caption>
+						<tr>
+							<td>
+								<img src="help_histo_2.gif" alt="fig5" width="258" height="251">
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<br>
+		This represents the frequency of each score,
+		over all the pixels, on
+		linear (blue) and logarithmic (purple) scales;
+		with the lowest possible score on the left and
+		the highest on the right. The large peak on the
+		left corresponds to the majority of pixels with
+		low scores. If the sequences have some similarity
+		(as is the case here), there will also be a
+		smaller peak of higher scores. Sometimes the
+		proportion of high-scoring pixels to the noise
+		will be so low that the peak will be barely, if
+		at all, perceptible on the linear scale. Hence
+		the use of the semi-logarithmic plot.<br>
+		With the scrollbars below and above the histogram,
+		respectively, bring the lower threshold just
+		past the first peak, and the higher threshold
+		just past the second peak (Fig. 5).<br>
+		Now, the background noise has disappeared from
+		the dots window, and the similar regions stand
+		out more clearly (Fig. 6):<br><br>
+		<table style="margin-left:auto; margin-right:auto">
+			<caption>
+				<strong>Figure 6</strong>: The Dots window, after adjusting the grayscale
+			</caption>
+			<tr>
+				<td>
+					<img src="help_dotwin_2.gif" alt="fig6" width="349" height="354">
+				</td>
+			</tr>
+		</table>
+		</li>
+	</ol>
+	That's it.<br>
+	If your sequences are too long for the dot
+	window, you have two options. First, you can choose a
+	smaller zoom factor (use the zoom factor menu). You'll
+	have to start the computation anew. Alternatively, you
+	can move around the dot window by using its vertical
+	and horizontal scrollbars. At the corners of the zoom
+	window are four buttons, with which you can slide the
+	display  diagonally.<br><br>
+
+	If you wish to inspect the alignment at some spot,
+	click on the corresponding pixel in the dot window. A
+	<strong>cursor</strong> (blue cross) will appear, and
+	the <strong>alignment window</strong> will display the
+	sequences around the cursor's positions (Fig. 7).<br><br>
+	<table style="margin-left:auto; margin-right:auto">
+		<caption>
+			<strong>Figure 7</strong>: The Alignments window
+		</caption>
+		<tr>
+			<td>
+				<img src="help_align.gif" alt="fig7" width="629" height="148">
+			</td>
+		</tr>
+	</table>
+	<br>
+	Residues that match well (according to the matrix) are colored in
+	blue. The comparison window is highlighted by a purple box.
+	The cursor can be dragged around (if you try to drag it
+	beyond the edges of the dot window, the whole display
+	will scroll instead). The alignment window's scrollbars
+	have the same function. The cursor can also be moved with the
+	keyboard with the arrow keys, and with '<code>&lt;</code>'
+	(up left), '<code>&gt;</code>' (down right), '<code>[</code>'
+	(up right), and '<code>]</code>' (down left). When the
+	display is zoomed, the cursor will not be updated at
+	every keystroke, but the alignment window will.
+	<h2>Beyond the basics</h2>
+	When comparing nucleic acid to nucleic acid, in addition
+	to comparing the sequences the usual way, <code>dotlet</code>
+	will reverse complement one of the sequences and perform
+	a second comparison. Each pixel is set to the best of
+	these two scores. This enables to see structures like
+	stem-loops, for example. The alignment window will also
+	display the reverse complemented sequence.<br><br>
+
+	It is also possible to compare a protein to a nucleic
+	acid sequence (but not the reverse - yet). In this case
+	the nucleic acid sequence is translated in the three
+	forward frames, the comparison is performed for each
+	frame, and the pixels are set to the highest of the
+	three scores. The alignment window also displays the
+	three translated frames. This is useful for finding
+	frameshifts or exons (although the latter can be done
+	by comparing gene and mRNA). See the <a
+	href="dotlet_examples.html">examples</a> page for more.
+	<hr>
+	Marco Pagni<br>Thomas Junier
+	<br>
+	Last modified: Tue Jul 13, 1999
+</body>
+</html>

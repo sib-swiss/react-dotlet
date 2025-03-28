@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<meta charset="utf-8">
+	<meta name="dcterms.rights" content="MyHits copyright 2003-2018 SIB Swiss Institute of Bioinformatics">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Frameshifts</title>
+</head>
+
+<body>
+	<h2>Frameshifts</h2>
+	The horizontal sequence is a human 3' EST coding
+	for an unidentified protein (well, it has now been
+	identified, but let's pretend it had not...). The
+	vertical is the protein sequence of the closest
+	<code>BLASTX</code> match, in this case a mouse
+	granulocyte colony stimulating factor receptor
+	precursor (whew! :-).<br>
+	As we can see from the graph, the EST matches
+	the C-terminal part of the protein and contains
+	a 3'-UTR. The diagonal is not perfect, however:
+	there are two partial diagonals but the C-terminal
+	one is shifted one position downstream with
+	respect to the first one. This is a clear sign
+	of a frameshift. The alignment window shows this
+	well: there is a rather good match on frame 1
+	but it starts at position 806 or so (in the
+	protein sequence).
+	<br><br>
+
+	<div style="text-align:center"><img src='frameshift_1.gif' alt="frame_shift1" width="628" height="501"></div>
+	<br>
+	If we move the protein sequence one residue
+	upstream, we get another good match, but this
+	time on frame 3, and it extends only through
+	position 792 (of the protein sequence). It might
+	seem strange that the match on frame 1 doesn't
+	start where the match on frame 3 ends, but this
+	is due to sequence divergence, not to the
+	frameshift..<br><br>
+
+	<div style="text-align:center"><img src='frameshift_2.gif' alt="frame_shift2" width="630" height="148"></div>
+
+	<ul style="font-family:monospace;">
+		<li> EST:<br>
+GCCCCACAAGCCCAGGGCCAGGGCACTATCTCCGCTGTGACTCCACTCAGCCCCTCTTGGCGGGCCTCAC
+CCCCAGCCCCAAGTCCTATGAGAACCTCTGGTTCCAGGCCAGCCCCCTTGGGAACCCTGGTAACCCCAGC
+CCAAGCCAGGAGGACGACTGTGTCTTTGGGCCACTGCTCAACTTCCCNCTCCTGCAGGGGATCCGGGTCC
+ATGGGATGGAGGCGCTGGGGAGCTTCTAGGGCTTCCTGGGGGTTCCCTTCTTGGGCCTGCCTCTTAAAGG
+CCTGAGCTAGCTGGGAGAAGAGGGGAGGGTCCATAAAGCCCATTGATTAAAAATTACCCCAGCCCAGGGT
+TTTCACCATNTTCCAGTTCACCAGCATCT</li>
+		<li> GCSR_MOUSE (P40223):<br>
+MVGLGACTLTGVTLIFLLLPRSLESCGHIEISPPVVRLGDPVLASCTISPNCSKLDQQAKILWRLQDEPIQPGDRQHHLP
+DGTQESLITLPHLNYTQAFLFCLVPWEDSVQLLDQAELHAGYPPASPSNLSCLMHLTTNSLVCQWEPGPETHLPTSFILK
+SFRSRADCQYQGDTIPDCVAKKRQNNCSIPRKNLLLYQYMAIWVQAENMLGSSESPKLCLDPMDVVKLEPPMLQALDIGP
+DVVSHQPGCLWLSWKPWKPSEYMEQECELRYQPQLKGANWTLVFHLPSSKDQFELCGLHQAPVYTLQMRCIRSSLPGFWS
+PWSPGLQLRPTMKAPTIRLDTWCQKKQLDPGTVSVQLFWKPTPLQEDSGQIQGYLLSWNSPDHQGQDIHLCNTTQLSCIF
+LLPSEAQNVTLVAYNKAGTSSPTTVVFLENEGPAVTGLHAMAQDLNTIWVDWEAPSLLPQGYLIEWEMSSPSYNNSYKSW
+MIEPNGNITGILLKDNINPFQLYRITVAPLYPGIVGPPVNVYTFAGERAPPHAPALHLKHVGTTWAQLEWVPEAPRLGMI
+PLTHYTIFWADAGDHSFSVTLNISLHDFVLKHLEPASLYHVYLMATSRAGSTNSTGLTLRTLDPSDLNIFLGILCLVLLS
+TTCVVTWLCCKRRGKTSFWSDVPDPAHSSLSSWLPTIMTEETFQLPSFWDSSVPSITKITELEEDKKPTHWDSESSGNGS
+LPALVQAYVLQGDPREISNQSQPPSRTGDQVLYGQVLESPTSPGVMQYIRSDSTQPLLGGPTPSPKSYENIWFHSRPQET
+FVPQPPNQEDDCVFGPPFDFPLFQGLQVHGVEEQGGF</li>
+	</ul>
+	<hr>
+	<a href="terminator.html">Previous</a> | <a href="lowcom.html">Next</a> | <a href="dotlet_examples.html">Top</a>
+</body>
+</html>

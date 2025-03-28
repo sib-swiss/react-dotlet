@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<meta charset="utf-8">
+	<meta name="dcterms.rights" content="MyHits copyright 2003-2018 SIB Swiss Institute of Bioinformatics">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>New features in Dotlet 1.5</title>
+</head>
+
+<body>
+	<h2>New features of Dotlet 1.5</h2>
+	4 new features were implemented in Dotlet version 1.5.
+	<ul>
+		<li>A "print" button (opening a print dialog) has been added, allowing the user to print
+			the plot (as well as important informations) in a WYSIWYG way and to receive it as a pdf file.
+			<br><br>
+			<table style="margin-left:auto; margin-right:auto">
+				<caption>
+					<strong>Figure 1</strong>: print dialog showing available options
+				</caption>
+				<tr>
+					<td><img src="new_print.gif" alt="print_functionality" width="403" height="308"></td>
+				</tr>
+			</table>
+			<br><br>
+		</li>
+		<li>When mouse-selecting+SHIFT an area of the dotplot, Dotlet tries to find diagonals where at least half
+			of the sequence is above the cutoff (as defined in the histogram). <strong>The diagonals
+			must be fully contained in the selected area</strong>, and are drawn in red (the whole diagonals are
+			considered, not the sole parts that are above cutoff). The result
+			is displayed in a new window, and can be sent to the browser for further use. <strong>That functionality
+			only works with a zoom ratio of 1:1.</strong>
+			<br><br>
+			<table style="margin-left:auto; margin-right:auto">
+				<caption>
+					<strong>Figure 2</strong>: mouse selection (left), with 2 diagonals found (right)
+				</caption>
+				<tr>
+					<td><img src="new_selection.gif" alt="selection_fct" width="349" height="360"></td>
+					<td><img src="new_selection2.gif" alt="selection_fct2" width="350" height="360"></td>
+				</tr>
+			</table>
+			<br><br>
+		</li>
+		<li>When mouse-moving+CTRL in the dotplot, a "magnetic cursor" helps the user to target high scores areas more precisely.
+			<strong>That functionality only works with a zoom ratio of 1:1.</strong>
+			<br><br>
+			<table style="margin-left:auto; margin-right:auto">
+				<caption>
+					<strong>Figure 3</strong>: magnetic cursor
+				</caption>
+				<tr>
+					<td><img src="new_magnetic.gif" alt="magnetic_fct" width="351" height="360"></td>
+				</tr>
+			</table>
+			<br><br>
+		</li>
+		<li>When mouse-selecting+CTRL on a diagonal in the dotplot, Dotlet (starting from the selected point)
+			extends the diagonal in both directions (as long as the scores are above the cutoff,
+			as defined in the histogram). The result is displayed in a new window, and can be
+			sent to the browser for further use. By combining several clicks on different locations, one can
+			reconstruct a sequence. <strong>That functionality only works with a zoom ratio of 1:1.</strong>
+			<br>
+			<strong>Warning : sequence reconstruction is done in the same order as the clicks on the dotplot.
+			Be careful to start from left to right and top to bottom, otherwise this might lead to complete
+			synthetic sequences.</strong>
+			<br><br>
+			<table style="margin-left:auto; margin-right:auto">
+				<caption>
+					<strong>Figure 4</strong>: sequence reconstruction on the dotplot (left) and the result (right)
+				</caption>
+				<tr>
+					<td><img src="new_reconstruction.gif" alt="reconstruction_fct" width="352" height="359"></td>
+					<td><img src="new_reconstruction_output.gif" alt="reconstruction_output_fct" width="417" height="314"></td>
+				</tr>
+			</table>
+			<br><br>
+		</li>
+	</ul>
+	<hr>
+	<br>
+	Last modified: Tue Nov 28, 2006
+</body>
+</html>

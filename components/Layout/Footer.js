@@ -38,7 +38,7 @@ class Footer extends React.Component {
 
                         <li className="mdl-mini-footer--social-btn" style={{ backgroundColor: 'transparent' }}>
                             <div>
-                                <a href="https://myhits.sib.swiss/util/dotlet/doc/dotlet_help.html" target="_blank" rel="noopener">
+                                <a href="/doc/dotlet_help.html" target="_blank" rel="noopener">
                                     <IconButton iconStyle={{color:'white', fontSize: '35px'}}
                                                 style={{padding:'8px'}}
                                                 tooltip="Documentation"
