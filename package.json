@@ -62,7 +62,7 @@
     "front-matter": "^2.1.0",
     "highlight.js": "^9.5.0",
     "ignore-styles": "^4.0.0",
-    "jsdom": "^9.4.1",
+    "jsdom": "^16.5.0",
     "jsdom-global": "^2.0.0",
     "json-loader": "^0.5.4",
     "markdown-it": "^7.0.0",
