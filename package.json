@@ -65,7 +65,7 @@
     "jsdom": "^9.4.1",
     "jsdom-global": "^2.0.0",
     "json-loader": "^0.5.4",
-    "markdown-it": "^7.0.0",
+    "markdown-it": "^12.3.2",
     "mocha": "^8.3.2",
     "path-to-regexp": "^1.5.3",
     "pixrem": "^3.0.1",
